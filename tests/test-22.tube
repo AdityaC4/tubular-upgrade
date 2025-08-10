@@ -1,0 +1,4 @@
+// test casting int to string
+function PrintInt(int n) : string {
+  return n:string;
+}

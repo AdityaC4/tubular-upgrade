@@ -1,0 +1,7 @@
+// test for string compare
+function StrCmp(string a, string b) : string {
+  if (a == b) {
+    return "match";
+  }
+  return "no match";
+}

@@ -1,0 +1,22 @@
+-WHITESPACE [ \t\r\n]+
+-COMMENT //.*|"/*"([^*]|(\*[^/]))*"*/"
+BREAK break
+CONTINUE continue
+IF if
+ELSE else
+WHILE while
+FUNCTION function
+RETURN return
+RESIZE resize
+SIZE size
+SQRT sqrt
+TYPE double|int|char|string
+ID [a-zA-Z_][a-zA-Z0-9_]*
+LIT_INT [0-9]+
+LIT_FLOAT [0-9]*\.[0-9]+
+LIT_STRING \"([^\n"\\]|(\\[n"\\]))*\"
+LIT_CHAR \'[^\\'\n\t]\'|\'\\.\'
+EXPR_COMPARE [<>]"="?
+EXPR_COMPARE_EQ "=="|"!="
+AND "&&"
+OR "||"
