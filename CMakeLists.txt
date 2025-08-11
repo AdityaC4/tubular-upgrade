@@ -6,6 +6,7 @@ project(Tubular VERSION 1.0.0 LANGUAGES CXX)
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Define the executable
 add_executable(${PROJECT_NAME} ${PROJECT_NAME}.cpp)
