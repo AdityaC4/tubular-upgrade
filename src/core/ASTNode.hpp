@@ -8,12 +8,12 @@
 #include <string>
 #include <vector>
 
-#include "ASTVisitor.hpp"
 #include "../Control.hpp"
 #include "../SymbolTable.hpp"
 #include "../TokenQueue.hpp"
 #include "../lexer.hpp"
 #include "../tools.hpp"
+#include "ASTVisitor.hpp"
 
 class ASTNode {
 protected:
@@ -73,7 +73,7 @@ public:
   virtual bool ToWAT(Control & /* control */) = 0;
 
   // Accept method for visitor pattern
-  virtual void Accept(ASTVisitor& visitor) = 0;
+  virtual void Accept(ASTVisitor &visitor) = 0;
 
   virtual bool CanAssign() const { return false; }
   virtual void ToAssignWAT(Control & /* control */) {
@@ -176,11 +176,9 @@ public:
       GetChild(i).Print(prefix + "  ");
     }
   }
-  
+
   // Accept method for visitor pattern
-  void Accept(ASTVisitor& visitor) override {
-    visitor.visit(*this);
-  }
+  void Accept(ASTVisitor &visitor) override { visitor.visit(*this); }
 };
 
 class ASTNode_Block : public ASTNode_Parent {
@@ -232,10 +230,8 @@ public:
     return false; // Value is left on the stack only if this is a return
                   // statement.
   }
-  
-  void Accept(ASTVisitor& visitor) override {
-    visitor.visit(*this);
-  }
+
+  void Accept(ASTVisitor &visitor) override { visitor.visit(*this); }
 };
 
 class ASTNode_Function : public ASTNode_Parent {
@@ -308,10 +304,8 @@ public:
 
     return false;
   }
-  
-  void Accept(ASTVisitor& visitor) override {
-    visitor.visit(*this);
-  }
+
+  void Accept(ASTVisitor &visitor) override { visitor.visit(*this); }
 };
 
 class ASTNode_FunctionCall : public ASTNode_Parent {
@@ -345,10 +339,8 @@ public:
     control.Code("(call $", fun_name, ")").Comment("Call function ", fun_name);
     return true;
   }
-  
-  void Accept(ASTVisitor& visitor) override {
-    visitor.visit(*this);
-  }
+
+  void Accept(ASTVisitor &visitor) override { visitor.visit(*this); }
 };
 
 class ASTNode_If : public ASTNode_Parent {
@@ -420,10 +412,8 @@ public:
     control.Code(")").Comment("End 'if'");
     return false;
   }
-  
-  void Accept(ASTVisitor& visitor) override {
-    visitor.visit(*this);
-  }
+
+  void Accept(ASTVisitor &visitor) override { visitor.visit(*this); }
 };
 
 class ASTNode_While : public ASTNode_Parent {
@@ -497,10 +487,8 @@ public:
 
     return false;
   }
-  
-  void Accept(ASTVisitor& visitor) override {
-    visitor.visit(*this);
-  }
+
+  void Accept(ASTVisitor &visitor) override { visitor.visit(*this); }
 };
 
 class ASTNode_Return : public ASTNode_Parent {
@@ -535,10 +523,8 @@ public:
     }
     return false;
   }
-  
-  void Accept(ASTVisitor& visitor) override {
-    visitor.visit(*this);
-  }
+
+  void Accept(ASTVisitor &visitor) override { visitor.visit(*this); }
 };
 
 class ASTNode_Break : public ASTNode {
@@ -553,10 +539,8 @@ public:
     control.Code("(br ", loop_exit, ")").Comment("'break' command.");
     return false;
   }
-  
-  void Accept(ASTVisitor& visitor) override {
-    visitor.visit(*this);
-  }
+
+  void Accept(ASTVisitor &visitor) override { visitor.visit(*this); }
 };
 
 class ASTNode_Continue : public ASTNode {
@@ -571,10 +555,8 @@ public:
     control.Code("(br ", loop_label, ")").Comment("'continue' command.");
     return false;
   }
-  
-  void Accept(ASTVisitor& visitor) override {
-    visitor.visit(*this);
-  }
+
+  void Accept(ASTVisitor &visitor) override { visitor.visit(*this); }
 };
 
 class ASTNode_ToDouble : public ASTNode_Parent {
@@ -604,10 +586,8 @@ public:
     }
     return true;
   }
-  
-  void Accept(ASTVisitor& visitor) override {
-    visitor.visit(*this);
-  }
+
+  void Accept(ASTVisitor &visitor) override { visitor.visit(*this); }
 };
 
 class ASTNode_ToInt : public ASTNode_Parent {
@@ -636,10 +616,8 @@ public:
     }
     return true;
   }
-  
-  void Accept(ASTVisitor& visitor) override {
-    visitor.visit(*this);
-  }
+
+  void Accept(ASTVisitor &visitor) override { visitor.visit(*this); }
 };
 
 class ASTNode_ToString : public ASTNode_Parent {
@@ -680,10 +658,8 @@ public:
     }
     return true;
   }
-  
-  void Accept(ASTVisitor& visitor) override {
-    visitor.visit(*this);
-  }
+
+  void Accept(ASTVisitor &visitor) override { visitor.visit(*this); }
 
 private:
   void GenerateCharToString(Control &control, const std::string &str_addr) {
@@ -779,10 +755,8 @@ public:
 
     return true;
   }
-  
-  void Accept(ASTVisitor& visitor) override {
-    visitor.visit(*this);
-  }
+
+  void Accept(ASTVisitor &visitor) override { visitor.visit(*this); }
 };
 
 class ASTNode_Math2 : public ASTNode_Parent {
@@ -1143,10 +1117,8 @@ public:
 
     return false;
   }
-  
-  void Accept(ASTVisitor& visitor) override {
-    visitor.visit(*this);
-  }
+
+  void Accept(ASTVisitor &visitor) override { visitor.visit(*this); }
 };
 
 class ASTNode_CharLit : public ASTNode {
@@ -1171,10 +1143,8 @@ public:
         .Comment("Put a char \\", value, " on the stack");
     return true;
   }
-  
-  void Accept(ASTVisitor& visitor) override {
-    visitor.visit(*this);
-  }
+
+  void Accept(ASTVisitor &visitor) override { visitor.visit(*this); }
 };
 
 class ASTNode_IntLit : public ASTNode {
@@ -1199,10 +1169,8 @@ public:
         .Comment("Put a ", value, " on the stack");
     return true;
   }
-  
-  void Accept(ASTVisitor& visitor) override {
-    visitor.visit(*this);
-  }
+
+  void Accept(ASTVisitor &visitor) override { visitor.visit(*this); }
 };
 
 class ASTNode_FloatLit : public ASTNode {
@@ -1225,10 +1193,8 @@ public:
         .Comment("Put a ", value, " on the stack");
     return true;
   }
-  
-  void Accept(ASTVisitor& visitor) override {
-    visitor.visit(*this);
-  }
+
+  void Accept(ASTVisitor &visitor) override { visitor.visit(*this); }
 };
 
 class ASTNode_StringLit : public ASTNode {
@@ -1251,10 +1217,8 @@ public:
         .Comment("Load address of string literal");
     return true;
   }
-  
-  void Accept(ASTVisitor& visitor) override {
-    visitor.visit(*this);
-  }
+
+  void Accept(ASTVisitor &visitor) override { visitor.visit(*this); }
 };
 
 class ASTNode_Var : public ASTNode {
@@ -1299,10 +1263,8 @@ public:
         .Comment("Place var '", var_name, "' onto stack");
     return true;
   }
-  
-  void Accept(ASTVisitor& visitor) override {
-    visitor.visit(*this);
-  }
+
+  void Accept(ASTVisitor &visitor) override { visitor.visit(*this); }
 };
 
 class ASTNode_Indexing : public ASTNode_Parent {
@@ -1363,10 +1325,8 @@ public:
     control.Code("(i32.load8_u)").Comment("Load byte at computed address");
     return true;
   }
-  
-  void Accept(ASTVisitor& visitor) override {
-    visitor.visit(*this);
-  }
+
+  void Accept(ASTVisitor &visitor) override { visitor.visit(*this); }
 };
 
 class ASTNode_Size : public ASTNode_Parent {
@@ -1393,8 +1353,6 @@ public:
     control.Code("(call $_strlen)").Comment("Call _strlen for size()");
     return true;
   }
-  
-  void Accept(ASTVisitor& visitor) override {
-    visitor.visit(*this);
-  }
+
+  void Accept(ASTVisitor &visitor) override { visitor.visit(*this); }
 };

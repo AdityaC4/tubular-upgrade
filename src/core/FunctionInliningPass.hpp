@@ -1,30 +1,28 @@
 #pragma once
 
-#include "Pass.hpp"
 #include "ASTNode.hpp"
+#include "Pass.hpp"
 #include <iostream>
 
 class FunctionInliningPass : public Pass {
 private:
-    bool inlineEnabled;
+  bool inlineEnabled;
 
 public:
-    FunctionInliningPass(bool enabled) : inlineEnabled(enabled) {}
-    
-    std::string getName() const override { 
-        return "FunctionInlining"; 
+  FunctionInliningPass(bool enabled) : inlineEnabled(enabled) {}
+
+  std::string getName() const override { return "FunctionInlining"; }
+
+  void run(ASTNode &node) override {
+    if (!inlineEnabled) {
+      return;
     }
-    
-    void run(ASTNode& node) override {
-        if (!inlineEnabled) {
-            return;
-        }
-        
-        // TODO: Implement actual function inlining logic
-        // This would involve:
-        // 1. Traversing the AST to find function calls
-        // 2. Replacing direct function calls with the function body
-        // 3. Handling parameter substitution
-        // 4. Maintaining correctness with variable scoping
-    }
+
+    // TODO: Implement actual function inlining logic
+    // This would involve:
+    // 1. Traversing the AST to find function calls
+    // 2. Replacing direct function calls with the function body
+    // 3. Handling parameter substitution
+    // 4. Maintaining correctness with variable scoping
+  }
 };

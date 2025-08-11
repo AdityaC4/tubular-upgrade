@@ -26,33 +26,33 @@ class ASTNode_Size;
 
 class ASTVisitor {
 public:
-    virtual ~ASTVisitor() = default;
-    
-    // Base node visit method
-    virtual void visit(ASTNode& node) {}
-    
-    // Parent node visit method
-    virtual void visit(ASTNode_Parent& node) {}
-    
-    // Concrete node visit methods
-    virtual void visit(ASTNode_Block& node) {}
-    virtual void visit(ASTNode_Function& node) {}
-    virtual void visit(ASTNode_FunctionCall& node) {}
-    virtual void visit(ASTNode_If& node) {}
-    virtual void visit(ASTNode_While& node) {}
-    virtual void visit(ASTNode_Return& node) {}
-    virtual void visit(ASTNode_Break& node) {}
-    virtual void visit(ASTNode_Continue& node) {}
-    virtual void visit(ASTNode_ToDouble& node) {}
-    virtual void visit(ASTNode_ToInt& node) {}
-    virtual void visit(ASTNode_ToString& node) {}
-    virtual void visit(ASTNode_Math1& node) {}
-    virtual void visit(ASTNode_Math2& node) {}
-    virtual void visit(ASTNode_CharLit& node) {}
-    virtual void visit(ASTNode_IntLit& node) {}
-    virtual void visit(ASTNode_FloatLit& node) {}
-    virtual void visit(ASTNode_StringLit& node) {}
-    virtual void visit(ASTNode_Var& node) {}
-    virtual void visit(ASTNode_Indexing& node) {}
-    virtual void visit(ASTNode_Size& node) {}
+  virtual ~ASTVisitor() = default;
+
+  // Base node visit method
+  virtual void visit(ASTNode &) {}
+
+  // Parent node visit method
+  virtual void visit(ASTNode_Parent &) {}
+
+  // Concrete node visit methods
+  virtual void visit(ASTNode_Block &) {}
+  virtual void visit(ASTNode_Function &) {}
+  virtual void visit(ASTNode_FunctionCall &) {}
+  virtual void visit(ASTNode_If &) {}
+  virtual void visit(ASTNode_While &) {}
+  virtual void visit(ASTNode_Return &) {}
+  virtual void visit(ASTNode_Break &) {}
+  virtual void visit(ASTNode_Continue &) {}
+  virtual void visit(ASTNode_ToDouble &) {}
+  virtual void visit(ASTNode_ToInt &) {}
+  virtual void visit(ASTNode_ToString &) {}
+  virtual void visit(ASTNode_Math1 &) {}
+  virtual void visit(ASTNode_Math2 &) {}
+  virtual void visit(ASTNode_CharLit &) {}
+  virtual void visit(ASTNode_IntLit &) {}
+  virtual void visit(ASTNode_FloatLit &) {}
+  virtual void visit(ASTNode_StringLit &) {}
+  virtual void visit(ASTNode_Var &) {}
+  virtual void visit(ASTNode_Indexing &) {}
+  virtual void visit(ASTNode_Size &) {}
 };
