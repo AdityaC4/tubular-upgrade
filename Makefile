@@ -5,7 +5,7 @@ PROJECT := Tubular
 CXX := c++
 
 # Flags to ALWAYs use
-CFLAGS_all := -Wall -Wextra -std=c++20
+CFLAGS_all := -Wall -Wextra -std=c++20 -I.
 
 # Flags based on compilation type.
 #   Default flags turn on optimizations
@@ -33,7 +33,7 @@ tests: $(PROJECT)
 .PHONY: tests
 
 # List any files here that should trigger full recompilation when they change.
-KEY_FILES := lexer.hpp
+KEY_FILES := src/lexer.hpp
 
 $(PROJECT):	$(PROJECT).cpp $(KEY_FILES)
 	$(CXX) $(CFLAGS) $(PROJECT).cpp -o $(PROJECT)

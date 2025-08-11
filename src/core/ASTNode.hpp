@@ -8,11 +8,12 @@
 #include <string>
 #include <vector>
 
-#include "Control.hpp"
-#include "SymbolTable.hpp"
-#include "TokenQueue.hpp"
-#include "lexer.hpp"
-#include "tools.hpp"
+#include "ASTVisitor.hpp"
+#include "../Control.hpp"
+#include "../SymbolTable.hpp"
+#include "../TokenQueue.hpp"
+#include "../lexer.hpp"
+#include "../tools.hpp"
 
 class ASTNode {
 protected:
@@ -70,6 +71,9 @@ public:
   // Generate WAT code and return (true/false) whether a value was left on the
   // stack.
   virtual bool ToWAT(Control & /* control */) = 0;
+
+  // Accept method for visitor pattern
+  virtual void Accept(ASTVisitor& visitor) = 0;
 
   virtual bool CanAssign() const { return false; }
   virtual void ToAssignWAT(Control & /* control */) {
@@ -172,6 +176,11 @@ public:
       GetChild(i).Print(prefix + "  ");
     }
   }
+  
+  // Accept method for visitor pattern
+  void Accept(ASTVisitor& visitor) override {
+    visitor.visit(*this);
+  }
 };
 
 class ASTNode_Block : public ASTNode_Parent {
@@ -222,6 +231,10 @@ public:
 
     return false; // Value is left on the stack only if this is a return
                   // statement.
+  }
+  
+  void Accept(ASTVisitor& visitor) override {
+    visitor.visit(*this);
   }
 };
 
@@ -295,6 +308,10 @@ public:
 
     return false;
   }
+  
+  void Accept(ASTVisitor& visitor) override {
+    visitor.visit(*this);
+  }
 };
 
 class ASTNode_FunctionCall : public ASTNode_Parent {
@@ -327,6 +344,10 @@ public:
 
     control.Code("(call $", fun_name, ")").Comment("Call function ", fun_name);
     return true;
+  }
+  
+  void Accept(ASTVisitor& visitor) override {
+    visitor.visit(*this);
   }
 };
 
@@ -398,6 +419,10 @@ public:
     control.Indent(-2);
     control.Code(")").Comment("End 'if'");
     return false;
+  }
+  
+  void Accept(ASTVisitor& visitor) override {
+    visitor.visit(*this);
   }
 };
 
@@ -472,6 +497,10 @@ public:
 
     return false;
   }
+  
+  void Accept(ASTVisitor& visitor) override {
+    visitor.visit(*this);
+  }
 };
 
 class ASTNode_Return : public ASTNode_Parent {
@@ -506,6 +535,10 @@ public:
     }
     return false;
   }
+  
+  void Accept(ASTVisitor& visitor) override {
+    visitor.visit(*this);
+  }
 };
 
 class ASTNode_Break : public ASTNode {
@@ -520,6 +553,10 @@ public:
     control.Code("(br ", loop_exit, ")").Comment("'break' command.");
     return false;
   }
+  
+  void Accept(ASTVisitor& visitor) override {
+    visitor.visit(*this);
+  }
 };
 
 class ASTNode_Continue : public ASTNode {
@@ -533,6 +570,10 @@ public:
     std::string loop_label = control.GetLoopLabel();
     control.Code("(br ", loop_label, ")").Comment("'continue' command.");
     return false;
+  }
+  
+  void Accept(ASTVisitor& visitor) override {
+    visitor.visit(*this);
   }
 };
 
@@ -563,6 +604,10 @@ public:
     }
     return true;
   }
+  
+  void Accept(ASTVisitor& visitor) override {
+    visitor.visit(*this);
+  }
 };
 
 class ASTNode_ToInt : public ASTNode_Parent {
@@ -590,6 +635,10 @@ public:
       control.Code("(i32.trunc_f64_s)").Comment("Convert to int.");
     }
     return true;
+  }
+  
+  void Accept(ASTVisitor& visitor) override {
+    visitor.visit(*this);
   }
 };
 
@@ -630,6 +679,10 @@ public:
             "Unsupported type for casting to string: ", child_type.Name());
     }
     return true;
+  }
+  
+  void Accept(ASTVisitor& visitor) override {
+    visitor.visit(*this);
   }
 
 private:
@@ -725,6 +778,10 @@ public:
     }
 
     return true;
+  }
+  
+  void Accept(ASTVisitor& visitor) override {
+    visitor.visit(*this);
   }
 };
 
@@ -1086,6 +1143,10 @@ public:
 
     return false;
   }
+  
+  void Accept(ASTVisitor& visitor) override {
+    visitor.visit(*this);
+  }
 };
 
 class ASTNode_CharLit : public ASTNode {
@@ -1109,6 +1170,10 @@ public:
     control.Code("(i32.const ", value, ")")
         .Comment("Put a char \\", value, " on the stack");
     return true;
+  }
+  
+  void Accept(ASTVisitor& visitor) override {
+    visitor.visit(*this);
   }
 };
 
@@ -1134,6 +1199,10 @@ public:
         .Comment("Put a ", value, " on the stack");
     return true;
   }
+  
+  void Accept(ASTVisitor& visitor) override {
+    visitor.visit(*this);
+  }
 };
 
 class ASTNode_FloatLit : public ASTNode {
@@ -1156,6 +1225,10 @@ public:
         .Comment("Put a ", value, " on the stack");
     return true;
   }
+  
+  void Accept(ASTVisitor& visitor) override {
+    visitor.visit(*this);
+  }
 };
 
 class ASTNode_StringLit : public ASTNode {
@@ -1177,6 +1250,10 @@ public:
     control.Code("(i32.const ", mem_pos, ")")
         .Comment("Load address of string literal");
     return true;
+  }
+  
+  void Accept(ASTVisitor& visitor) override {
+    visitor.visit(*this);
   }
 };
 
@@ -1221,6 +1298,10 @@ public:
     control.Code("(local.get $var", var_id, ")")
         .Comment("Place var '", var_name, "' onto stack");
     return true;
+  }
+  
+  void Accept(ASTVisitor& visitor) override {
+    visitor.visit(*this);
   }
 };
 
@@ -1282,6 +1363,10 @@ public:
     control.Code("(i32.load8_u)").Comment("Load byte at computed address");
     return true;
   }
+  
+  void Accept(ASTVisitor& visitor) override {
+    visitor.visit(*this);
+  }
 };
 
 class ASTNode_Size : public ASTNode_Parent {
@@ -1307,5 +1392,9 @@ public:
     ChildToWAT(0, control, true);
     control.Code("(call $_strlen)").Comment("Call _strlen for size()");
     return true;
+  }
+  
+  void Accept(ASTVisitor& visitor) override {
+    visitor.visit(*this);
   }
 };

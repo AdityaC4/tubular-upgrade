@@ -88,6 +88,7 @@ while (CONDITION) {
 #### Type Casting
 - `EXPRESSION : TYPE` - Cast expression to specified type
 - Implicit conversions between numeric types (int to double)
+- Explicit conversion functions: `ToInt`, `ToDouble`
 
 ### String Operations
 - Concatenation: `+`
@@ -129,7 +130,7 @@ All user-defined functions are exported with their original names, making them c
 3. **Symbol Table** - Manages variable and function declarations with scoping
 
 ### Backend
-1. **Code Generation** - Translates AST to WAT (WebAssembly Text Format)
+1. **Code Generation** - Translates AST to WAT (WebAssembly Text Format) using a visitor pattern
 2. **Helper Functions** - Provides runtime support for string operations
 
 ### AST Node Types
@@ -138,6 +139,12 @@ The compiler uses a hierarchy of AST nodes to represent the program structure:
 - Expression nodes for mathematical and logical operations
 - Statement nodes for control flow
 - Declaration nodes for variables and functions
+
+### Visitor Pattern
+The compiler uses the Visitor design pattern for code generation and other tree traversal operations:
+- `ASTVisitor` base class defines visit methods for each node type
+- `WATGenerator` is a concrete visitor that generates WAT code
+- New visitors can be easily added by inheriting from `ASTVisitor`
 
 ## Example Programs
 
@@ -182,4 +189,3 @@ function CountDivSeven(double min, double max) : int {
     }
     return count;
 }
-```

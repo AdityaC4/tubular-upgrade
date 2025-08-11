@@ -9,11 +9,16 @@
 #include <utility>
 #include <vector>
 
-#include "ASTNode.hpp"
-#include "Control.hpp"
-#include "SymbolTable.hpp"
-#include "TokenQueue.hpp"
-#include "lexer.hpp"
+#include "src/core/ASTNode.hpp"
+#include "src/Control.hpp"
+#include "src/SymbolTable.hpp"
+#include "src/TokenQueue.hpp"
+#include "src/lexer.hpp"
+#include "src/core/WATGenerator.hpp"
+#include "src/core/PassManager.hpp"
+#include "src/core/FunctionInliningPass.hpp"
+#include "src/core/LoopUnrollingPass.hpp"
+#include "src/core/TailRecursionPass.hpp"
 
 class Tubular {
 private:
@@ -718,8 +723,11 @@ public:
         .Code(")")
         .Code("");
 
+    // Generate code for each function using the visitor pattern
     for (auto &fun_ptr : functions) {
-      fun_ptr->ToWAT(control);
+      // Create a WAT generator visitor and use it to generate code
+      WATGenerator generator(control);
+      fun_ptr->Accept(generator);
     }
     control.Indent(-2);
     control.Code(")").Comment("END program module");
@@ -732,6 +740,21 @@ public:
       fun_ptr->Print();
     }
   }
+  
+  // New method to run optimization passes
+  void RunOptimizationPasses() {
+    PassManager passManager;
+    
+    // Add passes to the manager
+    passManager.addPass(std::make_unique<FunctionInliningPass>(true));
+    passManager.addPass(std::make_unique<LoopUnrollingPass>(4));
+    passManager.addPass(std::make_unique<TailRecursionPass>(true));
+    
+    // Run all passes on each function
+    for (auto &fun_ptr : functions) {
+      passManager.runPasses(*fun_ptr);
+    }
+  }
 };
 
 int main(int argc, char *argv[]) {
@@ -742,6 +765,9 @@ int main(int argc, char *argv[]) {
 
   Tubular prog(argv[1]);
   prog.Parse();
+
+  // Run optimization passes
+  prog.RunOptimizationPasses();
 
   // -- uncomment for debugging --
   // prog.PrintSymbols();
