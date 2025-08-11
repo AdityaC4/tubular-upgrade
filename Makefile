@@ -1,5 +1,5 @@
 # Project-specific settings
-PROJECT := Project4
+PROJECT := Tubular
 
 # Identify compiler to use
 CXX := c++
