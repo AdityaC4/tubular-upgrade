@@ -26,11 +26,11 @@ for i in $(seq -w 01 $test_count); do
     wat_file="test-${i}.wat"
     wasm_file="test-${i}.wasm"
 
-    # Use Tubular to generate the WAT file for each test case.
-    if [[ -f "../Tubular" && -f "$code_file" ]]; then
-        ../Tubular "$code_file" > "$wat_file"
+    # Use build/Tubular to generate the WAT file for each test case.
+    if [[ -f "../build/Tubular" && -f "$code_file" ]]; then
+        ../build/Tubular "$code_file" > "$wat_file"
     else
-        echo "Executable ../Tubular or code file $code_file does not exist."
+        echo "Executable ../build/Tubular or code file $code_file does not exist."
         continue
     fi
 
@@ -77,11 +77,11 @@ for i in $(seq -w 01 $P3_test_count); do
     wat_file="P3-test-${i}.wat"
     wasm_file="P3-test-${i}.wasm"
 
-    # Use Tubular to generate the WAT file for each test case.
-    if [[ -f "../Tubular" && -f "$code_file" ]]; then
-        ../Tubular "$code_file" > "$wat_file"
+    # Use build/Tubular to generate the WAT file for each test case.
+    if [[ -f "../build/Tubular" && -f "$code_file" ]]; then
+        ../build/Tubular "$code_file" > "$wat_file"
     else
-        echo "Executable ../Tubular or code file $code_file does not exist."
+        echo "Executable ../build/Tubular or code file $code_file does not exist."
         continue
     fi
 
@@ -127,11 +127,11 @@ for i in $(seq -w 01 $error_test_count); do
     code_file="test-error-${i}.tube"
     wat_file="output-error-${i}.wat"
 
-    # Generate the output file for Tubular
-    if [[ -f "../Tubular" && -f "$code_file" ]]; then
-        ../Tubular "$code_file"
+    # Generate the output file for build/Tubular
+    if [[ -f "../build/Tubular" && -f "$code_file" ]]; then
+        ../build/Tubular "$code_file"
     else
-        echo "Executable ../Tubular or code file $code_file does not exist."
+        echo "Executable ../build/Tubular or code file $code_file does not exist."
         continue
     fi
 
@@ -154,11 +154,11 @@ for i in $(seq -w 01 $P3_error_test_count); do
     code_file="P3-test-error-${i}.tube"
     wat_file="P3-output-error-${i}.wat"
 
-    # Generate the output file for Tubular
-    if [[ -f "../Tubular" && -f "$code_file" ]]; then
-        ../Tubular "$code_file" > /dev/null 2>&1
+    # Generate the output file for build/Tubular
+    if [[ -f "../build/Tubular" && -f "$code_file" ]]; then
+        ../build/Tubular "$code_file" > /dev/null 2>&1
     else
-        echo "Executable ../Tubular or code file $code_file does not exist."
+        echo "Executable ../build/Tubular or code file $code_file does not exist."
         continue
     fi
 
