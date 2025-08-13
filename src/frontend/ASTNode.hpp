@@ -8,12 +8,12 @@
 #include <string>
 #include <vector>
 
-#include "../Control.hpp"
-#include "../SymbolTable.hpp"
-#include "../TokenQueue.hpp"
-#include "../lexer.hpp"
-#include "../tools.hpp"
 #include "ASTVisitor.hpp"
+#include "Control.hpp"
+#include "SymbolTable.hpp"
+#include "TokenQueue.hpp"
+#include "lexer.hpp"
+#include "tools.hpp"
 
 class ASTNode {
 protected:
@@ -43,9 +43,7 @@ public:
   }
 
   virtual std::string GetTypeName() const = 0;
-  virtual void Print(std::string prefix = "") const {
-    std::cout << prefix << GetTypeName() << std::endl;
-  }
+  virtual void Print(std::string prefix = "") const { std::cout << prefix << GetTypeName() << std::endl; }
 
   // Does this node represent a guaranteed return? Options are:
   // - A return node.
@@ -58,9 +56,7 @@ public:
   // - A while loop with a return inside.
   virtual bool MayReturn() const { return false; }
 
-  virtual Type ReturnType(const SymbolTable & /* symbols */) const {
-    return Type();
-  }
+  virtual Type ReturnType(const SymbolTable & /* symbols */) const { return Type(); }
 
   virtual void TypeCheck(const SymbolTable & /* symbols */) {}
 
@@ -86,14 +82,11 @@ private:
   std::vector<ptr_t> children{};
 
 public:
-  template <typename... NODE_Ts>
-  ASTNode_Parent(FilePos file_pos, NODE_Ts &&...nodes) : ASTNode(file_pos) {
+  template <typename... NODE_Ts> ASTNode_Parent(FilePos file_pos, NODE_Ts &&...nodes) : ASTNode(file_pos) {
     (AddChild(std::move(nodes)), ...);
   }
 
-  void TypeCheck(const SymbolTable &symbols) override {
-    TypeCheckChildren(symbols);
-  }
+  void TypeCheck(const SymbolTable &symbols) override { TypeCheckChildren(symbols); }
 
   // Tools to work with child nodes...
 
@@ -110,9 +103,7 @@ public:
   }
 
   size_t NumChildren() const { return children.size(); }
-  bool HasChild(size_t id) const {
-    return id < children.size() && children[id];
-  }
+  bool HasChild(size_t id) const { return id < children.size() && children[id]; }
 
   ASTNode &GetChild(size_t id) {
     assert(HasChild(id));
@@ -140,12 +131,9 @@ public:
     return first_pos;
   }
 
-  void AddChild(ptr_t &&child) override {
-    children.push_back(std::move(child));
-  }
+  void AddChild(ptr_t &&child) override { children.push_back(std::move(child)); }
 
-  template <typename NODE_T, typename... ARG_Ts>
-  void MakeChild(ARG_Ts &&...args) {
+  template <typename NODE_T, typename... ARG_Ts> void MakeChild(ARG_Ts &&...args) {
     AddChild(std::make_unique<NODE_T>(std::forward<ARG_Ts>(args)...));
   }
 
@@ -160,10 +148,9 @@ public:
   void ChildToWAT(size_t id, Control &control, bool out_needed) {
     assert(HasChild(id));
     const bool has_out = children[id]->ToWAT(control);
-    assert(!out_needed ||
-           has_out); // If we need an out value, make sure one is provided.
-    if (!out_needed && has_out) { // If we don't need an out value and one is
-                                  // provided, drop it.
+    assert(!out_needed || has_out); // If we need an out value, make sure one is provided.
+    if (!out_needed && has_out) {   // If we don't need an out value and one is
+      // provided, drop it.
       control.Drop();
     }
   }
@@ -188,8 +175,7 @@ private:
 
 public:
   template <typename... NODE_Ts>
-  ASTNode_Block(FilePos file_pos, NODE_Ts &&...nodes)
-      : ASTNode_Parent(file_pos, nodes...) {}
+  ASTNode_Block(FilePos file_pos, NODE_Ts &&...nodes) : ASTNode_Parent(file_pos, nodes...) {}
 
   std::string GetTypeName() const override { return "BLOCK"; }
 
@@ -208,9 +194,7 @@ public:
 
   bool IsReturn() const override { return is_return; }
   bool MayReturn() const override { return may_return; }
-  Type ReturnType(const SymbolTable &symbols) const override {
-    return LastChild().ReturnType(symbols);
-  }
+  Type ReturnType(const SymbolTable &symbols) const override { return LastChild().ReturnType(symbols); }
 
   bool ToWAT(Control &control) override {
     bool is_final_node = control.FinalNode();
@@ -237,25 +221,18 @@ public:
 class ASTNode_Function : public ASTNode_Parent {
 protected:
   size_t fun_id;
-  std::vector<size_t>
-      param_ids; // The set of variables used as function parameters.
-  std::vector<size_t> var_ids; // The set of variables used inside the function.
+  std::vector<size_t> param_ids; // The set of variables used as function parameters.
+  std::vector<size_t> var_ids;   // The set of variables used inside the function.
 public:
-  ASTNode_Function(const emplex::Token &name_token, size_t fun_id,
-                   std::vector<size_t> param_ids, ptr_t &&body)
-      : ASTNode_Parent(name_token, body), fun_id(fun_id), param_ids(param_ids) {
-  }
+  ASTNode_Function(const emplex::Token &name_token, size_t fun_id, std::vector<size_t> param_ids, ptr_t &&body)
+      : ASTNode_Parent(name_token, body), fun_id(fun_id), param_ids(param_ids) {}
 
-  std::string GetTypeName() const override {
-    return std::string("FUNCTION: ") + std::to_string(fun_id);
-  }
+  std::string GetTypeName() const override { return std::string("FUNCTION: ") + std::to_string(fun_id); }
 
   void AddVar(size_t var_id) { var_ids.push_back(var_id); }
   void SetVars(const std::vector<size_t> &in) { var_ids = in; }
 
-  Type ReturnType(const SymbolTable &symbols) const override {
-    return symbols.At(fun_id).type.ReturnType();
-  }
+  Type ReturnType(const SymbolTable &symbols) const override { return symbols.At(fun_id).type.ReturnType(); }
 
   bool ToWAT(Control &control) override {
     assert(NumChildren() == 1);
@@ -270,8 +247,7 @@ public:
     auto fun_type = control.symbols.At(fun_id).type;
 
     std::string wat_return = fun_type.ReturnType().ToWAT();
-    control.Code("(func $", fun_name, param_declare, " (result ", wat_return,
-                 ")");
+    control.Code("(func $", fun_name, param_declare, " (result ", wat_return, ")");
 
     control.Indent(2);
 
@@ -313,21 +289,16 @@ private:
   size_t fun_id;
 
 public:
-  ASTNode_FunctionCall(FilePos file_pos, size_t fun_id,
-                       std::vector<ptr_t> &&args)
+  ASTNode_FunctionCall(FilePos file_pos, size_t fun_id, std::vector<ptr_t> &&args)
       : ASTNode_Parent(file_pos), fun_id(fun_id) {
     for (auto &arg : args) {
       AddChild(std::move(arg));
     }
   }
 
-  std::string GetTypeName() const override {
-    return std::string("FUNCTION_CALL: ") + std::to_string(fun_id);
-  }
+  std::string GetTypeName() const override { return std::string("FUNCTION_CALL: ") + std::to_string(fun_id); }
 
-  Type ReturnType(const SymbolTable &symbols) const override {
-    return symbols.At(fun_id).type.ReturnType();
-  }
+  Type ReturnType(const SymbolTable &symbols) const override { return symbols.At(fun_id).type.ReturnType(); }
 
   bool ToWAT(Control &control) override {
     auto fun_name = control.symbols.At(fun_id).name;
@@ -345,8 +316,7 @@ public:
 
 class ASTNode_If : public ASTNode_Parent {
 public:
-  ASTNode_If(FilePos file_pos, ptr_t &&test, ptr_t &&action)
-      : ASTNode_Parent(file_pos, test, action) {}
+  ASTNode_If(FilePos file_pos, ptr_t &&test, ptr_t &&action) : ASTNode_Parent(file_pos, test, action) {}
   ASTNode_If(FilePos file_pos, ptr_t &&test, ptr_t &&action, ptr_t &&alt_action)
       : ASTNode_Parent(file_pos, test, action, alt_action) {}
 
@@ -355,8 +325,7 @@ public:
   bool IsReturn() const override {
     // If both then and else statements are returns, 'if' is guaranteed to
     // return.
-    return (NumChildren() == 3) && GetChild(1).IsReturn() &&
-           GetChild(2).IsReturn();
+    return (NumChildren() == 3) && GetChild(1).IsReturn() && GetChild(2).IsReturn();
   }
 
   bool MayReturn() const override {
@@ -366,19 +335,14 @@ public:
     return (NumChildren() == 3) && GetChild(2).MayReturn();
   }
 
-  Type ReturnType(const SymbolTable &symbols) const override {
-    return GetChild(1).ReturnType(symbols);
-  }
+  Type ReturnType(const SymbolTable &symbols) const override { return GetChild(1).ReturnType(symbols); }
 
   void TypeCheck(const SymbolTable &symbols) override {
     if (NumChildren() < 2 || NumChildren() > 3) {
-      Error(file_pos,
-            "Internal error: Expected 2 or 3 children in if node, found ",
-            NumChildren());
+      Error(file_pos, "Internal error: Expected 2 or 3 children in if node, found ", NumChildren());
     }
     if (!GetChild(0).ReturnType(symbols).IsInt()) {
-      Error(file_pos,
-            "Condition for if-statement must evaluate to type int, not ",
+      Error(file_pos, "Condition for if-statement must evaluate to type int, not ",
             GetChild(0).ReturnType(symbols).Name());
     }
     TypeCheckChildren(symbols);
@@ -418,8 +382,7 @@ public:
 
 class ASTNode_While : public ASTNode_Parent {
 public:
-  ASTNode_While(FilePos file_pos, ptr_t &&test, ptr_t &&action)
-      : ASTNode_Parent(file_pos, test, action) {}
+  ASTNode_While(FilePos file_pos, ptr_t &&test, ptr_t &&action) : ASTNode_Parent(file_pos, test, action) {}
 
   std::string GetTypeName() const override { return "WHILE"; }
 
@@ -428,19 +391,15 @@ public:
   }
   bool MayReturn() const override { return GetChild(1).MayReturn(); }
 
-  Type ReturnType(const SymbolTable &symbols) const override {
-    return GetChild(1).ReturnType(symbols);
-  }
+  Type ReturnType(const SymbolTable &symbols) const override { return GetChild(1).ReturnType(symbols); }
 
   void TypeCheck(const SymbolTable &symbols) override {
     if (NumChildren() != 2) {
-      Error(file_pos, "Internal error: Expected 2 in while node, found ",
-            NumChildren());
+      Error(file_pos, "Internal error: Expected 2 in while node, found ", NumChildren());
     }
     TypeCheckChildren(symbols);
     if (!GetChild(0).ReturnType(symbols).IsInt()) {
-      Error(GetChild(0).GetFilePos(),
-            "Condition for while-statement must evaluate to type int, not ",
+      Error(GetChild(0).GetFilePos(), "Condition for while-statement must evaluate to type int, not ",
             GetChild(0).ReturnType(symbols).Name());
     }
   }
@@ -493,22 +452,18 @@ public:
 
 class ASTNode_Return : public ASTNode_Parent {
 public:
-  ASTNode_Return(FilePos file_pos, ptr_t &&expr)
-      : ASTNode_Parent(file_pos, expr) {}
+  ASTNode_Return(FilePos file_pos, ptr_t &&expr) : ASTNode_Parent(file_pos, expr) {}
 
   std::string GetTypeName() const override { return "RETURN"; }
 
   bool IsReturn() const override { return true; }
   bool MayReturn() const override { return true; }
 
-  Type ReturnType(const SymbolTable &symbols) const override {
-    return GetChild(0).ReturnType(symbols);
-  }
+  Type ReturnType(const SymbolTable &symbols) const override { return GetChild(0).ReturnType(symbols); }
 
   void TypeCheck(const SymbolTable &symbols) override {
     if (NumChildren() != 1) {
-      Error(file_pos, "Internal error: Expected one arg in return node, found ",
-            NumChildren());
+      Error(file_pos, "Internal error: Expected one arg in return node, found ", NumChildren());
     }
     TypeCheckChildren(symbols);
     // @CAO - SHOULD CHECK RETURN TYPE.
@@ -561,15 +516,13 @@ public:
 
 class ASTNode_ToDouble : public ASTNode_Parent {
 public:
-  ASTNode_ToDouble(ptr_t &&child)
-      : ASTNode_Parent(child->GetFilePos(), child) {}
+  ASTNode_ToDouble(ptr_t &&child) : ASTNode_Parent(child->GetFilePos(), child) {}
   std::string GetTypeName() const override { return "ToDouble"; }
   Type ReturnType(const SymbolTable &) const override { return Type{"double"}; }
 
   void TypeCheck(const SymbolTable &symbols) override {
     if (NumChildren() != 1) {
-      Error(file_pos, "Internal error: Expected child in ToDouble node, found ",
-            NumChildren());
+      Error(file_pos, "Internal error: Expected child in ToDouble node, found ", NumChildren());
     }
     TypeCheckChildren(symbols);
     const Type &child_type = GetChild(0).ReturnType(symbols);
@@ -598,8 +551,7 @@ public:
 
   void TypeCheck(const SymbolTable &symbols) override {
     if (NumChildren() != 1) {
-      Error(file_pos, "Internal error: Expected child in ToInt node, found ",
-            NumChildren());
+      Error(file_pos, "Internal error: Expected child in ToInt node, found ", NumChildren());
     }
     TypeCheckChildren(symbols);
     const Type &child_type = GetChild(0).ReturnType(symbols);
@@ -622,8 +574,7 @@ public:
 
 class ASTNode_ToString : public ASTNode_Parent {
 public:
-  ASTNode_ToString(ptr_t &&child)
-      : ASTNode_Parent(child->GetFilePos(), std::move(child)) {}
+  ASTNode_ToString(ptr_t &&child) : ASTNode_Parent(child->GetFilePos(), std::move(child)) {}
 
   std::string GetTypeName() const override { return "ToString"; }
 
@@ -631,9 +582,7 @@ public:
 
   void TypeCheck(const SymbolTable &symbols) override {
     if (NumChildren() != 1) {
-      Error(file_pos,
-            "Internal error: Expected one child in ToString node, found ",
-            NumChildren());
+      Error(file_pos, "Internal error: Expected one child in ToString node, found ", NumChildren());
     }
     TypeCheckChildren(symbols);
     const Type &child_type = GetChild(0).ReturnType(symbols);
@@ -653,8 +602,7 @@ public:
       // Generate code to convert int to string
       GenerateIntToString(control);
     } else {
-      Error(file_pos,
-            "Unsupported type for casting to string: ", child_type.Name());
+      Error(file_pos, "Unsupported type for casting to string: ", child_type.Name());
     }
     return true;
   }
@@ -667,8 +615,7 @@ private:
     control.Code("(i32.const 2)").Comment("Allocate 2 bytes for char string");
     control.Code("call $_alloc_str").Comment("Allocate memory for string");
     // Stack: [address]
-    control.Code("(local.set ", str_addr, ")")
-        .Comment("Store address in local variable");
+    control.Code("(local.set ", str_addr, ")").Comment("Store address in local variable");
 
     // Store the character at the allocated memory
     control.Code("(local.get ", str_addr, ")").Comment("Get address of string");
@@ -676,8 +623,7 @@ private:
     control.Code("i32.store8").Comment("Store the char at the address");
 
     // Return the address of the string
-    control.Code("(local.get ", str_addr, ")")
-        .Comment("Return address of the string");
+    control.Code("(local.get ", str_addr, ")").Comment("Return address of the string");
   }
 
   void GenerateIntToString(Control &control) {
@@ -691,14 +637,10 @@ protected:
   std::string op;
 
 public:
-  ASTNode_Math1(FilePos file_pos, std::string op, ptr_t &&child)
-      : ASTNode_Parent(file_pos, child), op(op) {}
-  ASTNode_Math1(const emplex::Token &token, ptr_t &&child)
-      : ASTNode_Math1(token, token.lexeme, std::move(child)) {}
+  ASTNode_Math1(FilePos file_pos, std::string op, ptr_t &&child) : ASTNode_Parent(file_pos, child), op(op) {}
+  ASTNode_Math1(const emplex::Token &token, ptr_t &&child) : ASTNode_Math1(token, token.lexeme, std::move(child)) {}
 
-  std::string GetTypeName() const override {
-    return std::string("MATH1: ") + op;
-  }
+  std::string GetTypeName() const override { return std::string("MATH1: ") + op; }
 
   Type ReturnType(const SymbolTable &symbols) const override {
     if (op == "!")
@@ -712,28 +654,25 @@ public:
 
   void TypeCheck(const SymbolTable &symbols) override {
     if (NumChildren() != 1) {
-      Error(file_pos, "Internal error: Expected one child in Math1 node (", op,
-            "), found ", NumChildren());
+      Error(file_pos, "Internal error: Expected one child in Math1 node (", op, "), found ", NumChildren());
     }
     TypeCheckChildren(symbols);
 
     const Type &child_type = GetChild(0).ReturnType(symbols);
     if (op == "-") {
       if (child_type.IsChar() || !child_type.IsNumeric())
-        Error(file_pos, "Unary operator NEGATE (-) cannot be used on type '",
-              child_type.Name(), "'.");
+        Error(file_pos, "Unary operator NEGATE (-) cannot be used on type '", child_type.Name(), "'.");
     } else if (op == "!") {
       if (!child_type.IsInt())
-        Error(file_pos,
-              "Unary operator NOT (!) can only be used on 'int' types.");
+        Error(file_pos, "Unary operator NOT (!) can only be used on 'int' types.");
     } else if (op == "sqrt") {
       if (!child_type.IsNumeric())
         Error(file_pos, "Square root (sqrt) must have a numeric argument.");
       if (!child_type.IsDouble())
         AdaptChild<ASTNode_ToDouble>(0);
     } else if (!child_type.IsNumeric()) {
-      Error(file_pos, "In unary operator '", op, "', cannot convert type ",
-            child_type.Name(), " to a numerical value.");
+      Error(file_pos, "In unary operator '", op, "', cannot convert type ", child_type.Name(),
+            " to a numerical value.");
     }
   }
 
@@ -764,16 +703,12 @@ protected:
   std::string op;
 
 public:
-  ASTNode_Math2(FilePos file_pos, std::string op, ptr_t &&child1,
-                ptr_t &&child2)
+  ASTNode_Math2(FilePos file_pos, std::string op, ptr_t &&child1, ptr_t &&child2)
       : ASTNode_Parent(file_pos, child1, child2), op(op) {}
   ASTNode_Math2(const emplex::Token &token, ptr_t &&child1, ptr_t &&child2)
-      : ASTNode_Parent(token, std::move(child1), std::move(child2)),
-        op(token.lexeme) {}
+      : ASTNode_Parent(token, std::move(child1), std::move(child2)), op(token.lexeme) {}
 
-  std::string GetTypeName() const override {
-    return std::string("MATH2: " + op);
-  }
+  std::string GetTypeName() const override { return std::string("MATH2: " + op); }
 
   Type ReturnType(const SymbolTable &symbols) const override {
     // Assignments use the type of the variable being assigned.
@@ -781,20 +716,18 @@ public:
       return GetChild(0).ReturnType(symbols);
 
     // Comparisons and Boolean operations always return type int.
-    if (op == "<" || op == "<=" || op == ">" || op == ">=" || op == "==" ||
-        op == "!=" || op == "&&" || op == "||" || op == "%")
+    if (op == "<" || op == "<=" || op == ">" || op == ">=" || op == "==" || op == "!=" || op == "&&" || op == "||" ||
+        op == "%")
       return Type("int");
 
     if (op == "+" || op == "*") {
-      if (GetChild(0).ReturnType(symbols).IsString() ||
-          GetChild(1).ReturnType(symbols).IsString()) {
+      if (GetChild(0).ReturnType(symbols).IsString() || GetChild(1).ReturnType(symbols).IsString()) {
         return Type("string");
       }
     }
     // Binary math scales to the higher precision of inputs.
     if (op == "*" || op == "/" || op == "+" || op == "-") {
-      if (GetChild(0).ReturnType(symbols).BitCount() >
-          GetChild(1).ReturnType(symbols).BitCount()) {
+      if (GetChild(0).ReturnType(symbols).BitCount() > GetChild(1).ReturnType(symbols).BitCount()) {
         return GetChild(0).ReturnType(symbols);
       } else {
         return GetChild(1).ReturnType(symbols);
@@ -808,9 +741,7 @@ public:
     constexpr bool DEBUG = false;
 
     if (NumChildren() != 2) {
-      Error(file_pos,
-            "Internal error: Expected two children in ToDouble node, found ",
-            NumChildren());
+      Error(file_pos, "Internal error: Expected two children in ToDouble node, found ", NumChildren());
     }
 
     // Resolve types of children before checking this node.
@@ -820,19 +751,12 @@ public:
     const Type &type1 = GetChild(1).ReturnType(symbols);
 
     if constexpr (DEBUG) {
-      std::cerr << "TESTING OP '" << op << "' with types " << type0.Name()
-                << " and " << type1.Name() << "." << std::endl;
+      std::cerr << "TESTING OP '" << op << "' with types " << type0.Name() << " and " << type1.Name() << "."
+                << std::endl;
     }
 
     // Conduct tests based on the type of operator:
-    enum Status {
-      INVALID,
-      OK,
-      PROMOTE0_INT,
-      PROMOTE0_DOUBLE,
-      PROMOTE1_INT,
-      PROMOTE1_DOUBLE
-    };
+    enum Status { INVALID, OK, PROMOTE0_INT, PROMOTE0_DOUBLE, PROMOTE1_INT, PROMOTE1_DOUBLE };
     Status status = INVALID;
     bool align_numeric = false;
     if (op == "*") {
@@ -841,16 +765,14 @@ public:
           AdaptChild<ASTNode_ToString>(0);
         }
         status = OK;
-      } else if ((type0.IsInt() && type1.IsInt()) ||
-                 (type0.IsDouble() && type1.IsDouble())) {
+      } else if ((type0.IsInt() && type1.IsInt()) || (type0.IsDouble() && type1.IsDouble())) {
         status = OK;
       } else if (type0.IsInt() && type1.IsDouble())
         status = PROMOTE0_DOUBLE;
       else if (type0.IsDouble() && type1.IsInt())
         status = PROMOTE1_DOUBLE;
     } else if (op == "/") {
-      if ((type0.IsInt() && type1.IsInt()) ||
-          (type0.IsDouble() && type1.IsDouble())) {
+      if ((type0.IsInt() && type1.IsInt()) || (type0.IsDouble() && type1.IsDouble())) {
         status = OK;
       } else if (type0.IsInt() && type1.IsDouble())
         status = PROMOTE0_DOUBLE;
@@ -873,8 +795,7 @@ public:
       }
     } else if (op == "==" && type0 == type1 && type0.IsString()) {
       status = OK;
-    } else if (op == "-" || op == "<" || op == "<=" || op == ">" ||
-               op == ">=" || op == "==" || op == "!=") {
+    } else if (op == "-" || op == "<" || op == "<=" || op == ">" || op == ">=" || op == "==" || op == "!=") {
       align_numeric = true;
     } else if (op == "=") {
       // If both sides already match we're good.
@@ -930,8 +851,7 @@ public:
     // Resolve the current status.
     switch (status) {
     case INVALID:
-      Error(file_pos, "Cannot use operator '", op, "' on types ", type0.Name(),
-            " and ", type1.Name());
+      Error(file_pos, "Cannot use operator '", op, "' on types ", type0.Name(), " and ", type1.Name());
       break;
     case OK:
       break;
@@ -964,10 +884,7 @@ public:
   void ToWAT_AND(Control &control) {
     control.CommentLine("Setup the && operation");
     ChildToWAT(0, control, true); // First value sets the condition.
-    control.Code("(if (result i32)")
-        .Comment("Setup for && operator")
-        .Code("  (then")
-        .Indent(4);
+    control.Code("(if (result i32)").Comment("Setup for && operator").Code("  (then").Indent(4);
     ChildToWAT(1, control,
                true); // If first value was true, result is second value.
     control.Code("(i32.const 0)")
@@ -1062,9 +979,8 @@ public:
 
     ChildToWAT(0, control,
                true); // Calculate the first arg (so it's top of the stack)
-    ChildToWAT(
-        1, control,
-        true); // Calculate the second arg (so it's one down on the stack)
+    ChildToWAT(1, control,
+               true); // Calculate the second arg (so it's one down on the stack)
 
     std::string type = GetChild(0).ReturnType(control.symbols).ToWAT();
     std::string extra = (type == "i32") ? "_s" : "";
@@ -1126,12 +1042,9 @@ protected:
   int value = '\0';
 
 public:
-  ASTNode_CharLit(FilePos file_pos, int value)
-      : ASTNode(file_pos), value(value) {}
+  ASTNode_CharLit(FilePos file_pos, int value) : ASTNode(file_pos), value(value) {}
 
-  std::string GetTypeName() const override {
-    return std::string("CHAR_LIT: ") + std::to_string(((int)value));
-  }
+  std::string GetTypeName() const override { return std::string("CHAR_LIT: ") + std::to_string(((int)value)); }
 
   Type ReturnType(const SymbolTable & /* symbols */) const override {
     // For now, ops do not change the return type.
@@ -1139,8 +1052,7 @@ public:
   }
 
   bool ToWAT(Control &control) override {
-    control.Code("(i32.const ", value, ")")
-        .Comment("Put a char \\", value, " on the stack");
+    control.Code("(i32.const ", value, ")").Comment("Put a char \\", value, " on the stack");
     return true;
   }
 
@@ -1152,12 +1064,9 @@ protected:
   int value = 0.0;
 
 public:
-  ASTNode_IntLit(FilePos file_pos, int value)
-      : ASTNode(file_pos), value(value) {}
+  ASTNode_IntLit(FilePos file_pos, int value) : ASTNode(file_pos), value(value) {}
 
-  std::string GetTypeName() const override {
-    return std::string("INT_LIT:") + std::to_string(value);
-  }
+  std::string GetTypeName() const override { return std::string("INT_LIT:") + std::to_string(value); }
 
   Type ReturnType(const SymbolTable & /* symbols */) const override {
     // For now, ops do not change the return type.
@@ -1165,8 +1074,7 @@ public:
   }
 
   bool ToWAT(Control &control) override {
-    control.Code("(i32.const ", value, ")")
-        .Comment("Put a ", value, " on the stack");
+    control.Code("(i32.const ", value, ")").Comment("Put a ", value, " on the stack");
     return true;
   }
 
@@ -1178,8 +1086,7 @@ protected:
   double value = 0.0;
 
 public:
-  ASTNode_FloatLit(FilePos file_pos, double value)
-      : ASTNode(file_pos), value(value) {}
+  ASTNode_FloatLit(FilePos file_pos, double value) : ASTNode(file_pos), value(value) {}
 
   std::string GetTypeName() const override { return "FLOAT_LIT"; }
 
@@ -1189,8 +1096,7 @@ public:
   }
 
   bool ToWAT(Control &control) override {
-    control.Code("(f64.const ", value, ")")
-        .Comment("Put a ", value, " on the stack");
+    control.Code("(f64.const ", value, ")").Comment("Put a ", value, " on the stack");
     return true;
   }
 
@@ -1203,8 +1109,7 @@ protected:
   std::string str;
 
 public:
-  ASTNode_StringLit(FilePos file_pos, std::string str)
-      : ASTNode(file_pos), str(str) {}
+  ASTNode_StringLit(FilePos file_pos, std::string str) : ASTNode(file_pos), str(str) {}
 
   std::string GetTypeName() const override { return "STRING_LIT"; }
 
@@ -1213,8 +1118,7 @@ public:
   void InitializeWAT(Control &control) override { mem_pos = control.Data(str); }
 
   bool ToWAT(Control &control) override {
-    control.Code("(i32.const ", mem_pos, ")")
-        .Comment("Load address of string literal");
+    control.Code("(i32.const ", mem_pos, ")").Comment("Load address of string literal");
     return true;
   }
 
@@ -1229,24 +1133,19 @@ protected:
   void TestOK() const { assert(var_id < MAX_ID); }
 
 public:
-  ASTNode_Var(FilePos file_pos, size_t id) : ASTNode(file_pos), var_id(id) {
-    TestOK();
-  }
+  ASTNode_Var(FilePos file_pos, size_t id) : ASTNode(file_pos), var_id(id) { TestOK(); }
   ASTNode_Var(const emplex::Token &token, SymbolTable &symbols)
       : ASTNode(token), var_id(symbols.GetVarID(token.lexeme)) {
     TestOK();
   }
 
-  std::string GetTypeName() const override {
-    return std::string("VAR: ") + std::to_string(var_id);
-  }
+  std::string GetTypeName() const override { return std::string("VAR: ") + std::to_string(var_id); }
 
   bool CanAssign() const override { return true; }
   void ToAssignWAT(Control &control) override {
     TestOK();
     const std::string var_name = control.symbols.GetName(var_id);
-    control.Code("(local.set $var", var_id, ")")
-        .Comment("Set var '", var_name, "' from stack");
+    control.Code("(local.set $var", var_id, ")").Comment("Set var '", var_name, "' from stack");
   }
 
   Type ReturnType(const SymbolTable &symbols) const override {
@@ -1259,8 +1158,7 @@ public:
     TestOK();
     const std::string var_name = control.symbols.GetName(var_id);
 
-    control.Code("(local.get $var", var_id, ")")
-        .Comment("Place var '", var_name, "' onto stack");
+    control.Code("(local.get $var", var_id, ")").Comment("Place var '", var_name, "' onto stack");
     return true;
   }
 
@@ -1279,16 +1177,13 @@ public:
     if (base_type.IsString()) {
       return Type("char");
     }
-    Error(file_pos, "Indexing is not supported on type '", base_type.Name(),
-          "'.");
+    Error(file_pos, "Indexing is not supported on type '", base_type.Name(), "'.");
     return Type(); // Return invalid type
   }
 
   void TypeCheck(const SymbolTable &symbols) override {
     if (NumChildren() != 2) {
-      Error(file_pos,
-            "Internal error: Expected 2 children in indexing node, found ",
-            NumChildren());
+      Error(file_pos, "Internal error: Expected 2 children in indexing node, found ", NumChildren());
     }
 
     TypeCheckChildren(symbols);
@@ -1297,12 +1192,10 @@ public:
     const Type &index_type = GetChild(1).ReturnType(symbols);
 
     if (!base_type.IsString()) {
-      Error(file_pos, "Cannot index into type '", base_type.Name(),
-            "'. Expected a string.");
+      Error(file_pos, "Cannot index into type '", base_type.Name(), "'. Expected a string.");
     }
     if (!index_type.IsInt()) {
-      Error(file_pos, "Index must be of type int, not '", index_type.Name(),
-            "'.");
+      Error(file_pos, "Index must be of type int, not '", index_type.Name(), "'.");
     }
   }
 
@@ -1312,9 +1205,7 @@ public:
     ChildToWAT(0, control, true);
     ChildToWAT(1, control, true);
     control.Code("(i32.add)").Comment("Compute address: base + index");
-    control.Code("(call $_swap)")
-        .Comment(
-            "Swapping top 2 values on the stack to alight then for store.");
+    control.Code("(call $_swap)").Comment("Swapping top 2 values on the stack to alight then for store.");
     control.Code("(i32.store8)").Comment("Store value at computed address");
   }
 
@@ -1343,8 +1234,7 @@ public:
     TypeCheckChildren(symbols);
     const Type &arg_type = GetChild(0).ReturnType(symbols);
     if (!arg_type.IsString()) {
-      Error(file_pos, "size() expects a string argument, but got '",
-            arg_type.Name(), "'.");
+      Error(file_pos, "size() expects a string argument, but got '", arg_type.Name(), "'.");
     }
   }
 

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../Control.hpp"
 #include "ASTNode.hpp"
 #include "ASTVisitor.hpp"
+#include "Control.hpp"
 
 class WATGenerator : public ASTVisitor {
 private:

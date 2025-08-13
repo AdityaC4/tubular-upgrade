@@ -12,7 +12,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_executable(${PROJECT_NAME} ${PROJECT_NAME}.cpp)
 
 # Include directories
-target_include_directories(${PROJECT_NAME} PRIVATE .)
+file(GLOB_RECURSE HEADER_DIRS LIST_DIRECTORIES true "${CMAKE_SOURCE_DIR}/src/*")
+target_include_directories(${PROJECT_NAME} PRIVATE src ${HEADER_DIRS})
 
 # Common compiler flags (equivalent to CFLAGS_all)
 target_compile_options(${PROJECT_NAME} PRIVATE 

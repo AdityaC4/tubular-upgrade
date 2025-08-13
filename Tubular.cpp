@@ -9,16 +9,16 @@
 #include <utility>
 #include <vector>
 
-#include "src/core/ASTNode.hpp"
-#include "src/Control.hpp"
-#include "src/SymbolTable.hpp"
-#include "src/TokenQueue.hpp"
-#include "src/lexer.hpp"
-#include "src/core/WATGenerator.hpp"
-#include "src/core/PassManager.hpp"
-#include "src/core/FunctionInliningPass.hpp"
-#include "src/core/LoopUnrollingPass.hpp"
-#include "src/core/TailRecursionPass.hpp"
+#include "ASTNode.hpp"
+#include "Control.hpp"
+#include "FunctionInliningPass.hpp"
+#include "LoopUnrollingPass.hpp"
+#include "PassManager.hpp"
+#include "SymbolTable.hpp"
+#include "TailRecursionPass.hpp"
+#include "TokenQueue.hpp"
+#include "WATGenerator.hpp"
+#include "lexer.hpp"
 
 class Tubular {
 private:
@@ -44,18 +44,13 @@ private:
     Error(tokens.CurFilePos(), std::forward<Ts>(message)...);
   }
 
-  template <typename NODE_T, typename... ARG_Ts>
-  static std::unique_ptr<NODE_T> MakeNode(ARG_Ts &&...args) {
+  template <typename NODE_T, typename... ARG_Ts> static std::unique_ptr<NODE_T> MakeNode(ARG_Ts &&...args) {
     return std::make_unique<NODE_T>(std::forward<ARG_Ts>(args)...);
   }
 
-  ast_ptr_t MakeVarNode(emplex::Token token) {
-    return MakeNode<ASTNode_Var>(token, control.symbols);
-  }
+  ast_ptr_t MakeVarNode(emplex::Token token) { return MakeNode<ASTNode_Var>(token, control.symbols); }
 
-  Type GetReturnType(const ast_ptr_t &node_ptr) const {
-    return node_ptr->ReturnType(control.symbols);
-  }
+  Type GetReturnType(const ast_ptr_t &node_ptr) const { return node_ptr->ReturnType(control.symbols); }
 
   // Take in the provided node and add an ASTNode converter to make it a double,
   // as needed. Return if a change was made.
@@ -81,8 +76,7 @@ private:
     op_map["("] = op_map["!"] = OpInfo{cur_prec++, 'n'};
     op_map["*"] = op_map["/"] = op_map["%"] = OpInfo{cur_prec++, 'l'};
     op_map["+"] = op_map["-"] = OpInfo{cur_prec++, 'l'};
-    op_map["<"] = op_map["<="] = op_map[">"] = op_map[">="] =
-        OpInfo{cur_prec++, 'n'};
+    op_map["<"] = op_map["<="] = op_map[">"] = op_map[">="] = OpInfo{cur_prec++, 'n'};
     op_map["=="] = op_map["!="] = OpInfo{cur_prec++, 'n'};
     op_map["&&"] = OpInfo{cur_prec++, 'l'};
     op_map["||"] = OpInfo{cur_prec++, 'l'};
@@ -93,8 +87,7 @@ public:
   Tubular(std::string filename) {
     std::ifstream in_file(filename); // Load the input file
     if (in_file.fail()) {
-      std::cerr << "ERROR: Unable to open file '" << filename << "'."
-                << std::endl;
+      std::cerr << "ERROR: Unable to open file '" << filename << "'." << std::endl;
       exit(1);
     }
 
@@ -144,8 +137,7 @@ public:
       out = MakeNode<ASTNode_FloatLit>(token, std::stod(token.lexeme));
       break;
     case emplex::Lexer::ID_LIT_STRING: {
-      out = MakeNode<ASTNode_StringLit>(
-          token, token.lexeme.substr(1, token.lexeme.size() - 2));
+      out = MakeNode<ASTNode_StringLit>(token, token.lexeme.substr(1, token.lexeme.size() - 2));
       break;
     }
     case emplex::Lexer::ID_SQRT:
@@ -170,8 +162,7 @@ public:
 
     // Check to see if the term is followed by a type modifier.
     if (tokens.UseIf(':')) {
-      auto type_token = tokens.Use(emplex::Lexer::ID_TYPE,
-                                   "Expected a type specified after ':'.");
+      auto type_token = tokens.Use(emplex::Lexer::ID_TYPE, "Expected a type specified after ':'.");
       if (type_token.lexeme == "double")
         out = MakeNode<ASTNode_ToDouble>(std::move(out));
       else if (type_token.lexeme == "int")
@@ -199,15 +190,12 @@ public:
     const auto &fun_type = control.symbols.At(fun_id).type;
 
     if (args.size() != fun_type.NumParams()) {
-      Error(token, "Function '", token.lexeme, "' expects ",
-            fun_type.NumParams(), " arguments but got ", args.size(), ".");
+      Error(token, "Function '", token.lexeme, "' expects ", fun_type.NumParams(), " arguments but got ", args.size(),
+            ".");
     }
     for (size_t i = 0; i < args.size(); ++i) {
-      if (!args[i]
-               ->ReturnType(control.symbols)
-               .ConvertToOK(fun_type.ParamType(i))) {
-        Error(args[i]->GetFilePos(), "Argument ", i + 1, " of function '",
-              token.lexeme, "' has type mismatch.");
+      if (!args[i]->ReturnType(control.symbols).ConvertToOK(fun_type.ParamType(i))) {
+        Error(args[i]->GetFilePos(), "Argument ", i + 1, " of function '", token.lexeme, "' has type mismatch.");
       }
     }
 
@@ -218,8 +206,7 @@ public:
     tokens.Use('[');
     auto index = Parse_Expression();
     tokens.Use(']');
-    return MakeNode<ASTNode_Indexing>(token, std::move(identifier_node),
-                                      std::move(index));
+    return MakeNode<ASTNode_Indexing>(token, std::move(identifier_node), std::move(index));
   }
 
   // Parse expressions.  The level input determines how restrictive this parse
@@ -229,8 +216,7 @@ public:
     // Any expression must begin with a variable name or a literal value.
     ast_ptr_t cur_node = Parse_UnaryTerm();
 
-    size_t skip_prec =
-        1000; // If we get a non-associative op, we must skip next one.
+    size_t skip_prec = 1000; // If we get a non-associative op, we must skip next one.
 
     // While there are more tokens to process, try to expand this expression.
     while (tokens.Any()) {
@@ -261,8 +247,7 @@ public:
       ast_ptr_t node2 = Parse_Expression(next_limit);
 
       // Build the new node.
-      cur_node = MakeNode<ASTNode_Math2>(op_token, std::move(cur_node),
-                                         std::move(node2));
+      cur_node = MakeNode<ASTNode_Math2>(op_token, std::move(cur_node), std::move(node2));
 
       // If operator is non-associative, skip the current precedence for next
       // loop.
@@ -300,16 +285,12 @@ public:
 
   ast_ptr_t Parse_Statement_Declare() {
     auto type_token = tokens.Use();
-    const auto id_token =
-        tokens.Use(emplex::Lexer::ID_ID,
-                   "Declarations must have a type followed by identifier.");
+    const auto id_token = tokens.Use(emplex::Lexer::ID_ID, "Declarations must have a type followed by identifier.");
     control.symbols.AddVar(type_token, id_token);
     if (tokens.UseIf(';')) {
       return nullptr; // Variable added, nothing else to do.
     }
-    auto op_token =
-        tokens.Use('=', "Expected ';' or '=' after declaration of variable '",
-                   id_token.lexeme, "'.");
+    auto op_token = tokens.Use('=', "Expected ';' or '=' after declaration of variable '", id_token.lexeme, "'.");
     auto rhs_node = Parse_Expression();
     tokens.Use(';');
 
@@ -317,8 +298,7 @@ public:
     Type lhs_type = lhs_node->ReturnType(control.symbols);
     Type rhs_type = rhs_node->ReturnType(control.symbols);
 
-    return MakeNode<ASTNode_Math2>(id_token, "=", std::move(lhs_node),
-                                   std::move(rhs_node));
+    return MakeNode<ASTNode_Math2>(id_token, "=", std::move(lhs_node), std::move(rhs_node));
   }
 
   ast_ptr_t Parse_Statement_If() {
@@ -331,12 +311,10 @@ public:
     // Check if we need to add on an "else" branch
     if (tokens.UseIf(emplex::Lexer::ID_ELSE)) {
       ast_ptr_t alt = Parse_Statement();
-      return MakeNode<ASTNode_If>(if_token, std::move(condition),
-                                  std::move(action), std::move(alt));
+      return MakeNode<ASTNode_If>(if_token, std::move(condition), std::move(action), std::move(alt));
     }
 
-    return MakeNode<ASTNode_If>(if_token, std::move(condition),
-                                std::move(action));
+    return MakeNode<ASTNode_If>(if_token, std::move(condition), std::move(action));
   }
 
   ast_ptr_t Parse_Statement_While() {
@@ -345,8 +323,7 @@ public:
     ast_ptr_t condition = Parse_Expression();
     tokens.Use(')');
     ast_ptr_t action = Parse_Statement();
-    return MakeNode<ASTNode_While>(while_token, std::move(condition),
-                                   std::move(action));
+    return MakeNode<ASTNode_While>(while_token, std::move(condition), std::move(action));
   }
 
   ast_ptr_t Parse_Statement_Return() {
@@ -403,14 +380,12 @@ public:
     while (!tokens.UseIf(')')) {
       auto type_token = tokens.Use(Lexer::ID_TYPE);
       param_types.emplace_back(type_token);
-      const auto id_token = tokens.Use(
-          emplex::Lexer::ID_ID,
-          "Function parameters must have a type followed by identifier.");
+      const auto id_token =
+          tokens.Use(emplex::Lexer::ID_ID, "Function parameters must have a type followed by identifier.");
       size_t param_id = control.symbols.AddVar(type_token, id_token);
       param_ids.push_back(param_id);
       if (!tokens.UseIf(',') && !tokens.Is(')')) {
-        TriggerError("Parameters must be separated by commas (','; found '",
-                     tokens.Peek().lexeme, "'.");
+        TriggerError("Parameters must be separated by commas (','; found '", tokens.Peek().lexeme, "'.");
       }
     }
     tokens.Use(':');
@@ -418,8 +393,7 @@ public:
 
     // Now that we have the function signature, let the symbol table know about
     // it.
-    size_t fun_id =
-        control.symbols.AddFunction(name_token, param_types, return_type);
+    size_t fun_id = control.symbols.AddFunction(name_token, param_types, return_type);
 
     // Now parse the body of this function.
     control.symbols.ClearFunctionVars();
@@ -427,12 +401,10 @@ public:
     control.symbols.PopScope(); // Leave the function scope.
 
     if (!body->IsReturn()) {
-      Error(name_token, "Function '", name_token.lexeme,
-            "' must guarantee a return statement through all paths.");
+      Error(name_token, "Function '", name_token.lexeme, "' must guarantee a return statement through all paths.");
     }
 
-    auto out_node = MakeNode<ASTNode_Function>(name_token, fun_id, param_ids,
-                                               std::move(body));
+    auto out_node = MakeNode<ASTNode_Function>(name_token, fun_id, param_ids, std::move(body));
     out_node->SetVars(control.symbols.GetFunctionVars());
     return out_node;
   }
@@ -458,10 +430,7 @@ public:
     for (auto &fun_ptr : functions) {
       fun_ptr->InitializeWAT(control);
     }
-    control
-        .Code("(global $free_mem (mut i32) (i32.const ", control.wat_mem_pos,
-              "))")
-        .Code("");
+    control.Code("(global $free_mem (mut i32) (i32.const ", control.wat_mem_pos, "))").Code("");
 
     control
         .Code(";; Function to allocate a string; add one to size and places "
@@ -486,9 +455,7 @@ public:
 
     // LOTS OF OTHER HELPER FUNCTIONS SHOULD GO HERE FOR PROJECT 4!!
     // strlen
-    control
-        .Code(
-            ";; Function to calculate the length of a null-terminated string.")
+    control.Code(";; Function to calculate the length of a null-terminated string.")
         .Code("(func $_strlen (param $str i32) (result i32)")
         .Code("  (local $length i32) ;; Local variable to store the string "
               "length.")
@@ -525,11 +492,9 @@ public:
         .Comment("Copy the current byte from source to destination.")
         .Code("      (local.set $src (i32.add (local.get $src) (i32.const 1)))")
         .Comment("Increment source and destination pointers.")
-        .Code(
-            "      (local.set $dest (i32.add (local.get $dest) (i32.const 1)))")
+        .Code("      (local.set $dest (i32.add (local.get $dest) (i32.const 1)))")
         .Comment("Decrement size.")
-        .Code(
-            "      (local.set $size (i32.sub (local.get $size) (i32.const 1)))")
+        .Code("      (local.set $size (i32.sub (local.get $size) (i32.const 1)))")
         .Code("      (br $copy)")
         .Comment("Repeat the loop.")
         .Code("    )")
@@ -542,8 +507,7 @@ public:
         .Code("(func $_strcat (param $str1 i32) (param $str2 i32) (result i32)")
         .Code("  (local $len1 i32) ;; Length of the first string.")
         .Code("  (local $len2 i32) ;; Length of the second string.")
-        .Code(
-            "  (local $result i32) ;; Pointer to the new concatenated string.")
+        .Code("  (local $result i32) ;; Pointer to the new concatenated string.")
         .Code("  ;; Calculate the length of the first string.")
         .Code("  (local.set $len1 (call $_strlen (local.get $str1)))")
         .Code("  ;; Calculate the length of the second string.")
@@ -692,8 +656,7 @@ public:
         .Code("");
 
     // string compare
-    control
-        .Code("(func $_str_cmp (param $lhs i32) (param $rhs i32) (result i32)")
+    control.Code("(func $_str_cmp (param $lhs i32) (param $rhs i32) (result i32)")
         .Code("  (local $len1 i32)")
         .Code("  (local $len2 i32)")
         .Code("  (local.set $len1 (call $_strlen (local.get $lhs)))")
@@ -714,8 +677,7 @@ public:
         .Code("      ))")
         .Code("      (local.set $lhs (i32.add (local.get $lhs) (i32.const 1)))")
         .Code("      (local.set $rhs (i32.add (local.get $rhs) (i32.const 1)))")
-        .Code(
-            "      (local.set $len1 (i32.sub (local.get $len1) (i32.const 1)))")
+        .Code("      (local.set $len1 (i32.sub (local.get $len1) (i32.const 1)))")
         .Code("      (br $compare)")
         .Code("    )")
         .Code("  )")
@@ -740,16 +702,16 @@ public:
       fun_ptr->Print();
     }
   }
-  
+
   // New method to run optimization passes
   void RunOptimizationPasses() {
     PassManager passManager;
-    
+
     // Add passes to the manager
     passManager.addPass(std::make_unique<FunctionInliningPass>(true));
     passManager.addPass(std::make_unique<LoopUnrollingPass>(4));
     passManager.addPass(std::make_unique<TailRecursionPass>(true));
-    
+
     // Run all passes on each function
     for (auto &fun_ptr : functions) {
       passManager.runPasses(*fun_ptr);
