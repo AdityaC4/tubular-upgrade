@@ -1,0 +1,13 @@
+// Ultra-Light Loop Body - Maximum overhead to work ratio
+// Simple arithmetic without conditionals that might confuse unrolling
+
+function UltraLight() : int {
+    int sum = 0;
+    int i = 0;
+    while (i < 100000000) {  // 100M iterations for good timing resolution
+        sum = sum + i;       // Use loop variable to prevent over-optimization
+        sum = sum + 1;       // Add constant to increase work per iteration
+        i = i + 1;
+    }
+    return sum;
+}

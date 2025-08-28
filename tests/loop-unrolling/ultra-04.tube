@@ -1,0 +1,29 @@
+// Memory Access Pattern Test - Complex pointer arithmetic and array-like access
+// Tests how unrolling affects memory access optimization
+
+function MemoryAccess() : int {
+    int base = 1000;
+    int stride1 = 7; int stride2 = 11; int stride3 = 13; int stride4 = 17;
+    int accumulator = 0;
+    int offset1 = 0; int offset2 = 0; int offset3 = 0; int offset4 = 0;
+    int i = 0;
+    while (i < 2000000) {  // 2M iterations for good timing resolution
+        // Simulate array access with different strides (using different primes)
+        offset1 = base + (i * stride1) % 997;
+        offset2 = base + (i * stride2) % 991;
+        offset3 = base + (i * stride3) % 983;
+        offset4 = base + (i * stride4) % 977;
+        
+        // Complex arithmetic mixing the "addresses" - more varied pattern
+        accumulator = accumulator + offset1;
+        accumulator = accumulator + offset2;
+        accumulator = accumulator - offset3;
+        accumulator = accumulator + offset4;
+        
+        // Add some dependency chains that unrolling can break (no conditionals)
+        accumulator = accumulator % 100000;
+        
+        i = i + 1;
+    }
+    return accumulator;
+}

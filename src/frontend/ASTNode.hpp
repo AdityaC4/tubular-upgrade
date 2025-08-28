@@ -143,6 +143,12 @@ public:
     children[id] = std::make_unique<NODE_T>(std::move(children[id]));
   }
 
+  // Replace a child with a new node (for loop unrolling)
+  void ReplaceChild(size_t id, ptr_t &&new_child) {
+    assert(id < children.size()); // Make sure child is there to replace.
+    children[id] = std::move(new_child);
+  }
+
   // Generate WAT code for a specified child.
   // Make sure there is an 'out_value' if needed; otherwise drop any out value.
   void ChildToWAT(size_t id, Control &control, bool out_needed) {

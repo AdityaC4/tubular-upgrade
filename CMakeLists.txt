@@ -12,8 +12,13 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_executable(${PROJECT_NAME} ${PROJECT_NAME}.cpp)
 
 # Include directories
-file(GLOB_RECURSE HEADER_DIRS LIST_DIRECTORIES true "${CMAKE_SOURCE_DIR}/src/*")
-target_include_directories(${PROJECT_NAME} PRIVATE src ${HEADER_DIRS})
+target_include_directories(${PROJECT_NAME} PRIVATE 
+    src
+    src/backend
+    src/core  
+    src/frontend
+    src/middle_end
+)
 
 # Common compiler flags (equivalent to CFLAGS_all)
 target_compile_options(${PROJECT_NAME} PRIVATE 
@@ -52,27 +57,41 @@ endif()
 
 # Custom target for tests (equivalent to tests target)
 add_custom_target(tests
-    COMMAND ${CMAKE_COMMAND} -E echo "Running tests..."
+    COMMAND ${CMAKE_COMMAND} -E echo "Running standard tests..."
     COMMAND cd tests && ./run_tests.sh
-    COMMAND ${CMAKE_COMMAND} -E echo "Tests completed."
+    COMMAND ${CMAKE_COMMAND} -E echo "Running loop unrolling tests..."
+    COMMAND cd tests/loop-unrolling && ./run_unroll_tests.sh
+    COMMAND ${CMAKE_COMMAND} -E echo "All tests completed."
     DEPENDS ${PROJECT_NAME}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    COMMENT "Running test suite"
+    COMMENT "Running complete test suite including loop unrolling tests"
 )
 
 # Custom clean target to match original Makefile behavior exactly
 add_custom_target(clean-all
     COMMAND rm -f ${PROJECT_NAME} *.o tests/test-??.wasm tests/test-??.wat tests/P3-test-??.wasm tests/P3-test-??.wat
+    COMMAND rm -f tests/loop-unrolling/ultra-??-unroll*.wasm tests/loop-unrolling/ultra-??-unroll*.wat
     COMMAND rm -rf ${PROJECT_NAME}.dSYM
+    COMMAND rm -rf tests/loop-unrolling/results
+    COMMAND rm -f build/${PROJECT_NAME}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    COMMENT "Cleaning all files"
+    COMMENT "Cleaning all files including loop unrolling test results and binary"
 )
 
 # Clean only test files
 add_custom_target(clean-test
     COMMAND rm -f tests/test-??.wasm tests/test-??.wat tests/P3-test-??.wasm tests/P3-test-??.wat
+    COMMAND rm -f tests/loop-unrolling/ultra-??-unroll*.wasm tests/loop-unrolling/ultra-??-unroll*.wat
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    COMMENT "Cleaning test files only"
+    COMMENT "Cleaning all test files including loop unrolling tests"
+)
+
+# Clean only loop unrolling test results
+add_custom_target(clean-unroll
+    COMMAND rm -f tests/loop-unrolling/ultra-??-unroll*.wasm tests/loop-unrolling/ultra-??-unroll*.wat
+    COMMAND rm -rf tests/loop-unrolling/results
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMENT "Cleaning loop unrolling test files and results"
 )
 
 # Print configuration information (equivalent to print-% debugging)

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Loop Unrolling Performance Tests</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      .test {
+        margin-bottom: 20px;
+      }
+      .test-group {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin: 20px 0;
+        padding: 15px;
+      }
+      .test-group h3 {
+        margin-top: 0;
+        color: #333;
+      }
+      .unroll-row {
+        background-color: #f9f9f9;
+        border-left: 4px solid #007acc;
+      }
+      .factor-1 {
+        background-color: #fff8dc;
+      }
+      .factor-4 {
+        background-color: #f0f8ff;
+      }
+      .factor-8 {
+        background-color: #f0fff0;
+      }
+      .factor-16 {
+        background-color: #fff0f5;
+      }
+      .error {
+        color: red;
+        font-weight: bold;
+      }
+      .pass {
+        color: darkgreen;
+        font-weight: bold;
+      }
+      .fail {
+        color: darkred;
+        font-weight: bold;
+      }
+      .waiting {
+        color: gray;
+        font-style: italic;
+      }
+      .performance-info {
+        font-size: 0.9em;
+        color: #666;
+        font-style: italic;
+      }
+      .summary-box {
+        background-color: #e8f4f8;
+        border: 1px solid #bee5eb;
+        border-radius: 5px;
+        padding: 15px;
+        margin: 20px 0;
+      }
+      .time-comparison {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .time-badge {
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 0.8em;
+        font-weight: bold;
+      }
+      .faster {
+        background-color: #d4edda;
+        color: #155724;
+      }
+      .slower {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+      .same {
+        background-color: #e2e3e5;
+        color: #383d41;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Loop Unrolling Performance Tests</h1>
+
+    <div class="summary-box">
+      <h3 style="margin-top: 0">About Loop Unrolling Tests</h3>
+      <p>
+        These tests measure the performance impact of loop unrolling
+        optimization with different unroll factors (1x, 4x, 8x, 16x). Each test
+        demonstrates different scenarios where unrolling can provide benefits:
+      </p>
+      <ul>
+        <li>
+          <strong>UltraLight:</strong> Minimal loop body to maximize loop
+          overhead impact
+        </li>
+        <li>
+          <strong>ParallelStreams:</strong> Multiple independent calculations
+          for instruction-level parallelism
+        </li>
+        <li>
+          <strong>RegisterPressure:</strong> Many variables to test register
+          allocation benefits
+        </li>
+      </ul>
+      <p class="performance-info">
+        <strong>Note:</strong> Performance measurements show execution time
+        differences. Lower times indicate better performance.
+      </p>
+    </div>
+
+    <div
+      style="
+        margin: 20px 0;
+        padding: 15px;
+        background-color: #f0f8ff;
+        border-radius: 5px;
+      "
+    >
+      <h3 style="margin-top: 0">Test Suites:</h3>
+      <ul style="list-style-type: none; padding: 0">
+        <li style="margin: 8px 0">
+          <a href="index.html">🔄 Project 4 Tests</a> - Main functional tests
+        </li>
+        <li style="margin: 8px 0">
+          <a href="P3-tester.html">📋 Project 3 Tests</a> - Legacy compatibility
+          tests
+        </li>
+        <li style="margin: 8px 0">
+          <strong>⚡ Loop Unrolling Tests</strong> - Current page (performance
+          optimization)
+        </li>
+      </ul>
+      <hr style="margin: 15px 0" />
+      <p style="margin: 0; font-size: 0.9em; color: #666">
+        <strong>Current Page:</strong> Tests loop unrolling optimization with
+        factors 1x, 4x, 8x, and 16x to measure performance improvements and
+        validate correctness.
+      </p>
+    </div>
+
+    <table id="results-table">
+      <tr style="height: 30px">
+        <td style="background-color: #ddddff" colspan="7">
+          <div id="test-summary">
+            <b>TESTS:</b>
+            <b><span class="total_count">0</span></b> &nbsp;&nbsp;&nbsp;
+            <b>PASSED:</b>
+            <span class="pass_count pass">0</span> &nbsp;&nbsp;&nbsp;
+            <b>FAILED:</b>
+            <span class="fail_count fail">0</span> &nbsp;&nbsp;&nbsp;
+            <b>ERRORS:</b> <span class="error_count error">0</span>
+          </div>
+        </td>
+      </tr>
+      <tr style="background-color: #dddddd">
+        <th>Test File</th>
+        <th>Function</th>
+        <th>Unroll Factor</th>
+        <th>Status</th>
+        <th>Output</th>
+        <th>Expected</th>
+        <th>Performance</th>
+      </tr>
+    </table>
+
+    <div id="performance-summary" style="margin-top: 20px"></div>
+
+    <script>
+      // Test configurations for each file and unroll factor
+      const testConfigs = [
+        // UltraLight tests
+        {
+          file: "ultra-01",
+          name: "UltraLight",
+          function: "UltraLight",
+          args: [],
+          expected: 500000,
+          description: "Minimal loop body with maximum iterations",
+        },
+        // ParallelStreams tests
+        {
+          file: "ultra-02",
+          name: "ParallelStreams",
+          function: "ParallelStreams",
+          args: [],
+          expected: 800161279,
+          description: "Multiple independent calculations",
+        },
+        // RegisterPressure tests
+        {
+          file: "ultra-03",
+          name: "RegisterPressure",
+          function: "RegisterPressure",
+          args: [],
+          expected: 1124925055,
+          description: "Many variables testing register allocation",
+        },
+      ];
+
+      const unrollFactors = [1, 4, 8, 16];
+
+      // Summary counters
+      let test_count = 0;
+      let pass_count = 0;
+      let fail_count = 0;
+      let error_count = 0;
+
+      // Performance tracking
+      const performanceData = {};
+
+      function updateSummary() {
+        const summary_div = document.getElementById("test-summary");
+        const tot_span = summary_div.querySelector(".total_count");
+        tot_span.textContent = test_count;
+        const pass_span = summary_div.querySelector(".pass_count");
+        pass_span.textContent = pass_count;
+        const fail_span = summary_div.querySelector(".fail_count");
+        fail_span.textContent = fail_count;
+        const error_span = summary_div.querySelector(".error_count");
+        error_span.textContent = error_count;
+      }
+
+      function formatTime(ms) {
+        if (ms < 1000) {
+          return `${ms.toFixed(2)}ms`;
+        } else {
+          return `${(ms / 1000).toFixed(3)}s`;
+        }
+      }
+
+      function getPerformanceClass(factor, baseTime, currentTime) {
+        if (!baseTime || !currentTime) return "same";
+        const diff = ((currentTime - baseTime) / baseTime) * 100;
+        if (Math.abs(diff) < 1) return "same";
+        return diff > 0 ? "slower" : "faster";
+      }
+
+      function getPerformanceText(factor, baseTime, currentTime) {
+        if (!baseTime || !currentTime || factor === 1) return "";
+        const diff = ((currentTime - baseTime) / baseTime) * 100;
+        if (Math.abs(diff) < 1) return "Same";
+        const symbol = diff > 0 ? "+" : "";
+        return `${symbol}${diff.toFixed(1)}%`;
+      }
+
+      // Function to load and test each WASM file
+      async function runTest(testConfig, factor, table_row) {
+        const filename = `${testConfig.file}-unroll${factor}.wasm`;
+
+        try {
+          test_count++;
+          updateSummary();
+
+          // Measure execution time
+          const startTime = performance.now();
+
+          // Fetch the WASM file
+          const response = await fetch(filename);
+          if (!response.ok) {
+            throw new Error(`Missing file ${filename}`);
+          }
+          const wasmBuffer = await response.arrayBuffer();
+          const wasmModule = await WebAssembly.instantiate(wasmBuffer);
+
+          // Execute the function multiple times to get more reliable timing
+          const iterations = 100;
+          const execStartTime = performance.now();
+
+          let result;
+          for (let i = 0; i < iterations; i++) {
+            result = wasmModule.instance.exports[testConfig.function].apply(
+              null,
+              testConfig.args
+            );
+          }
+
+          const execEndTime = performance.now();
+          const avgExecutionTime = (execEndTime - execStartTime) / iterations;
+
+          // Store performance data
+          if (!performanceData[testConfig.file]) {
+            performanceData[testConfig.file] = {};
+          }
+          performanceData[testConfig.file][factor] = avgExecutionTime;
+
+          // Update table cells
+          const status_cell = table_row.cells[3];
+          const output_cell = table_row.cells[4];
+          const expected_cell = table_row.cells[5];
+          const performance_cell = table_row.cells[6];
+
+          output_cell.textContent = result;
+          expected_cell.textContent = testConfig.expected;
+          performance_cell.textContent = formatTime(avgExecutionTime);
+
+          // Check the result against expected output
+          if (result === testConfig.expected) {
+            status_cell.textContent = "PASS";
+            status_cell.className = "result pass";
+            pass_count++;
+
+            // Add performance comparison for factors > 1
+            if (factor > 1 && performanceData[testConfig.file][1]) {
+              const baseTime = performanceData[testConfig.file][1];
+              const perfClass = getPerformanceClass(
+                factor,
+                baseTime,
+                avgExecutionTime
+              );
+              const perfText = getPerformanceText(
+                factor,
+                baseTime,
+                avgExecutionTime
+              );
+
+              performance_cell.innerHTML = `
+                <div class="time-comparison">
+                  <span>${formatTime(avgExecutionTime)}</span>
+                  <span class="time-badge ${perfClass}">${perfText}</span>
+                </div>
+              `;
+            }
+          } else {
+            status_cell.textContent = "FAIL";
+            status_cell.className = "result fail";
+            fail_count++;
+          }
+
+          updateSummary();
+        } catch (error) {
+          // Display any error
+          const status_cell = table_row.cells[3];
+          status_cell.textContent = "ERROR";
+          status_cell.className = "result error";
+
+          const output_cell = table_row.cells[4];
+          output_cell.colSpan = 3;
+          output_cell.textContent = `ERROR: ${error.message}`;
+
+          error_count++;
+          updateSummary();
+        }
+      }
+
+      function createPerformanceSummary() {
+        const summaryDiv = document.getElementById("performance-summary");
+        let summaryHTML =
+          '<div class="summary-box"><h3>Performance Summary</h3>';
+
+        for (const [testFile, data] of Object.entries(performanceData)) {
+          const testConfig = testConfigs.find(
+            (config) => config.file === testFile
+          );
+          if (!testConfig) continue;
+
+          summaryHTML += `<div class="test-group">`;
+          summaryHTML += `<h4>${testConfig.name}</h4>`;
+          summaryHTML += `<p class="performance-info">${testConfig.description}</p>`;
+
+          if (data[1]) {
+            summaryHTML +=
+              '<table style="width: 100%; border-collapse: collapse;">';
+            summaryHTML +=
+              '<tr style="background-color: #f0f0f0;"><th style="padding: 5px; border: 1px solid #ddd;">Unroll Factor</th><th style="padding: 5px; border: 1px solid #ddd;">Avg Time</th><th style="padding: 5px; border: 1px solid #ddd;">vs Baseline</th></tr>';
+
+            for (const factor of unrollFactors) {
+              if (data[factor]) {
+                const time = data[factor];
+                const baseTime = data[1];
+                const perfText = getPerformanceText(factor, baseTime, time);
+                const perfClass = getPerformanceClass(factor, baseTime, time);
+
+                summaryHTML += `<tr>`;
+                summaryHTML += `<td style="padding: 5px; border: 1px solid #ddd;">${factor}x</td>`;
+                summaryHTML += `<td style="padding: 5px; border: 1px solid #ddd;">${formatTime(
+                  time
+                )}</td>`;
+                summaryHTML += `<td style="padding: 5px; border: 1px solid #ddd;">`;
+                if (factor === 1) {
+                  summaryHTML +=
+                    '<span class="time-badge same">Baseline</span>';
+                } else {
+                  summaryHTML += `<span class="time-badge ${perfClass}">${perfText}</span>`;
+                }
+                summaryHTML += `</td></tr>`;
+              }
+            }
+            summaryHTML += "</table>";
+          }
+          summaryHTML += "</div>";
+        }
+
+        summaryHTML += "</div>";
+        summaryDiv.innerHTML = summaryHTML;
+      }
+
+      // Run tests asynchronously
+      function runTestsAsync() {
+        const results_table = document.getElementById("results-table");
+
+        for (const testConfig of testConfigs) {
+          // Add a header row for each test group
+          const headerRow = results_table.insertRow();
+          headerRow.style.backgroundColor = "#e9ecef";
+          headerRow.style.fontWeight = "bold";
+          const headerCell = headerRow.insertCell(0);
+          headerCell.colSpan = 7;
+          headerCell.textContent = `${testConfig.name} - ${testConfig.description}`;
+
+          for (const factor of unrollFactors) {
+            const row = results_table.insertRow();
+            row.classList.add("unroll-row", `factor-${factor}`);
+
+            // Test file
+            const fileCell = row.insertCell(0);
+            fileCell.textContent = `${testConfig.file}-unroll${factor}.wasm`;
+
+            // Function name
+            const funcCell = row.insertCell(1);
+            funcCell.textContent = testConfig.function;
+
+            // Unroll factor
+            const factorCell = row.insertCell(2);
+            factorCell.textContent = `${factor}x`;
+            factorCell.style.fontWeight = "bold";
+
+            // Status
+            const statusCell = row.insertCell(3);
+            statusCell.textContent = "Waiting...";
+            statusCell.className = "result waiting";
+
+            // Output
+            row.insertCell(4);
+
+            // Expected
+            row.insertCell(5);
+
+            // Performance
+            row.insertCell(6);
+
+            // Run the test asynchronously
+            runTest(testConfig, factor, row);
+          }
+        }
+
+        // Generate performance summary after a delay to allow tests to complete
+        setTimeout(createPerformanceSummary, 5000);
+      }
+
+      // Start the tests
+      runTestsAsync();
+    </script>
+  </body>
+</html>

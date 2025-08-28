@@ -1,0 +1,32 @@
+// Parallel Computation Streams - Multiple independent calculations
+// Designed to maximize the benefit of instruction-level parallelism from unrolling
+
+function ParallelStreams() : int {
+    int a1 = 1; int a2 = 2; int a3 = 3; int a4 = 4;
+    int b1 = 5; int b2 = 6; int b3 = 7; int b4 = 8;
+    int c1 = 9; int c2 = 10; int c3 = 11; int c4 = 12;
+    int i = 0;
+    while (i < 3000000) {  // Increased to 3M iterations
+        // Stream A: Arithmetic progression
+        a1 = a1 + (i + 1);
+        a2 = a2 + (i + 2);
+        a3 = a3 + (i + 3);
+        a4 = a4 + (i + 4);
+        // Stream B: Multiplication with modulo
+        b1 = b1 * 2;
+        b2 = b2 * 3;
+        b3 = b3 * 5;
+        b4 = b4 * 7;
+        b1 = b1 % 1000;
+        b2 = b2 % 1000;
+        b3 = b3 % 1000;
+        b4 = b4 % 1000;
+        // Stream C: Mixed operations
+        c1 = c1 + b1;
+        c2 = c2 + b2;
+        c3 = c3 + b3;
+        c4 = c4 + b4;
+        i = i + 1;
+    }
+    return a1 + a2 + a3 + a4 + b1 + b2 + b3 + b4 + c1 + c2 + c3 + c4;
+}

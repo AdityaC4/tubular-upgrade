@@ -172,6 +172,18 @@ for i in $(seq -w 01 $P3_error_test_count); do
     fi
 done
 
+# Run loop unrolling performance tests
+echo ---
+echo LOOP UNROLLING PERFORMANCE TESTS
+if [[ -f "loop-unrolling/run_unroll_tests.sh" ]]; then
+    echo "Running loop unrolling performance tests..."
+    cd loop-unrolling
+    ./run_unroll_tests.sh
+    cd ..
+else
+    echo "Loop unrolling tests not found (optional)"
+fi
+
 # Report the final count of differing files
 echo ---
 echo "Of $test_count regular test files..."

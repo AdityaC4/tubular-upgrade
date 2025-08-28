@@ -1,7 +1,10 @@
 #include <assert.h>
+#include <chrono>
 #include <complex>
 #include <cstddef>
 #include <fstream>
+#include <iomanip>
+#include <iostream>
 #include <iterator>
 #include <memory>
 #include <string>
@@ -697,6 +700,16 @@ public:
 
   void PrintCode() const { control.PrintCode(); }
   void PrintSymbols() const { control.symbols.Print(); }
+  
+  // Get the total size of generated code (for performance comparison)
+  size_t GetCodeSize() const {
+    size_t totalSize = 0;
+    for (const auto &line : control.code) {
+      totalSize += line.code.size() + line.comment.size() + line.indent;
+    }
+    return totalSize;
+  }
+  
   void PrintAST() const {
     for (auto &fun_ptr : functions) {
       fun_ptr->Print();
@@ -704,12 +717,17 @@ public:
   }
 
   // New method to run optimization passes
-  void RunOptimizationPasses() {
+  void RunOptimizationPasses(bool enableLoopUnrolling = true, int unrollFactor = 4) {
     PassManager passManager;
 
     // Add passes to the manager
     passManager.addPass(std::make_unique<FunctionInliningPass>(true));
-    passManager.addPass(std::make_unique<LoopUnrollingPass>(4));
+    
+    // Only add loop unrolling if enabled
+    if (enableLoopUnrolling) {
+      passManager.addPass(std::make_unique<LoopUnrollingPass>(unrollFactor));
+    }
+    
     passManager.addPass(std::make_unique<TailRecursionPass>(true));
 
     // Run all passes on each function
@@ -720,16 +738,47 @@ public:
 };
 
 int main(int argc, char *argv[]) {
-  if (argc != 2) {
-    std::cout << "Format: " << argv[0] << " [filename]" << std::endl;
+  if (argc < 2 || argc > 3) {
+    std::cout << "Format: " << argv[0] << " [filename] [--no-unroll|--unroll-factor=N]" << std::endl;
     exit(1);
   }
 
-  Tubular prog(argv[1]);
+  std::string filename = argv[1];
+  bool enableLoopUnrolling = true;
+  int unrollFactor = 4; // default
+
+  // Check for optimization flags
+  if (argc == 3) {
+    std::string flag = argv[2];
+    if (flag == "--no-unroll") {
+      enableLoopUnrolling = false;
+    } else if (flag.find("--unroll-factor=") == 0) {
+      std::string factorStr = flag.substr(16); // length of "--unroll-factor="
+      try {
+        unrollFactor = std::stoi(factorStr);
+        if (unrollFactor < 1 || unrollFactor > 16) {
+          std::cout << "Error: Unroll factor must be between 1 and 16" << std::endl;
+          exit(1);
+        }
+        // If unroll factor is 1, disable loop unrolling entirely
+        if (unrollFactor == 1) {
+          enableLoopUnrolling = false;
+        }
+      } catch (const std::exception&) {
+        std::cout << "Error: Invalid unroll factor '" << factorStr << "'" << std::endl;
+        exit(1);
+      }
+    } else {
+      std::cout << "Error: Unknown flag '" << flag << "'" << std::endl;
+      exit(1);
+    }
+  }
+
+  Tubular prog(filename);
   prog.Parse();
 
   // Run optimization passes
-  prog.RunOptimizationPasses();
+  prog.RunOptimizationPasses(enableLoopUnrolling, unrollFactor);
 
   // -- uncomment for debugging --
   // prog.PrintSymbols();
