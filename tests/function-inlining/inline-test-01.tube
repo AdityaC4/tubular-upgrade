@@ -1,0 +1,10 @@
+// Test 1: Basic function inlining - simple arithmetic function
+// Expected: Function call should be preserved (has parameters)
+function double_it(int x) : int {
+  return x * 2;
+}
+
+function main() : int {
+  int result = double_it(5);
+  return result;
+}

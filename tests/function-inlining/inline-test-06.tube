@@ -1,0 +1,15 @@
+// Test 6: Multiple parameterless functions (should be inlined)
+// Expected: Both function calls should be inlined
+function get_five() : int {
+  return 5;
+}
+
+function get_ten() : int {
+  return 10;
+}
+
+function main() : int {
+  int a = get_five();
+  int b = get_ten();
+  return a + b;
+}

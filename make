@@ -20,6 +20,10 @@ case "$1" in
         echo "Cleaning loop unrolling test files via CMake..."
         cd build && make clean-unroll
         ;;
+    "clean-inline")
+        echo "Cleaning function inlining test files via CMake..."
+        cd build && make clean-inline
+        ;;
     "")
         echo "Building Tubular via CMake..."
         cd build && make
@@ -28,10 +32,11 @@ case "$1" in
         echo "Unknown make target: $1"
         echo "Available targets:"
         echo "  make          - Build the project"
-        echo "  make test     - Run all tests (standard + loop unrolling)"
+        echo "  make test     - Run all tests (standard + loop unrolling + function inlining)"
         echo "  make clean    - Clean all generated files"
         echo "  make clean-test - Clean only test files"
         echo "  make clean-unroll - Clean only loop unrolling test files"
+        echo "  make clean-inline - Clean only function inlining test files"
         exit 1
         ;;
 esac

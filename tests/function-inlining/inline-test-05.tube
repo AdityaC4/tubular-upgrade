@@ -1,0 +1,10 @@
+// Test 5: Parameterless function (should be inlined)
+// Expected: Function call should be inlined - no (call $get_constant) in output
+function get_constant() : int {
+  return 42;
+}
+
+function main() : int {
+  int value = get_constant();
+  return value;
+}

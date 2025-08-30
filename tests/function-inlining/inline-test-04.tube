@@ -1,0 +1,19 @@
+// Test 4: Nested function calls (one inlinable, one not)
+// Expected: simple_add should be preserved (has parameters), complex_multiply preserved (too complex)
+function simple_add(int a, int b) : int {
+  return a + b;
+}
+
+function complex_multiply(int x, int y) : int {
+  int temp1 = x * 2;
+  int temp2 = y * 3;
+  int temp3 = temp1 + temp2;
+  int result = temp3 * 4;
+  return result;
+}
+
+function main() : int {
+  int sum = simple_add(5, 3);
+  int product = complex_multiply(sum, 2);
+  return product;
+}

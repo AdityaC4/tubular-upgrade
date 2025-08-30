@@ -1,0 +1,11 @@
+// Test 2: Multiple calls to same simple function
+// Expected: Function calls should be preserved (has parameters)
+function add_one(int n) : int {
+  return n + 1;
+}
+
+function main() : int {
+  int a = add_one(10);
+  int b = add_one(20);
+  return a + b;
+}

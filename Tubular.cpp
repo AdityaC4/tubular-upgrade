@@ -717,11 +717,13 @@ public:
   }
 
   // New method to run optimization passes
-  void RunOptimizationPasses(bool enableLoopUnrolling = true, int unrollFactor = 4) {
+  void RunOptimizationPasses(bool enableLoopUnrolling = true, int unrollFactor = 4, bool enableFunctionInlining = true) {
     PassManager passManager;
 
-    // Add passes to the manager
-    passManager.addPass(std::make_unique<FunctionInliningPass>(true));
+    // Add passes to the manager - only add function inlining if enabled
+    if (enableFunctionInlining) {
+      passManager.addPass(std::make_unique<FunctionInliningPass>(true));
+    }
     
     // Only add loop unrolling if enabled
     if (enableLoopUnrolling) {
@@ -739,19 +741,22 @@ public:
 
 int main(int argc, char *argv[]) {
   if (argc < 2 || argc > 3) {
-    std::cout << "Format: " << argv[0] << " [filename] [--no-unroll|--unroll-factor=N]" << std::endl;
+    std::cout << "Format: " << argv[0] << " [filename] [--no-unroll|--unroll-factor=N|--no-inline]" << std::endl;
     exit(1);
   }
 
   std::string filename = argv[1];
   bool enableLoopUnrolling = true;
   int unrollFactor = 4; // default
+  bool enableFunctionInlining = true; // default
 
   // Check for optimization flags
   if (argc == 3) {
     std::string flag = argv[2];
     if (flag == "--no-unroll") {
       enableLoopUnrolling = false;
+    } else if (flag == "--no-inline") {
+      enableFunctionInlining = false;
     } else if (flag.find("--unroll-factor=") == 0) {
       std::string factorStr = flag.substr(16); // length of "--unroll-factor="
       try {
@@ -778,7 +783,7 @@ int main(int argc, char *argv[]) {
   prog.Parse();
 
   // Run optimization passes
-  prog.RunOptimizationPasses(enableLoopUnrolling, unrollFactor);
+  prog.RunOptimizationPasses(enableLoopUnrolling, unrollFactor, enableFunctionInlining);
 
   // -- uncomment for debugging --
   // prog.PrintSymbols();

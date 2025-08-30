@@ -238,6 +238,11 @@ public:
   void AddVar(size_t var_id) { var_ids.push_back(var_id); }
   void SetVars(const std::vector<size_t> &in) { var_ids = in; }
 
+  // Getter methods for function inlining
+  size_t GetFunId() const { return fun_id; }
+  const std::vector<size_t>& GetParamIds() const { return param_ids; }
+  const std::vector<size_t>& GetVarIds() const { return var_ids; }
+
   Type ReturnType(const SymbolTable &symbols) const override { return symbols.At(fun_id).type.ReturnType(); }
 
   bool ToWAT(Control &control) override {

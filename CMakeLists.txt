@@ -61,29 +61,33 @@ add_custom_target(tests
     COMMAND cd tests && ./run_tests.sh
     COMMAND ${CMAKE_COMMAND} -E echo "Running loop unrolling tests..."
     COMMAND cd tests/loop-unrolling && ./run_unroll_tests.sh
+    COMMAND ${CMAKE_COMMAND} -E echo "Running function inlining tests..."
+    COMMAND cd tests/function-inlining && ./run_inlining_tests.sh
     COMMAND ${CMAKE_COMMAND} -E echo "All tests completed."
     DEPENDS ${PROJECT_NAME}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    COMMENT "Running complete test suite including loop unrolling tests"
+    COMMENT "Running complete test suite including loop unrolling and function inlining tests"
 )
 
 # Custom clean target to match original Makefile behavior exactly
 add_custom_target(clean-all
     COMMAND rm -f ${PROJECT_NAME} *.o tests/test-??.wasm tests/test-??.wat tests/P3-test-??.wasm tests/P3-test-??.wat
     COMMAND rm -f tests/loop-unrolling/ultra-??-unroll*.wasm tests/loop-unrolling/ultra-??-unroll*.wat
+    COMMAND rm -f tests/function-inlining/inline-test-??-*.wasm tests/function-inlining/inline-test-??-*.wat
     COMMAND rm -rf ${PROJECT_NAME}.dSYM
     COMMAND rm -rf tests/loop-unrolling/results
     COMMAND rm -f build/${PROJECT_NAME}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    COMMENT "Cleaning all files including loop unrolling test results and binary"
+    COMMENT "Cleaning all files including loop unrolling, function inlining test results and binary"
 )
 
 # Clean only test files
 add_custom_target(clean-test
     COMMAND rm -f tests/test-??.wasm tests/test-??.wat tests/P3-test-??.wasm tests/P3-test-??.wat
     COMMAND rm -f tests/loop-unrolling/ultra-??-unroll*.wasm tests/loop-unrolling/ultra-??-unroll*.wat
+    COMMAND rm -f tests/function-inlining/inline-test-??-*.wasm tests/function-inlining/inline-test-??-*.wat
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    COMMENT "Cleaning all test files including loop unrolling tests"
+    COMMENT "Cleaning all test files including loop unrolling and function inlining tests"
 )
 
 # Clean only loop unrolling test results
@@ -92,6 +96,13 @@ add_custom_target(clean-unroll
     COMMAND rm -rf tests/loop-unrolling/results
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "Cleaning loop unrolling test files and results"
+)
+
+# Clean only function inlining test results
+add_custom_target(clean-inline
+    COMMAND rm -f tests/function-inlining/inline-test-??-*.wasm tests/function-inlining/inline-test-??-*.wat
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMENT "Cleaning function inlining test files"
 )
 
 # Print configuration information (equivalent to print-% debugging)

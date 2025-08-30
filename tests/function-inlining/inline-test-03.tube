@@ -1,0 +1,13 @@
+// Test 3: Function that should NOT be inlined (too many statements)
+// Expected: Function call should be preserved (complex function)
+function complex_calc(int x) : int {
+  int temp1 = x + 5;
+  int temp2 = temp1 * 2;
+  int temp3 = temp2 - 1;
+  int temp4 = temp3 / 2;
+  return temp4;
+}
+
+function main() : int {
+  return complex_calc(10);
+}
