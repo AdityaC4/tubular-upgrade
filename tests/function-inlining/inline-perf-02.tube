@@ -1,0 +1,18 @@
+// Performance Test 2: Call chain of tiny functions inside hot loop
+// Goal: Inlining collapses a chain f1->f2->f3->f4 in the loop body
+
+function f1(int x) : int { return x + 1; }
+function f2(int x) : int { return x + 2; }
+function f3(int x) : int { return x + 3; }
+function f4(int x) : int { return x + 4; }
+
+function main() : int {
+  int x = 0;
+  int i = 0;
+  while (i < 3000000) { // 3M chains; each adds 10
+    x = f4(f3(f2(f1(x))));
+    i = i + 1;
+  }
+  return x; // Expected: 30000000
+}
+

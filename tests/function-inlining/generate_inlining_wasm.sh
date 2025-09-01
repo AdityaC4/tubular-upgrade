@@ -45,7 +45,7 @@ generate_test_wasm() {
     
     # Generate non-inlined version
     echo "  → Generating non-inlined version..."
-    if "$TUBULAR" "$test_file" --no-inline > "${test_name}-no-inline.wat" 2>/dev/null; then
+    if "$TUBULAR" "$test_file" --no-inline --unroll-factor=1 > "${test_name}-no-inline.wat" 2>/dev/null; then
         if wat2wasm "${test_name}-no-inline.wat" -o "${test_name}-no-inline.wasm" 2>/dev/null; then
             echo -e "    ${GREEN}✓ Non-inlined WASM generated successfully${NC}"
         else
@@ -59,7 +59,7 @@ generate_test_wasm() {
     
     # Generate inlined version (default behavior)
     echo "  → Generating inlined version..."
-    if "$TUBULAR" "$test_file" > "${test_name}-inline.wat" 2>/dev/null; then
+    if "$TUBULAR" "$test_file" --unroll-factor=1 > "${test_name}-inline.wat" 2>/dev/null; then
         if wat2wasm "${test_name}-inline.wat" -o "${test_name}-inline.wasm" 2>/dev/null; then
             echo -e "    ${GREEN}✓ Inlined WASM generated successfully${NC}"
         else
@@ -79,15 +79,13 @@ generate_test_wasm() {
 success_count=0
 total_count=0
 
-for i in {1..6}; do
-    test_file="$SCRIPT_DIR/inline-test-0$i.tube"
+# Process both correctness tests and perf tests
+for test_file in "$SCRIPT_DIR"/inline-*.tube; do
     if [ -f "$test_file" ]; then
         total_count=$((total_count + 1))
         if generate_test_wasm "$test_file"; then
             success_count=$((success_count + 1))
         fi
-    else
-        echo -e "${YELLOW}Warning: Test file $test_file not found, skipping...${NC}"
     fi
 done
 

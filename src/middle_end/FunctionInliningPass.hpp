@@ -14,12 +14,7 @@ private:
   size_t maxInlineDepth = 3;
   size_t currentDepth = 0;
 
-  // Helper to get function parameters
-  std::vector<size_t> getFunctionParams(ASTNode_Function* func) {
-    // Access protected members via reflection on the GetTypeName and class structure
-    // This is a simplified approach - in production, we'd add public getters
-    return {}; // Will handle simple cases first
-  }
+  // (Removed) getFunctionParams; we now use public getters on AST nodes.
 
   // Complete AST cloning with parameter substitution
   std::unique_ptr<ASTNode> cloneWithSubstitution(const ASTNode &node, const std::unordered_map<size_t, std::unique_ptr<ASTNode>> &paramMap) {
@@ -82,32 +77,15 @@ private:
   }
 
   std::unique_ptr<ASTNode_IntLit> cloneIntLit(const ASTNode_IntLit &intLit) {
-    std::string typeName = intLit.GetTypeName();
-    if (typeName.find("INT_LIT:") == 0) {
-      int value = std::stoi(typeName.substr(8));
-      return std::make_unique<ASTNode_IntLit>(intLit.GetFilePos(), value);
-    }
-    return nullptr;
+    return std::make_unique<ASTNode_IntLit>(intLit.GetFilePos(), intLit.GetValue());
   }
 
   std::unique_ptr<ASTNode_FloatLit> cloneFloatLit(const ASTNode_FloatLit &floatLit) {
-    std::string typeName = floatLit.GetTypeName();
-    if (typeName.find("FLOAT_LIT:") == 0) {
-      double value = std::stod(typeName.substr(10));
-      return std::make_unique<ASTNode_FloatLit>(floatLit.GetFilePos(), value);
-    }
-    return nullptr;
+    return std::make_unique<ASTNode_FloatLit>(floatLit.GetFilePos(), floatLit.GetValue());
   }
 
   std::unique_ptr<ASTNode_StringLit> cloneStringLit(const ASTNode_StringLit &strLit) {
-    // For string literals, we need to access the actual string value, not an ID
-    // This is a simplified approach - we'd need proper access to the string value
-    std::string typeName = strLit.GetTypeName();
-    if (typeName == "STRING_LIT") {
-      // Create a placeholder string - in a full implementation we'd extract the actual string
-      return std::make_unique<ASTNode_StringLit>(strLit.GetFilePos(), "");
-    }
-    return nullptr;
+    return std::make_unique<ASTNode_StringLit>(strLit.GetFilePos(), strLit.GetValue());
   }
 
   std::unique_ptr<ASTNode_Math2> cloneMath2(const ASTNode_Math2 &math2, const std::unordered_map<size_t, std::unique_ptr<ASTNode>> &paramMap) {
@@ -116,7 +94,7 @@ private:
       auto rightClone = cloneWithSubstitution(math2.GetChild(1), paramMap);
       
       if (leftClone && rightClone) {
-        std::string op = getOperator(const_cast<ASTNode_Math2&>(math2));
+        std::string op = const_cast<ASTNode_Math2&>(math2).GetOp();
         return std::make_unique<ASTNode_Math2>(math2.GetFilePos(), op, std::move(leftClone), std::move(rightClone));
       }
     }
@@ -199,7 +177,7 @@ public:
 private:
   void collectFunctions(ASTNode &node) {
     if (auto *function = dynamic_cast<ASTNode_Function *>(&node)) {
-      size_t funId = getFunctionId(*function);
+    size_t funId = function->GetFunId();
       functionMap[funId] = function;
     }
     
@@ -236,7 +214,7 @@ private:
 
   void inlineMath2FunctionCalls(ASTNode_Math2 &math2) {
     // Check if this is an assignment with a function call on the RHS
-    std::string op = getOperator(math2);
+    std::string op = math2.GetOp();
     if (op == "=" && math2.NumChildren() >= 2) {
       // Check if RHS is a function call
       if (auto *funcCall = dynamic_cast<ASTNode_FunctionCall *>(&math2.GetChild(1))) {
@@ -283,7 +261,7 @@ private:
   }
 
   bool shouldInlineFunction(const ASTNode_FunctionCall &funcCall) {
-    size_t funId = getFunctionCallId(funcCall);
+    size_t funId = funcCall.GetFunId();
     
     if (functionMap.find(funId) == functionMap.end()) {
       return false;
@@ -310,7 +288,7 @@ private:
   }
 
   std::unique_ptr<ASTNode> createInlinedExpression(const ASTNode_FunctionCall &funcCall) {
-    size_t funId = getFunctionCallId(funcCall);
+    size_t funId = funcCall.GetFunId();
     ASTNode_Function *function = functionMap[funId];
     
     if (!function || function->NumChildren() == 0) {
@@ -365,35 +343,5 @@ private:
   }
 
   // Helper methods
-  size_t getFunctionId(const ASTNode_Function &function) {
-    std::string typeName = function.GetTypeName();
-    if (typeName.find("FUNCTION: ") == 0) {
-      return std::stoul(typeName.substr(10));
-    }
-    return 0;
-  }
-
-  size_t getFunctionCallId(const ASTNode_FunctionCall &funcCall) {
-    std::string typeName = funcCall.GetTypeName();
-    if (typeName.find("FUNCTION_CALL: ") == 0) {
-      return std::stoul(typeName.substr(15));
-    }
-    return 0;
-  }
-
-  size_t getVarId(const ASTNode_Var &var) {
-    std::string typeName = var.GetTypeName();
-    if (typeName.find("VAR: ") == 0) {
-      return std::stoul(typeName.substr(5));
-    }
-    return 0;
-  }
-
-  std::string getOperator(ASTNode_Math2 &math2) {
-    std::string typeName = math2.GetTypeName();
-    if (typeName.find("MATH2: ") == 0) {
-      return typeName.substr(7);
-    }
-    return "";
-  }
+  size_t getVarId(const ASTNode_Var &var) { return var.GetVarId(); }
 };

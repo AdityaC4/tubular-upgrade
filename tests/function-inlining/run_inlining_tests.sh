@@ -151,13 +151,13 @@ for i in {1..6}; do
     test_file="$SCRIPT_DIR/inline-test-0$i.tube"
     if [ -f "$test_file" ]; then
         case $i in
-            1) run_test "$test_file" "inline-test-01" "Function with parameters should NOT be inlined"
+            1) run_test "$test_file" "inline-test-01" "Simple function should be inlined"
                analyze_inlining "${test_file%.tube}.wat" "double_it" ;;
-            2) run_test "$test_file" "inline-test-02" "Function with parameters should NOT be inlined" 
+            2) run_test "$test_file" "inline-test-02" "Function calls should be inlined" 
                analyze_inlining "${test_file%.tube}.wat" "add_one" ;;
             3) run_test "$test_file" "inline-test-03" "Complex function should NOT be inlined"
                analyze_inlining "${test_file%.tube}.wat" "complex_calc" ;;
-            4) run_test "$test_file" "inline-test-04" "Functions with parameters should NOT be inlined"
+            4) run_test "$test_file" "inline-test-04" "Simple_add inlined; complex_multiply preserved"
                analyze_inlining "${test_file%.tube}.wat" "simple_add"
                analyze_inlining "${test_file%.tube}.wat" "complex_multiply" ;;
             5) run_test "$test_file" "inline-test-05" "Parameterless function SHOULD be inlined"

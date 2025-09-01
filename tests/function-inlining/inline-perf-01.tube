@@ -1,0 +1,17 @@
+// Performance Test 1: Heavy inner-loop of tiny function calls
+// Goal: Make inlining remove call/return overhead in a hot loop
+
+function inc(int x) : int {
+  return x + 1;
+}
+
+function main() : int {
+  int s = 0;
+  int i = 0;
+  while (i < 5000000) { // 5M calls to inc
+    s = inc(s);
+    i = i + 1;
+  }
+  return s; // Expected: 5000000
+}
+

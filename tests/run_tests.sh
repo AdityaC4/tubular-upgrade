@@ -184,6 +184,16 @@ else
     echo "Loop unrolling tests not found (optional)"
 fi
 
+# Generate function inlining WASM pairs for browser tests (inline vs no-inline)
+echo ---
+echo FUNCTION INLINING ARTIFACTS
+if [[ -f "function-inlining/generate_inlining_wasm.sh" ]]; then
+    echo "Generating inlining comparison artifacts..."
+    (cd function-inlining && ./generate_inlining_wasm.sh) || echo "Inlining artifacts generation encountered issues."
+else
+    echo "Function inlining generator not found (optional)"
+fi
+
 # Report the final count of differing files
 echo ---
 echo "Of $test_count regular test files..."

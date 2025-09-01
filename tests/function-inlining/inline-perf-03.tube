@@ -1,0 +1,15 @@
+// Performance Test 3: Parameterless function in hot loop
+// Goal: Inlining eliminates call overhead and constant load per iteration
+
+function get_const() : int { return 7; }
+
+function main() : int {
+  int s = 0;
+  int i = 0;
+  while (i < 4000000) { // 4M calls
+    s = s + get_const();
+    i = i + 1;
+  }
+  return s; // Expected: 28000000
+}
+

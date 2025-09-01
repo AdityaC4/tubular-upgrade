@@ -717,7 +717,10 @@ public:
   }
 
   // New method to run optimization passes
-  void RunOptimizationPasses(bool enableLoopUnrolling = true, int unrollFactor = 4, bool enableFunctionInlining = true) {
+  void RunOptimizationPasses(bool enableLoopUnrolling = true,
+                             int unrollFactor = 4,
+                             bool enableFunctionInlining = true,
+                             bool enableTailLoopify = true) {
     PassManager passManager;
 
     // Add passes to the manager - only add function inlining if enabled
@@ -730,7 +733,7 @@ public:
       passManager.addPass(std::make_unique<LoopUnrollingPass>(unrollFactor));
     }
     
-    passManager.addPass(std::make_unique<TailRecursionPass>(true));
+    passManager.addPass(std::make_unique<TailRecursionPass>(enableTailLoopify));
 
     // Run all passes on each function
     for (auto &fun_ptr : functions) {
@@ -740,8 +743,9 @@ public:
 };
 
 int main(int argc, char *argv[]) {
-  if (argc < 2 || argc > 3) {
-    std::cout << "Format: " << argv[0] << " [filename] [--no-unroll|--unroll-factor=N|--no-inline]" << std::endl;
+  if (argc < 2) {
+    std::cout << "Format: " << argv[0]
+              << " [filename] [--no-unroll] [--unroll-factor=N] [--no-inline] [--tail=loop|off]" << std::endl;
     exit(1);
   }
 
@@ -749,15 +753,16 @@ int main(int argc, char *argv[]) {
   bool enableLoopUnrolling = true;
   int unrollFactor = 4; // default
   bool enableFunctionInlining = true; // default
+  bool enableTailLoopify = true;      // default
 
-  // Check for optimization flags
-  if (argc == 3) {
-    std::string flag = argv[2];
+  // Check for optimization flags (allow multiple)
+  for (int i = 2; i < argc; ++i) {
+    std::string flag = argv[i];
     if (flag == "--no-unroll") {
       enableLoopUnrolling = false;
     } else if (flag == "--no-inline") {
       enableFunctionInlining = false;
-    } else if (flag.find("--unroll-factor=") == 0) {
+    } else if (flag.rfind("--unroll-factor=", 0) == 0) {
       std::string factorStr = flag.substr(16); // length of "--unroll-factor="
       try {
         unrollFactor = std::stoi(factorStr);
@@ -773,6 +778,16 @@ int main(int argc, char *argv[]) {
         std::cout << "Error: Invalid unroll factor '" << factorStr << "'" << std::endl;
         exit(1);
       }
+    } else if (flag.rfind("--tail=", 0) == 0) {
+      std::string mode = flag.substr(7);
+      if (mode == "loop") {
+        enableTailLoopify = true;
+      } else if (mode == "off") {
+        enableTailLoopify = false;
+      } else {
+        std::cout << "Error: Unknown tail mode '" << mode << "' (use loop|off)" << std::endl;
+        exit(1);
+      }
     } else {
       std::cout << "Error: Unknown flag '" << flag << "'" << std::endl;
       exit(1);
@@ -783,7 +798,7 @@ int main(int argc, char *argv[]) {
   prog.Parse();
 
   // Run optimization passes
-  prog.RunOptimizationPasses(enableLoopUnrolling, unrollFactor, enableFunctionInlining);
+  prog.RunOptimizationPasses(enableLoopUnrolling, unrollFactor, enableFunctionInlining, enableTailLoopify);
 
   // -- uncomment for debugging --
   // prog.PrintSymbols();

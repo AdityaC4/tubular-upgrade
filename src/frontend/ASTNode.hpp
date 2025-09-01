@@ -309,6 +309,9 @@ public:
 
   std::string GetTypeName() const override { return std::string("FUNCTION_CALL: ") + std::to_string(fun_id); }
 
+  // Getter for function identifier
+  size_t GetFunId() const { return fun_id; }
+
   Type ReturnType(const SymbolTable &symbols) const override { return symbols.At(fun_id).type.ReturnType(); }
 
   bool ToWAT(Control &control) override {
@@ -721,6 +724,9 @@ public:
 
   std::string GetTypeName() const override { return std::string("MATH2: " + op); }
 
+  // Getter for operator symbol
+  const std::string &GetOp() const { return op; }
+
   Type ReturnType(const SymbolTable &symbols) const override {
     // Assignments use the type of the variable being assigned.
     if (op == "=")
@@ -1079,6 +1085,9 @@ public:
 
   std::string GetTypeName() const override { return std::string("INT_LIT:") + std::to_string(value); }
 
+  // Getter for literal value
+  int GetValue() const { return value; }
+
   Type ReturnType(const SymbolTable & /* symbols */) const override {
     // For now, ops do not change the return type.
     return Type("int");
@@ -1100,6 +1109,9 @@ public:
   ASTNode_FloatLit(FilePos file_pos, double value) : ASTNode(file_pos), value(value) {}
 
   std::string GetTypeName() const override { return "FLOAT_LIT"; }
+
+  // Getter for literal value
+  double GetValue() const { return value; }
 
   Type ReturnType(const SymbolTable & /* symbols */) const override {
     // For now, ops do not change the return type.
@@ -1123,6 +1135,9 @@ public:
   ASTNode_StringLit(FilePos file_pos, std::string str) : ASTNode(file_pos), str(str) {}
 
   std::string GetTypeName() const override { return "STRING_LIT"; }
+
+  // Getter for literal value
+  const std::string &GetValue() const { return str; }
 
   Type ReturnType(const SymbolTable &) const override { return Type("string"); }
 
@@ -1151,6 +1166,9 @@ public:
   }
 
   std::string GetTypeName() const override { return std::string("VAR: ") + std::to_string(var_id); }
+
+  // Getter for variable identifier
+  size_t GetVarId() const { return var_id; }
 
   bool CanAssign() const override { return true; }
   void ToAssignWAT(Control &control) override {

@@ -65,3 +65,15 @@ All tests should pass with:
 - **Standard tests**: 100% compilation success rate
 - **Loop unrolling tests**: 100% compilation success rate with measurable performance improvements
 - **Browser tests**: All functions should execute correctly with expected outputs
+### CLI Flags
+
+You can combine multiple optimization flags when invoking Tubular:
+
+```
+./build/Tubular file.tube --unroll-factor=4 --no-inline --tail=off
+```
+
+- `--unroll-factor=N` (1 disables unrolling)
+- `--no-unroll`
+- `--no-inline`
+- `--tail=loop|off`

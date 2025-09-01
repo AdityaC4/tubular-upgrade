@@ -8,6 +8,21 @@
       body {
         font-family: Arial, sans-serif;
       }
+      .nav {
+        background-color: #f5f5f5;
+        border-radius: 4px;
+        padding: 8px 12px;
+        margin: 12px 0;
+      }
+      .nav a {
+        margin-right: 12px;
+        text-decoration: none;
+        color: #0366d6;
+      }
+      .nav a.active {
+        font-weight: bold;
+        color: #000;
+      }
       .test {
         margin-bottom: 20px;
       }
@@ -87,77 +102,16 @@
   <body>
     <h1>Function Inlining Tests</h1>
 
-    <div class="summary-box">
-      <h3 style="margin-top: 0">About Function Inlining Tests</h3>
-      <p>
-        These tests measure the performance impact and correctness of function 
-        inlining optimization. Function inlining can improve performance by:
-      </p>
-      <ul>
-        <li>
-          <strong>Eliminating Call Overhead:</strong> Removes function call/return instructions
-        </li>
-        <li>
-          <strong>Enabling Further Optimizations:</strong> Allows cross-function optimizations
-        </li>
-        <li>
-          <strong>Reducing Stack Operations:</strong> Fewer stack frame operations
-        </li>
-      </ul>
-      <div
-        style="
-          background-color: #fff3cd;
-          border: 1px solid #ffeaa7;
-          border-radius: 3px;
-          padding: 10px;
-          margin: 10px 0;
-        "
-      >
-        <strong>🔧 Test Configuration:</strong>
-        <ul style="margin: 5px 0">
-          <li>Each test is compiled with and without function inlining</li>
-          <li>Performance measured using median of 3 runs with 1000 iterations each</li>
-          <li>Correctness verified by comparing expected outputs</li>
-          <li>Tests cover various inlining scenarios and edge cases</li>
-        </ul>
-      </div>
-      <p class="performance-info">
-        <strong>Note:</strong> Function inlining optimization applies compiler heuristics 
-        to decide which functions to inline based on size, complexity, and call frequency.
-        Some functions may not be inlined if they exceed complexity thresholds.
-      </p>
+    <div class="nav">
+      <a href="../index.html">Project 4 Tests</a>
+      <a href="../P3-tester.html">Project 3 Tests</a>
+      <a class="active" href="../function-inlining/function-inlining-tester.html">Function Inlining Tests</a>
+      <a href="../loop-unrolling/loop-unrolling-tester.html">Loop Unrolling Tests</a>
     </div>
 
-    <div
-      style="
-        margin: 20px 0;
-        padding: 15px;
-        background-color: #f0f8ff;
-        border-radius: 5px;
-      "
-    >
-      <h3 style="margin-top: 0">Test Suites:</h3>
-      <ul style="list-style-type: none; padding: 0">
-        <li style="margin: 8px 0">
-          <a href="../index.html">🔄 Project 4 Tests</a> - Main functional tests
-        </li>
-        <li style="margin: 8px 0">
-          <a href="../P3-tester.html">📋 Project 3 Tests</a> - Legacy
-          compatibility tests
-        </li>
-        <li style="margin: 8px 0">
-          <a href="../loop-unrolling/loop-unrolling-tester.html">⚡ Loop Unrolling Tests</a> - Loop optimization tests
-        </li>
-        <li style="margin: 8px 0">
-          <strong>🔧 Function Inlining Tests</strong> - Current page (function inlining optimization)
-        </li>
-      </ul>
-      <hr style="margin: 15px 0" />
-      <p style="margin: 0; font-size: 0.9em; color: #666">
-        <strong>Current Page:</strong> Tests function inlining optimization to measure 
-        performance improvements and validate that function behavior is preserved.
-      </p>
-    </div>
+    <!-- About section moved below results -->
+
+    
 
     <table id="results-table">
       <tr style="height: 30px">
@@ -184,7 +138,17 @@
       </tr>
     </table>
 
-    <div id="performance-summary" style="margin-top: 20px"></div>
+    <div class="summary-box" style="margin-top: 20px">
+      <h3 style="margin-top: 0">About These Tests</h3>
+      <p>
+        Compares execution time and correctness with function inlining disabled versus enabled. Each row reports median per‑call time after warm‑up; percent change is relative to the no‑inline baseline.
+      </p>
+      <ul>
+        <li>Timing: median of 3 runs; iterations per test may vary.</li>
+        <li>Warm‑up: 10 iterations to stabilize JIT.</li>
+        <li>Correctness: exact match with expected output.</li>
+      </ul>
+    </div>
 
     <script>
       // Test configurations for function inlining tests
@@ -196,6 +160,7 @@
           args: [],
           expected: 10,
           description: "Simple arithmetic function - double_it(5)",
+          iterations: 1000,
         },
         {
           file: "inline-test-02", 
@@ -204,6 +169,7 @@
           args: [],
           expected: 32,
           description: "Multiple function calls in sequence",
+          iterations: 1000,
         },
         {
           file: "inline-test-03",
@@ -212,6 +178,7 @@
           args: [],
           expected: 14,
           description: "Nested function calls - factorial-like computation",
+          iterations: 1000,
         },
         {
           file: "inline-test-04",
@@ -220,6 +187,7 @@
           args: [],
           expected: 88,
           description: "Functions with conditional logic",
+          iterations: 1000,
         },
         {
           file: "inline-test-05",
@@ -228,6 +196,7 @@
           args: [],
           expected: 42,
           description: "String manipulation functions",
+          iterations: 1000,
         },
         {
           file: "inline-test-06",
@@ -236,6 +205,38 @@
           args: [],
           expected: 15,
           description: "Complex mathematical expressions with multiple inlines",
+          iterations: 1000,
+        },
+        // Performance-focused tests to show inlining impact clearly
+        {
+          file: "inline-perf-01",
+          name: "HotLoop_Inc",
+          function: "main",
+          args: [],
+          expected: 5000000,
+          description: "5M calls to a tiny function inside a hot loop",
+          iterations: 5,
+          warmupIterations: 2,
+        },
+        {
+          file: "inline-perf-02",
+          name: "HotLoop_CallChain",
+          function: "main",
+          args: [],
+          expected: 30000000,
+          description: "3M iterations of a 4-deep small call chain",
+          iterations: 5,
+          warmupIterations: 2,
+        },
+        {
+          file: "inline-perf-03",
+          name: "HotLoop_Paramless",
+          function: "main",
+          args: [],
+          expected: 28000000,
+          description: "4M calls to a parameterless function in a hot loop",
+          iterations: 5,
+          warmupIterations: 2,
         },
       ];
 
@@ -252,6 +253,8 @@
 
       // Performance tracking
       const performanceData = {};
+      // Cache rows to retroactively attach badges when baseline arrives
+      const rowsByFileMode = {}; // file -> { 'no-inline': row, 'inline': row }
 
       function updateSummary() {
         const summary_div = document.getElementById("test-summary");
@@ -287,6 +290,41 @@
         return `${symbol}${diff.toFixed(1)}%`;
       }
 
+      // Update badges on rows when baseline becomes available
+      function refreshInliningPerformance(file) {
+        const data = performanceData[file];
+        if (!data || !data['no-inline']) return;
+        const baseTime = data['no-inline'];
+        const rows = rowsByFileMode[file] || {};
+
+        for (const modeKey of ['no-inline', 'inline']) {
+          const row = rows[modeKey];
+          const time = data[modeKey];
+          if (!row || !time) continue;
+
+          const statusCell = row.cells[3];
+          const performanceCell = row.cells[6];
+          const timeText = formatTime(time);
+
+          if (statusCell.textContent === 'PASS') {
+            if (modeKey === 'inline') {
+              const perfClass = getPerformanceClass(baseTime, time, true);
+              const perfText = getPerformanceText(baseTime, time, true);
+              performanceCell.innerHTML = `
+                <div class="time-comparison">
+                  <span>${timeText}</span>
+                  <span class="time-badge ${perfClass}">${perfText}</span>
+                </div>
+              `;
+            } else {
+              performanceCell.textContent = timeText;
+            }
+          } else {
+            performanceCell.textContent = timeText;
+          }
+        }
+      }
+
       // Function to load and test each WASM file
       async function runTest(testConfig, mode, table_row) {
         const filename = `${testConfig.file}${mode.suffix}.wasm`;
@@ -312,8 +350,8 @@
           status_cell.textContent = "Testing...";
 
           // Execute the function multiple times to get more reliable timing
-          const iterations = 1000;
-          const warmupIterations = 10;
+          const iterations = (testConfig.iterations ?? 1000);
+          const warmupIterations = (testConfig.warmupIterations ?? 10);
 
           // Warm-up phase to stabilize JIT compilation
           for (let i = 0; i < warmupIterations; i++) {
@@ -398,6 +436,8 @@
                 </div>
               `;
             }
+            // Refresh possible badges when either mode completes
+            refreshInliningPerformance(testConfig.file);
           } else {
             status_cell.textContent = "FAIL";
             status_cell.className = "result fail";
@@ -420,7 +460,7 @@
         }
       }
 
-      function createPerformanceSummary() {
+      /* function createPerformanceSummary() {
         const summaryDiv = document.getElementById("performance-summary");
         let summaryHTML =
           '<div class="summary-box"><h3>Performance Summary</h3>';
@@ -468,7 +508,7 @@
 
         summaryHTML += "</div>";
         summaryDiv.innerHTML = summaryHTML;
-      }
+      } */
 
       // Run tests asynchronously
       function runTestsAsync() {
@@ -514,13 +554,14 @@
             // Performance
             row.insertCell(6);
 
-            // Run the test asynchronously
+            // Run the test asynchronously and cache rows for later refresh
+            if (!rowsByFileMode[testConfig.file]) rowsByFileMode[testConfig.file] = {};
+            rowsByFileMode[testConfig.file][mode.enabled ? 'inline' : 'no-inline'] = row;
             runTest(testConfig, mode, row);
           }
         }
 
-        // Generate performance summary after a delay to allow tests to complete
-        setTimeout(createPerformanceSummary, 3000);
+        // (No separate performance summary section)
       }
 
       // Start the tests

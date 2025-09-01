@@ -11,6 +11,7 @@ I have completed extra credit:
 1. Recursive Functions
 2. Make the `:string` type casting work on integers
 3. **Loop Unrolling Optimization** - NEW! Advanced compiler optimization feature
+4. **Function Inlining Optimization** - NEW! Safe inlining for small functions
 
 ## Testing
 
@@ -37,3 +38,18 @@ For my testing I also added 3 new tests:
 ```
 
 See [TESTING.md](TESTING.md) for complete testing documentation.
+
+## Optimization Flags
+
+Tubular supports multiple flags at once to control optimizations:
+
+- `--unroll-factor=N`: Set loop unroll factor (1 disables unrolling)
+- `--no-unroll`: Disable loop unrolling
+- `--no-inline`: Disable function inlining
+- `--tail=loop|off`: Enable tail recursion loopification or turn it off
+
+Example:
+
+```
+./build/Tubular program.tube --unroll-factor=8 --no-inline --tail=off
+```
