@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <memory>
 #include <vector>
+#include "NodeCounter.hpp"
 
 class FunctionInliningPass : public Pass {
 private:
@@ -13,6 +14,7 @@ private:
   std::unordered_map<size_t, ASTNode_Function*> functionMap;
   size_t maxInlineDepth = 3;
   size_t currentDepth = 0;
+  size_t maxInlineNodes = 40; // guard on inlined expression complexity
 
   std::unique_ptr<ASTNode> cloneWithSubstitution(const ASTNode &node, const std::unordered_map<size_t, std::unique_ptr<ASTNode>> &paramMap) {
     if (auto *var = dynamic_cast<const ASTNode_Var *>(&node)) {
@@ -26,6 +28,16 @@ private:
     // Handle Math2 nodes
     if (auto *math2 = dynamic_cast<const ASTNode_Math2 *>(&node)) {
       return cloneMath2(*math2, paramMap);
+    }
+
+    // Handle Math1 nodes
+    if (auto *math1 = dynamic_cast<const ASTNode_Math1 *>(&node)) {
+      return cloneMath1(*math1, paramMap);
+    }
+
+    // Handle function calls (for nested calls in expressions)
+    if (auto *call = dynamic_cast<const ASTNode_FunctionCall *>(&node)) {
+      return cloneFunctionCall(*call, paramMap);
     }
 
     // Handle literals
@@ -63,6 +75,31 @@ private:
       return cloneWhile(*whileNode, paramMap);
     }
 
+    // Handle casts/conversions
+    if (auto *toD = dynamic_cast<const ASTNode_ToDouble *>(&node)) {
+      auto child = cloneWithSubstitution(toD->GetChild(0), paramMap);
+      return std::make_unique<ASTNode_ToDouble>(std::move(child));
+    }
+    if (auto *toI = dynamic_cast<const ASTNode_ToInt *>(&node)) {
+      auto child = cloneWithSubstitution(toI->GetChild(0), paramMap);
+      return std::make_unique<ASTNode_ToInt>(std::move(child));
+    }
+    if (auto *toS = dynamic_cast<const ASTNode_ToString *>(&node)) {
+      auto child = cloneWithSubstitution(toS->GetChild(0), paramMap);
+      return std::make_unique<ASTNode_ToString>(std::move(child));
+    }
+
+    // Handle indexing and size
+    if (auto *idx = dynamic_cast<const ASTNode_Indexing *>(&node)) {
+      auto base = cloneWithSubstitution(idx->GetChild(0), paramMap);
+      auto off = cloneWithSubstitution(idx->GetChild(1), paramMap);
+      return std::make_unique<ASTNode_Indexing>(idx->GetFilePos(), std::move(base), std::move(off));
+    }
+    if (auto *sz = dynamic_cast<const ASTNode_Size *>(&node)) {
+      auto base = cloneWithSubstitution(sz->GetChild(0), paramMap);
+      return std::make_unique<ASTNode_Size>(sz->GetFilePos(), std::move(base));
+    }
+
     return nullptr;
   }
 
@@ -92,6 +129,15 @@ private:
         std::string op = const_cast<ASTNode_Math2&>(math2).GetOp();
         return std::make_unique<ASTNode_Math2>(math2.GetFilePos(), op, std::move(leftClone), std::move(rightClone));
       }
+    }
+    return nullptr;
+  }
+
+  std::unique_ptr<ASTNode_Math1> cloneMath1(const ASTNode_Math1 &math1, const std::unordered_map<size_t, std::unique_ptr<ASTNode>> &paramMap) {
+    if (math1.NumChildren() == 1) {
+      auto child = cloneWithSubstitution(math1.GetChild(0), paramMap);
+      std::string op = const_cast<ASTNode_Math1&>(math1).GetOp();
+      return std::make_unique<ASTNode_Math1>(math1.GetFilePos(), op, std::move(child));
     }
     return nullptr;
   }
@@ -152,6 +198,14 @@ private:
       }
     }
     return nullptr;
+  }
+
+  std::unique_ptr<ASTNode> cloneFunctionCall(const ASTNode_FunctionCall &call, const std::unordered_map<size_t, std::unique_ptr<ASTNode>> &paramMap) {
+    std::vector<std::unique_ptr<ASTNode>> args;
+    for (size_t i = 0; i < call.NumChildren(); ++i) {
+      args.push_back(cloneWithSubstitution(call.GetChild(i), paramMap));
+    }
+    return std::make_unique<ASTNode_FunctionCall>(call.GetFilePos(), call.GetFunId(), std::move(args));
   }
 
 public:
@@ -269,17 +323,47 @@ private:
     if (funcCall.NumChildren() != paramIds.size()) {
       return false; // Parameter count mismatch
     }
-    
-    // Only inline small functions (simple heuristic)
-    if (function->NumChildren() > 0 && function->HasChild(0)) {
-      if (auto *body = dynamic_cast<ASTNode_Block *>(&function->GetChild(0))) {
-        return body->NumChildren() <= 3; // Allow up to 3 statements
+    // Extract a return expression we could inline
+    const ASTNode *bodyNode = &function->GetChild(0);
+    const ASTNode_Return *ret = nullptr;
+    if (auto *block = dynamic_cast<const ASTNode_Block *>(bodyNode)) {
+      if (block->NumChildren() == 1 && block->HasChild(0)) {
+        ret = dynamic_cast<const ASTNode_Return *>(&block->GetChild(0));
       }
-      // Single statement body (not in a block) - always inline
-      return true;
+    } else {
+      ret = dynamic_cast<const ASTNode_Return *>(bodyNode);
     }
-    
-    return false;
+    if (!ret || ret->NumChildren() != 1) return false;
+
+    // Candidate expression to inline
+    const ASTNode &expr = ret->GetChild(0);
+
+    // Guard: expression size
+    NodeCounter counter;
+    const_cast<ASTNode&>(expr).Accept(counter);
+    if (static_cast<size_t>(counter.getCount()) > maxInlineNodes) return false;
+
+    // Guard: side-effect free expression
+    if (hasSideEffects(expr)) return false;
+
+    // Guard: argument duplication safety
+    std::vector<size_t> usage(paramIds.size(), 0);
+    for (size_t i = 0; i < paramIds.size(); ++i) {
+      usage[i] = countVarUsage(expr, paramIds[i]);
+    }
+    for (size_t i = 0; i < paramIds.size(); ++i) {
+      if (usage[i] <= 1) continue;
+      // If used multiple times, ensure argument is simple and pure
+      const ASTNode &arg = funcCall.GetChild(i);
+      if (hasSideEffects(arg)) return false;
+      NodeCounter ac; const_cast<ASTNode&>(arg).Accept(ac);
+      if (ac.getCount() > 3) return false; // too complex to duplicate safely
+    }
+
+    // Depth guard
+    if (currentDepth >= maxInlineDepth) return false;
+
+    return true;
   }
 
   std::unique_ptr<ASTNode> createInlinedExpression(const ASTNode_FunctionCall &funcCall) {
@@ -339,4 +423,37 @@ private:
 
   // Helper methods
   size_t getVarId(const ASTNode_Var &var) { return var.GetVarId(); }
+
+  // Check if a subtree may produce side effects or duplicate work hazards
+  bool hasSideEffects(const ASTNode &node) {
+    if (dynamic_cast<const ASTNode_While *>(&node)) return true;
+    if (auto *m2 = dynamic_cast<const ASTNode_Math2 *>(&node)) {
+      std::string op = const_cast<ASTNode_Math2*>(m2)->GetOp();
+      if (op == "=") return true; // assignment
+    }
+    if (dynamic_cast<const ASTNode_Break *>(&node)) return true;
+    if (dynamic_cast<const ASTNode_Continue *>(&node)) return true;
+    if (dynamic_cast<const ASTNode_FunctionCall *>(&node)) return true; // conservative
+
+    if (auto *p = dynamic_cast<const ASTNode_Parent *>(&node)) {
+      for (size_t i = 0; i < p->NumChildren(); ++i) {
+        if (p->HasChild(i) && hasSideEffects(p->GetChild(i))) return true;
+      }
+    }
+    return false;
+  }
+
+  // Count occurrences of variable id in subtree
+  size_t countVarUsage(const ASTNode &node, size_t varId) {
+    size_t cnt = 0;
+    if (auto *v = dynamic_cast<const ASTNode_Var *>(&node)) {
+      if (v->GetVarId() == varId) cnt++;
+    }
+    if (auto *p = dynamic_cast<const ASTNode_Parent *>(&node)) {
+      for (size_t i = 0; i < p->NumChildren(); ++i) {
+        if (p->HasChild(i)) cnt += countVarUsage(p->GetChild(i), varId);
+      }
+    }
+    return cnt;
+  }
 };

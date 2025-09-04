@@ -656,6 +656,9 @@ public:
 
   std::string GetTypeName() const override { return std::string("MATH1: ") + op; }
 
+  // Getter for operator symbol
+  const std::string &GetOp() const { return op; }
+
   Type ReturnType(const SymbolTable &symbols) const override {
     if (op == "!")
       return Type("int");

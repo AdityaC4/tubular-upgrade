@@ -278,7 +278,8 @@
         (call $f1)                                                                 ;; Call function f1
         (call $f2)                                                                 ;; Call function f2
         (call $f3)                                                                 ;; Call function f3
-        (call $f4)                                                                 ;; Call function f4
+        (i32.const 4)                                                              ;; Put a 4 on the stack
+        (i32.add)                                                                  ;; Stack2 + Stack1
         (local.set $var9)                                                          ;; Set var 'x' from stack
         (local.get $var10)                                                         ;; Place var 'i' onto stack
         (i32.const 1)                                                              ;; Put a 1 on the stack
