@@ -194,6 +194,37 @@ else
     echo "Function inlining generator not found (optional)"
 fi
 
+# CLI flag combination tests
+echo ---
+echo CLI FLAG COMBINATION TESTS
+cli_pass=0
+cli_fail=0
+
+if [[ -f "../build/Tubular" && -f "test-01.tube" ]]; then
+    # Valid combinations (any order)
+    ../build/Tubular test-01.tube --unroll-factor=8 --no-inline --tail=off > /dev/null 2>&1
+    if [ $? -eq 0 ]; then echo "Valid combo 1 ... Passed"; ((cli_pass++)); else echo "Valid combo 1 ... Failed"; ((cli_fail++)); fi
+
+    ../build/Tubular test-01.tube --tail=off --no-inline --unroll-factor=8 > /dev/null 2>&1
+    if [ $? -eq 0 ]; then echo "Valid combo 2 (order) ... Passed"; ((cli_pass++)); else echo "Valid combo 2 (order) ... Failed"; ((cli_fail++)); fi
+
+    # Redundant but valid: --no-unroll with --unroll-factor=1
+    ../build/Tubular test-01.tube --no-unroll --unroll-factor=1 > /dev/null 2>&1
+    if [ $? -eq 0 ]; then echo "Valid combo 3 (no-unroll + factor=1) ... Passed"; ((cli_pass++)); else echo "Valid combo 3 ... Failed"; ((cli_fail++)); fi
+
+    # Invalid combinations
+    ../build/Tubular test-01.tube --no-unroll --unroll-factor=8 > /dev/null 2>&1
+    if [ $? -ne 0 ]; then echo "Invalid combo (no-unroll + factor>1) ... Passed"; ((cli_pass++)); else echo "Invalid combo (no-unroll + factor>1) ... Failed"; ((cli_fail++)); fi
+
+    ../build/Tubular test-01.tube --unroll-factor=4 --unroll-factor=8 > /dev/null 2>&1
+    if [ $? -ne 0 ]; then echo "Invalid combo (duplicate unroll-factor) ... Passed"; ((cli_pass++)); else echo "Invalid combo (duplicate unroll-factor) ... Failed"; ((cli_fail++)); fi
+
+    ../build/Tubular test-01.tube --tail=off --tail=loop > /dev/null 2>&1
+    if [ $? -ne 0 ]; then echo "Invalid combo (conflicting tail) ... Passed"; ((cli_pass++)); else echo "Invalid combo (conflicting tail) ... Failed"; ((cli_fail++)); fi
+else
+    echo "Executable ../build/Tubular or test file test-01.tube does not exist."
+fi
+
 # Report the final count of differing files
 echo ---
 echo "Of $test_count regular test files..."

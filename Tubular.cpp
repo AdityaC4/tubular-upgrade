@@ -753,16 +753,26 @@ int main(int argc, char *argv[]) {
   bool enableFunctionInlining = true; // default
   bool enableTailLoopify = true;      // default
 
+  // Track seen flags for validation
+  bool seenNoUnroll = false;
+  bool seenUnrollFactor = false;
+  bool seenTail = false;
+
   // Check for optimization flags (allow multiple)
   for (int i = 2; i < argc; ++i) {
     std::string flag = argv[i];
     if (flag == "--no-unroll") {
       enableLoopUnrolling = false;
+      seenNoUnroll = true;
     } else if (flag == "--no-inline") {
       enableFunctionInlining = false;
     } else if (flag.rfind("--unroll-factor=", 0) == 0) {
       std::string factorStr = flag.substr(16); // length of "--unroll-factor="
       try {
+        if (seenUnrollFactor) {
+          std::cout << "Error: Duplicate --unroll-factor specified" << std::endl;
+          exit(1);
+        }
         unrollFactor = std::stoi(factorStr);
         if (unrollFactor < 1 || unrollFactor > 16) {
           std::cout << "Error: Unroll factor must be between 1 and 16" << std::endl;
@@ -772,6 +782,7 @@ int main(int argc, char *argv[]) {
         if (unrollFactor == 1) {
           enableLoopUnrolling = false;
         }
+        seenUnrollFactor = true;
       } catch (const std::exception&) {
         std::cout << "Error: Invalid unroll factor '" << factorStr << "'" << std::endl;
         exit(1);
@@ -779,17 +790,33 @@ int main(int argc, char *argv[]) {
     } else if (flag.rfind("--tail=", 0) == 0) {
       std::string mode = flag.substr(7);
       if (mode == "loop") {
+        if (seenTail && !enableTailLoopify) {
+          std::cout << "Error: Conflicting --tail options: both 'off' and 'loop' specified" << std::endl;
+          exit(1);
+        }
         enableTailLoopify = true;
       } else if (mode == "off") {
+        if (seenTail && enableTailLoopify) {
+          std::cout << "Error: Conflicting --tail options: both 'loop' and 'off' specified" << std::endl;
+          exit(1);
+        }
         enableTailLoopify = false;
       } else {
         std::cout << "Error: Unknown tail mode '" << mode << "' (use loop|off)" << std::endl;
         exit(1);
       }
+      seenTail = true;
     } else {
       std::cout << "Error: Unknown flag '" << flag << "'" << std::endl;
       exit(1);
     }
+  }
+
+  // Validate combinations after parsing
+  if (seenNoUnroll && seenUnrollFactor && unrollFactor > 1) {
+    std::cout << "Error: Cannot combine --no-unroll with --unroll-factor=" << unrollFactor
+              << ". Use one or set --unroll-factor=1 to disable unrolling." << std::endl;
+    exit(1);
   }
 
   Tubular prog(filename);
