@@ -9,13 +9,13 @@
 #include <vector>
 
 struct LoopPattern {
-  std::string loopVar;
-  std::string comparison;
-  std::string boundVar;
-  int increment;
-  bool isConstantBound;
-  bool isUnrollable;
-  ASTNode *incrementNode;
+  std::string loopVar;    // Variable being incremented/decremented
+  std::string comparison; // "<=", ">=", "<", ">", "!=", "=="
+  std::string boundVar;   // Variable or constant being compared to
+  int increment;          // +1, -1, etc.
+  bool isConstantBound;   // true if RHS is constant or simple variable
+  bool isUnrollable;      // can this loop be unrolled?
+  ASTNode *incrementNode; // Points to the increment statement
 
   LoopPattern() : increment(0), isConstantBound(false), isUnrollable(false), incrementNode(nullptr) {}
 };
@@ -33,6 +33,7 @@ private:
         return pattern;
       }
 
+      // Analyze the condition (child 0)
       ASTNode &condition = loop.GetChild(0);
       std::string leftVar, op, rightVar;
 
@@ -40,14 +41,15 @@ private:
         return pattern;
       }
 
+      // Analyze the body (child 1)
       if (auto *body = dynamic_cast<ASTNode_Block *>(&loop.GetChild(1))) {
         if (hasUnsuitableControlFlow(*body)) {
-          return pattern;
+          return pattern; // Contains break/continue/complex control flow, can't unroll
         }
 
         ASTNode *incrementNode = findIncrementStatement(*body, leftVar);
         if (!incrementNode) {
-          return pattern;
+          return pattern; // No simple increment found
         }
 
         int increment;
@@ -57,11 +59,11 @@ private:
         }
 
         if (incVar != leftVar) {
-          return pattern;
+          return pattern; // Increment variable doesn't match condition variable
         }
 
         if (hasMultipleAssignments(*body, leftVar)) {
-          return pattern;
+          return pattern; // Multiple assignments to loop variable, can't unroll safely
         }
 
         if (op == "<=" || op == "<" || op == ">" || op == ">=") {
@@ -83,6 +85,7 @@ private:
       if (auto *math2 = dynamic_cast<ASTNode_Math2 *>(&node)) {
         std::string typeName = math2->GetTypeName();
         if (typeName == "MATH2: =") {
+          // This is an assignment, check the pattern: var = var + constant
           if (math2->NumChildren() >= 2) {
             if (auto *leftVar = dynamic_cast<ASTNode_Var *>(&math2->GetChild(0))) {
               varName = std::to_string(leftVar->GetVarId());
