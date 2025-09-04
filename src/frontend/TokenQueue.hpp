@@ -28,6 +28,7 @@ private:
 
   const emplex::Token eof_token{0, "_EOF_", 0, 0};
 
+  // == Helper functions ==
   void Cleanup() {
     assert(token_id <= tokens.size());
     if (token_id) {
