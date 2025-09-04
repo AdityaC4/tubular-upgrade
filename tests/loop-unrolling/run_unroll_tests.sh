@@ -7,7 +7,7 @@ echo "=== LOOP UNROLLING PERFORMANCE TESTS ==="
 echo ""
 
 # Array of test files
-test_files=("ultra-01.tube" "ultra-02.tube" "ultra-03.tube" "ultra-04.tube")
+test_files=("ultra-01.tube" "ultra-02.tube" "ultra-03.tube" "ultra-04.tube" "ultra-05.tube")
 unroll_factors=(1 4 8 16)
 
 # Summary counters
@@ -80,9 +80,11 @@ for file in "${test_files[@]}"; do
         time_result=$(echo "$output" | tail -n 1)
         times+=($time_result)
         
-        # Generate WASM file for testing
+        # Generate WASM file for testing (default inlining)
         wat_file="${file%.tube}-unroll${factor}.wat"
         generate_wasm "$wat_file"
+
+        # (No separate no-inline variant; inlining can be controlled via CLI if needed)
     done
     
     # Display compilation time comparison
@@ -143,6 +145,7 @@ for file in "${test_files[@]}"; do
         if [[ -f "$wasm_file" ]]; then
             echo "  ✓ $wasm_file (ready for performance testing)"
         fi
+        # (No separate no-inline artifacts listed)
     done
 done
 

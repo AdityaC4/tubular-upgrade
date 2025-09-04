@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-class ASTNode; // Forward declaration
+class ASTNode;
 
 class Pass {
 public:

@@ -39,8 +39,6 @@ private:
 
   Control control;
 
-  // == HELPER FUNCTIONS
-
   template <typename... Ts> void TriggerError(Ts... message) {
     if (tokens.None())
       tokens.Rewind();

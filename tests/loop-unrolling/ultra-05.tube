@@ -1,0 +1,28 @@
+// Ultra-05: Loop with function calls to verify unrolling preserves calls
+
+function step(int x) : int {
+    // Make body large enough to avoid inlining by compilers/JITs
+    int a = x + 1;
+    int b = a + 1;
+    int c = b + 1;
+    int d = c - 1;
+    int e = d + 1;
+    int f = e + 0;
+    int g = f + 0;
+    int h = g + 0;
+    int i = h + 0;
+    int j = i + 0;
+    int k = j + 0;
+    int m = k + 0;
+    return m; // Net effect: x + 3
+}
+
+function UsesCall() : int {
+    int s = 0;
+    int i = 0;
+    while (i < 2000000) {  // 2M iterations
+        s = step(s);       // tiny function call in hot loop
+        i = i + 1;
+    }
+    return s; // Expected: 6000000
+}

@@ -8,15 +8,14 @@
 #include <string>
 #include <vector>
 
-// Structure to hold loop analysis results
 struct LoopPattern {
-  std::string loopVar;    // Variable being incremented/decremented
-  std::string comparison; // "<=", ">=", "<", ">", "!=", "=="
-  std::string boundVar;   // Variable or constant being compared to
-  int increment;          // +1, -1, etc.
-  bool isConstantBound;   // true if RHS is constant or simple variable
-  bool isUnrollable;      // can this loop be unrolled?
-  ASTNode *incrementNode; // Points to the increment statement
+  std::string loopVar;
+  std::string comparison;
+  std::string boundVar;
+  int increment;
+  bool isConstantBound;
+  bool isUnrollable;
+  ASTNode *incrementNode;
 
   LoopPattern() : increment(0), isConstantBound(false), isUnrollable(false), incrementNode(nullptr) {}
 };
@@ -25,35 +24,30 @@ class LoopUnrollingPass : public Pass {
 private:
   int unrollFactor;
 
-  // Helper classes for loop analysis and transformation
   class LoopAnalyzer {
   public:
     static LoopPattern analyzeLoop(ASTNode_While &loop) {
       LoopPattern pattern;
 
       if (loop.NumChildren() < 2) {
-        return pattern; // Not a valid while loop
+        return pattern;
       }
 
-      // Analyze the condition (child 0)
       ASTNode &condition = loop.GetChild(0);
       std::string leftVar, op, rightVar;
 
       if (!isSimpleComparison(condition, leftVar, op, rightVar)) {
-        return pattern; // Complex condition, can't unroll
+        return pattern;
       }
 
-      // Analyze the body (child 1)
       if (auto *body = dynamic_cast<ASTNode_Block *>(&loop.GetChild(1))) {
-        // Check for unsuitable control flow patterns
         if (hasUnsuitableControlFlow(*body)) {
-          return pattern; // Contains break/continue/complex control flow, can't unroll
+          return pattern;
         }
 
-        // Look for increment statement
         ASTNode *incrementNode = findIncrementStatement(*body, leftVar);
         if (!incrementNode) {
-          return pattern; // No simple increment found
+          return pattern;
         }
 
         int increment;
@@ -63,21 +57,19 @@ private:
         }
 
         if (incVar != leftVar) {
-          return pattern; // Increment variable doesn't match condition variable
+          return pattern;
         }
 
-        // Check if increment is consistent (no other assignments to the loop variable)
         if (hasMultipleAssignments(*body, leftVar)) {
-          return pattern; // Multiple assignments to loop variable, can't unroll safely
+          return pattern;
         }
 
-        // Check if this is a reasonable pattern to unroll (disallow ==/!=)
         if (op == "<=" || op == "<" || op == ">" || op == ">=") {
           pattern.loopVar = leftVar;
           pattern.comparison = op;
           pattern.boundVar = rightVar;
           pattern.increment = increment;
-          pattern.isConstantBound = true; // For now, assume it's reasonable to unroll
+          pattern.isConstantBound = true;
           pattern.isUnrollable = true;
           pattern.incrementNode = incrementNode;
         }
@@ -88,17 +80,13 @@ private:
 
   private:
     static bool isSimpleIncrement(ASTNode &node, std::string &varName, int &increment) {
-      // Check if this is an assignment node (Math2 with "=" operator)
       if (auto *math2 = dynamic_cast<ASTNode_Math2 *>(&node)) {
         std::string typeName = math2->GetTypeName();
         if (typeName == "MATH2: =") {
-          // This is an assignment, check the pattern: var = var + constant
           if (math2->NumChildren() >= 2) {
-            // Left side should be a variable
             if (auto *leftVar = dynamic_cast<ASTNode_Var *>(&math2->GetChild(0))) {
               varName = std::to_string(leftVar->GetVarId());
 
-              // Right side should be var + constant or var - constant
               if (auto *rightMath = dynamic_cast<ASTNode_Math2 *>(&math2->GetChild(1))) {
                 std::string rightOpName = rightMath->GetTypeName();
                 std::string rightOp;
@@ -107,10 +95,8 @@ private:
 
                   if (rightOp == "+" || rightOp == "-") {
                     if (rightMath->NumChildren() >= 2) {
-                      // Check if left side of addition is the same variable
                       if (auto *addLeftVar = dynamic_cast<ASTNode_Var *>(&rightMath->GetChild(0))) {
                         if (std::to_string(addLeftVar->GetVarId()) == varName) {
-                          // Check if right side is a constant
                           if (auto *constNode = dynamic_cast<ASTNode_IntLit *>(&rightMath->GetChild(1))) {
                             increment = constNode->GetValue();
                             if (rightOp == "-")
@@ -131,27 +117,21 @@ private:
     }
 
     static bool isSimpleComparison(ASTNode &node, std::string &leftVar, std::string &op, std::string &rightVar) {
-      // Check for infinite loop condition (constant 1)
       if (auto *intLit = dynamic_cast<ASTNode_IntLit*>(&node)) {
         if (intLit->GetValue() == 1) {
           return false; // while (1) infinite loop, not suitable for unrolling
         }
       }
       
-      // Check if this is a Math2 node (binary operation)
       if (auto *math2 = dynamic_cast<ASTNode_Math2 *>(&node)) {
-        // Use operator accessor
         op = math2->GetOp();
 
-          // Check if it's a comparison operator
           if (op == "<=" || op == "<" || op == ">=" || op == ">") {
 
             if (math2->NumChildren() >= 2) {
-              // Check left side - should be a variable
               if (auto *leftVarNode = dynamic_cast<ASTNode_Var *>(&math2->GetChild(0))) {
                 leftVar = std::to_string(leftVarNode->GetVarId());
 
-                // Check right side - can be variable or integer literal
                 if (auto *rightVarNode = dynamic_cast<ASTNode_Var *>(&math2->GetChild(1))) {
                   rightVar = std::to_string(rightVarNode->GetVarId());
                   return true;
@@ -167,7 +147,6 @@ private:
     }
 
     static ASTNode *findIncrementStatement(ASTNode_Block &body, const std::string &varName) {
-      // Look through the block for an assignment to varName
       for (size_t i = 0; i < body.NumChildren(); ++i) {
         if (body.HasChild(i)) {
           ASTNode &child = body.GetChild(i);
@@ -213,6 +192,9 @@ private:
       if (typeName == "BREAK" || typeName == "CONTINUE" || typeName == "RETURN") {
         return true;
       }
+
+      // Note: Function calls are now supported by the unroller's cloner,
+      // so they are not considered unsuitable on their own.
       
       // Check for nested loops (while, for)
       if (typeName == "WHILE" || typeName == "FOR") {
@@ -290,6 +272,11 @@ private:
         return cloneMath2(*math2);
       }
 
+      // Handle Function call nodes
+      if (auto *fn = dynamic_cast<const ASTNode_FunctionCall *>(&node)) {
+        return cloneFunctionCall(*fn);
+      }
+
       // Handle Variable nodes
       if (auto *var = dynamic_cast<const ASTNode_Var *>(&node)) {
         return cloneVar(*var);
@@ -337,6 +324,18 @@ private:
     }
 
   private:
+    static std::unique_ptr<ASTNode> cloneFunctionCall(const ASTNode_FunctionCall &call) {
+      std::vector<std::unique_ptr<ASTNode>> clonedArgs;
+      clonedArgs.reserve(call.NumChildren());
+      for (size_t i = 0; i < call.NumChildren(); ++i) {
+        if (call.HasChild(i)) {
+          auto argClone = clone(call.GetChild(i));
+          if (argClone) clonedArgs.push_back(std::move(argClone));
+        }
+      }
+      return std::make_unique<ASTNode_FunctionCall>(call.GetFilePos(), call.GetFunId(), std::move(clonedArgs));
+    }
+
     static std::unique_ptr<ASTNode_Math2> cloneMath2(const ASTNode_Math2 &math2) {
       if (math2.NumChildren() >= 2) {
         auto leftClone = clone(math2.GetChild(0));
@@ -690,6 +689,19 @@ private:
           return std::make_unique<ASTNode_Math2>(math2->GetFilePos(), op, std::move(leftClone), std::move(rightClone));
         }
       }
+    }
+
+    // Handle Function call nodes recursively (substitute within arguments)
+    if (auto *fn = dynamic_cast<const ASTNode_FunctionCall *>(&node)) {
+      std::vector<std::unique_ptr<ASTNode>> newArgs;
+      newArgs.reserve(fn->NumChildren());
+      for (size_t i = 0; i < fn->NumChildren(); ++i) {
+        if (fn->HasChild(i)) {
+          auto arg = cloneWithInductionVariableSubstitution(fn->GetChild(i), loopVar, offset);
+          if (arg) newArgs.push_back(std::move(arg));
+        }
+      }
+      return std::make_unique<ASTNode_FunctionCall>(fn->GetFilePos(), fn->GetFunId(), std::move(newArgs));
     }
 
     // Handle other node types with regular cloning

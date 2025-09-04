@@ -149,6 +149,14 @@
         <li>Timing: median of 3 runs × 100 iterations.</li>
         <li>Warm‑up: 10 iterations to stabilize JIT.</li>
         <li>Correctness: exact match with expected output.</li>
+        <li>
+          Note on CallsInLoop: when the loop body contains function calls, high
+          unroll factors (8×–16×) can slow down due to larger loop bodies
+          (more call sites per iteration), increased register pressure and
+          spills, instruction‑cache effects, and less favorable JIT
+          optimizations. In practice, a moderate factor (≈4×) is often the
+          sweet spot.
+        </li>
       </ul>
     </div>
 
@@ -190,6 +198,15 @@
           args: [],
           expected: 86372, // Complex memory access patterns (2M)
           description: "Memory access patterns with complex arithmetic (2M)",
+        },
+        // Function call in loop (regression for unrolling correctness)
+        {
+          file: "ultra-05",
+          name: "CallsInLoop",
+          function: "UsesCall",
+          args: [],
+          expected: 6000000,
+          description: "Calls tiny function inside loop (2M)",
         },
       ];
 

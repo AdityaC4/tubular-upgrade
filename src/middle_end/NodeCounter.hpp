@@ -12,18 +12,15 @@ public:
 
   void visit(ASTNode &node) override {
     count++;
-    // For base nodes, we don't need to do anything else
   }
 
   void visit(ASTNode_Parent &node) override {
     count++;
-    // For parent nodes, we need to visit all children
     for (size_t i = 0; i < node.NumChildren(); i++) {
       node.GetChild(i).Accept(*this);
     }
   }
 
-  // Override specific node types if needed
   void visit(ASTNode_Block &node) override {
     visit(static_cast<ASTNode_Parent &>(node));
   }

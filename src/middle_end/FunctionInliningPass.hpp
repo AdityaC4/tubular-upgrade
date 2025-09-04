@@ -14,15 +14,10 @@ private:
   size_t maxInlineDepth = 3;
   size_t currentDepth = 0;
 
-  // (Removed) getFunctionParams; we now use public getters on AST nodes.
-
-  // Complete AST cloning with parameter substitution
   std::unique_ptr<ASTNode> cloneWithSubstitution(const ASTNode &node, const std::unordered_map<size_t, std::unique_ptr<ASTNode>> &paramMap) {
-    // Handle Variable nodes with substitution
     if (auto *var = dynamic_cast<const ASTNode_Var *>(&node)) {
       size_t varId = getVarId(*var);
       if (paramMap.find(varId) != paramMap.end()) {
-        // Clone the parameter replacement
         return cloneWithSubstitution(*paramMap.at(varId), {});
       }
       return cloneVar(*var);
