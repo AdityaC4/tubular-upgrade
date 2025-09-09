@@ -2,6 +2,7 @@
 
 #include "ASTNode.hpp"
 #include "Pass.hpp"
+#include "core/ASTCloner.hpp"
 #include <memory>
 #include <vector>
 #include <unordered_set>
@@ -11,63 +12,6 @@
 class TailRecursionPass : public Pass {
 private:
   bool loopifyTailRecursion;
-
-  // Lightweight AST cloner
-  struct Cloner {
-    static std::unique_ptr<ASTNode> clone(const ASTNode &n) {
-      if (auto *b = dynamic_cast<const ASTNode_Block *>(&n)) return cloneBlock(*b);
-      if (auto *w = dynamic_cast<const ASTNode_While *>(&n)) return cloneWhile(*w);
-      if (auto *i = dynamic_cast<const ASTNode_If *>(&n)) return cloneIf(*i);
-      if (auto *r = dynamic_cast<const ASTNode_Return *>(&n)) return cloneReturn(*r);
-      if (auto *m2 = dynamic_cast<const ASTNode_Math2 *>(&n)) return cloneMath2(*m2);
-      if (auto *m1 = dynamic_cast<const ASTNode_Math1 *>(&n)) return cloneMath1(*m1);
-      if (auto *v = dynamic_cast<const ASTNode_Var *>(&n)) return std::make_unique<ASTNode_Var>(v->GetFilePos(), v->GetVarId());
-      if (auto *il = dynamic_cast<const ASTNode_IntLit *>(&n)) return std::make_unique<ASTNode_IntLit>(il->GetFilePos(), il->GetValue());
-      if (auto *fl = dynamic_cast<const ASTNode_FloatLit *>(&n)) return std::make_unique<ASTNode_FloatLit>(fl->GetFilePos(), fl->GetValue());
-      if (auto *ch = dynamic_cast<const ASTNode_CharLit *>(&n)) return std::make_unique<ASTNode_CharLit>(ch->GetFilePos(), (int)(ch->GetTypeName().size()>0));
-      if (auto *sl = dynamic_cast<const ASTNode_StringLit *>(&n)) return std::make_unique<ASTNode_StringLit>(sl->GetFilePos(), sl->GetValue());
-      if (auto *fc = dynamic_cast<const ASTNode_FunctionCall *>(&n)) return cloneCall(*fc);
-      if (auto *idx = dynamic_cast<const ASTNode_Indexing *>(&n)) return cloneIndexing(*idx);
-      if (auto *sz = dynamic_cast<const ASTNode_Size *>(&n)) return cloneSize(*sz);
-      if (auto *br = dynamic_cast<const ASTNode_Break *>(&n)) return std::make_unique<ASTNode_Break>(n.GetFilePos());
-      if (auto *ct = dynamic_cast<const ASTNode_Continue *>(&n)) return std::make_unique<ASTNode_Continue>(n.GetFilePos());
-      return nullptr;
-    }
-
-    static std::unique_ptr<ASTNode_Block> cloneBlock(const ASTNode_Block &b) {
-      auto out = std::make_unique<ASTNode_Block>(b.GetFilePos());
-      for (size_t i = 0; i < b.NumChildren(); ++i) if (b.HasChild(i)) { auto c = clone(b.GetChild(i)); if (c) out->AddChild(std::move(c)); }
-      return out;
-    }
-    static std::unique_ptr<ASTNode> cloneWhile(const ASTNode_While &w) {
-      if (w.NumChildren()<2) return nullptr; auto t = clone(w.GetChild(0)); auto a = clone(w.GetChild(1)); if (t&&a) return std::make_unique<ASTNode_While>(w.GetFilePos(), std::move(t), std::move(a)); return nullptr;
-    }
-    static std::unique_ptr<ASTNode> cloneIf(const ASTNode_If &i) {
-      if (i.NumChildren()==2) { auto t=clone(i.GetChild(0)); auto a=clone(i.GetChild(1)); if(t&&a) return std::make_unique<ASTNode_If>(i.GetFilePos(), std::move(t), std::move(a)); }
-      else if (i.NumChildren()==3) { auto t=clone(i.GetChild(0)); auto a=clone(i.GetChild(1)); auto e=clone(i.GetChild(2)); if(t&&a&&e) return std::make_unique<ASTNode_If>(i.GetFilePos(), std::move(t), std::move(a), std::move(e)); }
-      return nullptr;
-    }
-    static std::unique_ptr<ASTNode> cloneReturn(const ASTNode_Return &r) {
-      if (r.NumChildren()<1) return nullptr; auto e=clone(r.GetChild(0)); if(e) return std::make_unique<ASTNode_Return>(r.GetFilePos(), std::move(e)); return nullptr;
-    }
-    static std::unique_ptr<ASTNode> cloneMath2(const ASTNode_Math2 &m) {
-      if (m.NumChildren()<2) return nullptr; auto l=clone(m.GetChild(0)); auto r=clone(m.GetChild(1)); if(l&&r) return std::make_unique<ASTNode_Math2>(m.GetFilePos(), m.GetOp(), std::move(l), std::move(r)); return nullptr;
-    }
-    static std::unique_ptr<ASTNode> cloneMath1(const ASTNode_Math1 &m) {
-      if (m.NumChildren()<1) return nullptr; auto c=clone(m.GetChild(0)); if(c) return std::make_unique<ASTNode_Math1>(m.GetFilePos(), m.GetOp(), std::move(c)); return nullptr;
-    }
-    static std::unique_ptr<ASTNode> cloneCall(const ASTNode_FunctionCall &c) {
-      std::vector<std::unique_ptr<ASTNode>> args; args.reserve(c.NumChildren());
-      for (size_t i=0;i<c.NumChildren();++i) if(c.HasChild(i)){ auto a=clone(c.GetChild(i)); if(a) args.push_back(std::move(a)); }
-      return std::make_unique<ASTNode_FunctionCall>(c.GetFilePos(), c.GetFunId(), std::move(args));
-    }
-    static std::unique_ptr<ASTNode> cloneIndexing(const ASTNode_Indexing &idx) {
-      if (idx.NumChildren()<2) return nullptr; auto b=clone(idx.GetChild(0)); auto i=clone(idx.GetChild(1)); if(b&&i) return std::make_unique<ASTNode_Indexing>(idx.GetFilePos(), std::move(b), std::move(i)); return nullptr;
-    }
-    static std::unique_ptr<ASTNode> cloneSize(const ASTNode_Size &sz) {
-      if (sz.NumChildren()<1) return nullptr; auto a=clone(sz.GetChild(0)); if(a) return std::make_unique<ASTNode_Size>(sz.GetFilePos(), std::move(a)); return nullptr;
-    }
-  };
 
 public:
   TailRecursionPass(bool loopify) : loopifyTailRecursion(loopify) {}
@@ -148,7 +92,7 @@ public:
 
             // Prepare RHS clones and dependencies
             for (size_t i = 0; i < k; ++i) {
-              rhsClones[i] = Cloner::clone(call->GetChild(i));
+              rhsClones[i] = ASTCloner::clone(call->GetChild(i));
               if (rhsClones[i]) CollectParamDeps(*rhsClones[i], params, deps[i]);
             }
 
@@ -184,7 +128,7 @@ public:
 
             if (order.size() != nodes.size()) {
               // cycle detected (e.g., gcd or fib accum). Skip transform.
-              return Cloner::clone(*ret);
+              return ASTCloner::clone(*ret);
             }
 
             // Emit assignments in dependency-safe order: params in 'order'
@@ -192,7 +136,7 @@ public:
             for (size_t idx = 0; idx < order.size(); ++idx) {
               size_t i = order[idx];
               auto lhs = std::make_unique<ASTNode_Var>(ret->GetFilePos(), params[i]);
-              auto rhs = Cloner::clone(*rhsClones[i]);
+              auto rhs = ASTCloner::clone(*rhsClones[i]);
               seq->AddChild(std::make_unique<ASTNode_Math2>(ret->GetFilePos(), "=", std::move(lhs), std::move(rhs)));
             }
             seq->AddChild(std::make_unique<ASTNode_Continue>(ret->GetFilePos()));
@@ -202,12 +146,12 @@ public:
         }
       }
       // Non-tail return: clone as-is
-      return Cloner::clone(*ret);
+      return ASTCloner::clone(*ret);
     }
 
     // If: transform branches recursively
     if (auto *iff = dynamic_cast<ASTNode_If *>(&n)) {
-      auto test = Cloner::clone(iff->GetChild(0));
+      auto test = ASTCloner::clone(iff->GetChild(0));
       if (iff->NumChildren() == 2) {
         bool chThen=false; auto thenB = transformNodeAsBlock(fn, iff->GetChild(1), selfId, params, chThen);
         if (chThen) changed = true;
@@ -220,7 +164,7 @@ public:
         if (test && thenB && elseB) return std::make_unique<ASTNode_If>(iff->GetFilePos(), std::move(test), std::move(thenB), std::move(elseB));
       }
       // Fallback clone
-      return Cloner::clone(*iff);
+      return ASTCloner::clone(*iff);
     }
 
     // Block: transform children
@@ -232,7 +176,7 @@ public:
     }
 
     // Other nodes: clone as-is
-    return Cloner::clone(n);
+    return ASTCloner::clone(n);
   }
 
   std::unique_ptr<ASTNode> transformNodeAsBlock(ASTNode_Function &fn, ASTNode &n, size_t selfId,

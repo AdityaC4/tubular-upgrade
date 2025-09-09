@@ -73,7 +73,9 @@ add_custom_target(tests
 add_custom_target(clean-all
     COMMAND rm -f ${PROJECT_NAME} *.o tests/test-??.wasm tests/test-??.wat tests/P3-test-??.wasm tests/P3-test-??.wat
     COMMAND rm -f tests/loop-unrolling/ultra-??-unroll*.wasm tests/loop-unrolling/ultra-??-unroll*.wat
-    COMMAND rm -f tests/function-inlining/inline-test-??-*.wasm tests/function-inlining/inline-test-??-*.wat
+    COMMAND rm -f tests/function-inlining/*.wasm tests/function-inlining/*.wat
+    COMMAND rm -f tests/tail-recursion/*.wasm tests/tail-recursion/*.wat
+    COMMAND rm -rf tests/function-inlining/out/
     COMMAND rm -rf ${PROJECT_NAME}.dSYM
     COMMAND rm -rf tests/loop-unrolling/results
     COMMAND rm -f build/${PROJECT_NAME}
@@ -85,7 +87,9 @@ add_custom_target(clean-all
 add_custom_target(clean-test
     COMMAND rm -f tests/test-??.wasm tests/test-??.wat tests/P3-test-??.wasm tests/P3-test-??.wat
     COMMAND rm -f tests/loop-unrolling/ultra-??-unroll*.wasm tests/loop-unrolling/ultra-??-unroll*.wat
-    COMMAND rm -f tests/function-inlining/inline-test-??-*.wasm tests/function-inlining/inline-test-??-*.wat
+    COMMAND rm -f tests/function-inlining/*.wasm tests/function-inlining/*.wat
+    COMMAND rm -f tests/tail-recursion/*.wasm tests/tail-recursion/*.wat
+    COMMAND rm -rf tests/function-inlining/out/
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "Cleaning all test files including loop unrolling and function inlining tests"
 )
@@ -100,7 +104,8 @@ add_custom_target(clean-unroll
 
 # Clean only function inlining test results
 add_custom_target(clean-inline
-    COMMAND rm -f tests/function-inlining/inline-test-??-*.wasm tests/function-inlining/inline-test-??-*.wat
+    COMMAND rm -f tests/function-inlining/*.wasm tests/function-inlining/*.wat
+    COMMAND rm -rf tests/function-inlining/out/
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "Cleaning function inlining test files"
 )
