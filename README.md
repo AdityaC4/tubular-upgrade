@@ -83,8 +83,6 @@ Interactive testing interfaces provide real-time performance analysis:
 - Function inlining before/after analysis
 - Tail recursion optimization measurement
 
-![Browser Testing](docs/screenshots/browser-testing.png)
-
 ## Performance Results
 
 Current optimization impact measured across representative workloads:
