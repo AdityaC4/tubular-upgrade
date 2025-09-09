@@ -1,6 +1,6 @@
 # Testing and Build Commands
 
-This project supports comprehensive testing including loop unrolling performance tests.
+This project supports comprehensive testing including optimization performance tests.
 
 ## Available Commands
 
@@ -14,7 +14,7 @@ This project supports comprehensive testing including loop unrolling performance
 ### Testing
 
 ```bash
-./make test         # Run all tests (standard + loop unrolling)
+./make test         # Run all tests (standard + optimization tests)
 ./make clean-test   # Clean all test files
 ```
 
@@ -58,20 +58,31 @@ cd tests && python -m http.server
 - **Performance improvements observed**: Up to 22% faster execution with optimal unrolling
 - **Browser-based timing analysis** with anti-optimization techniques
 
+### Tail Recursion Tests
+
+- Location: `tests/tail-recursion/`
+- Runner: `tests/tail-recursion/run_tail_tests.sh`
+  - Compiles each test twice: `--tail=off` vs `--tail=loop`
+  - Validates outputs match expected
+  - Reports median per‑call time via Node.js when available
+
 ## Expected Results
 
 All tests should pass with:
 
 - **Standard tests**: 100% compilation success rate
-- **Loop unrolling tests**: 100% compilation success rate with measurable performance improvements
+- **Optimization tests**: 100% compilation success rate with measurable performance improvements
 - **Browser tests**: All functions should execute correctly with expected outputs
+
 ### CLI Flags
 
 You can combine multiple optimization flags when invoking Tubular:
 
-```
+```bash
 ./build/Tubular file.tube --unroll-factor=4 --no-inline --tail=off
 ```
+
+Available flags:
 
 - `--unroll-factor=N` (1 disables unrolling)
 - `--no-unroll`

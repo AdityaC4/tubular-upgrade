@@ -4,6 +4,7 @@
 #include "Pass.hpp"
 #include <cassert>
 #include <iostream>
+#include <cstdlib>
 #include <memory>
 #include <string>
 #include <vector>
@@ -82,37 +83,52 @@ private:
 
   private:
     static bool isSimpleIncrement(ASTNode &node, std::string &varName, int &increment) {
-      if (auto *math2 = dynamic_cast<ASTNode_Math2 *>(&node)) {
-        std::string typeName = math2->GetTypeName();
-        if (typeName == "MATH2: =") {
-          // This is an assignment, check the pattern: var = var + constant
-          if (math2->NumChildren() >= 2) {
-            if (auto *leftVar = dynamic_cast<ASTNode_Var *>(&math2->GetChild(0))) {
-              varName = std::to_string(leftVar->GetVarId());
-
-              if (auto *rightMath = dynamic_cast<ASTNode_Math2 *>(&math2->GetChild(1))) {
-                std::string rightOpName = rightMath->GetTypeName();
-                std::string rightOp;
-                if (rightOpName.find("MATH2: ") == 0) {
-                  rightOp = rightOpName.substr(7);
-
-                  if (rightOp == "+" || rightOp == "-") {
-                    if (rightMath->NumChildren() >= 2) {
-                      if (auto *addLeftVar = dynamic_cast<ASTNode_Var *>(&rightMath->GetChild(0))) {
-                        if (std::to_string(addLeftVar->GetVarId()) == varName) {
-                          if (auto *constNode = dynamic_cast<ASTNode_IntLit *>(&rightMath->GetChild(1))) {
-                            increment = constNode->GetValue();
-                            if (rightOp == "-")
-                              increment = -increment;
-                            return true;
-                          }
-                        }
+      // Match: var = var (+|-) k, and var = k + var (k int or unary -int)
+      if (auto *assign = dynamic_cast<ASTNode_Math2 *>(&node)) {
+        if (assign->GetOp() == "=" && assign->NumChildren() >= 2) {
+          if (auto *lhsVar = dynamic_cast<ASTNode_Var *>(&assign->GetChild(0))) {
+            varName = std::to_string(lhsVar->GetVarId());
+            if (auto *rhsBin = dynamic_cast<ASTNode_Math2 *>(&assign->GetChild(1))) {
+              const std::string op = rhsBin->GetOp();
+              if ((op == "+" || op == "-") && rhsBin->NumChildren() >= 2) {
+                // var = var (+|-) k
+                if (auto *aVar = dynamic_cast<ASTNode_Var *>(&rhsBin->GetChild(0))) {
+                  if (std::to_string(aVar->GetVarId()) == varName) {
+                    if (parseIntLike(rhsBin->GetChild(1), increment)) {
+                      if (op == "-") increment = -increment;
+                      return true;
+                    }
+                  }
+                }
+                // var = k + var (commutative plus only)
+                if (op == "+") {
+                  if (auto *bVar = dynamic_cast<ASTNode_Var *>(&rhsBin->GetChild(1))) {
+                    if (std::to_string(bVar->GetVarId()) == varName) {
+                      if (parseIntLike(rhsBin->GetChild(0), increment)) {
+                        return true;
                       }
                     }
                   }
                 }
               }
             }
+          }
+        }
+      }
+      return false;
+    }
+
+    // Accept INT_LIT or unary '-' INT_LIT
+    static bool parseIntLike(ASTNode &node, int &out) {
+      if (auto *lit = dynamic_cast<ASTNode_IntLit *>(&node)) {
+        out = lit->GetValue();
+        return true;
+      }
+      if (auto *un = dynamic_cast<ASTNode_Math1 *>(&node)) {
+        if (un->GetOp() == "-") {
+          if (auto *inner = dynamic_cast<ASTNode_IntLit *>(&un->GetChild(0))) {
+            out = -inner->GetValue();
+            return true;
           }
         }
       }
@@ -144,6 +160,11 @@ private:
                 }
               }
             }
+          }
+
+          // Explicitly reject equality-based loop conditions as unsafe
+          if (op == "==" || op == "!=") {
+            return false;
           }
       }
       return false;
@@ -235,20 +256,17 @@ private:
     // Check if there are multiple assignments to the loop variable
     static bool hasMultipleAssignments(ASTNode_Block &body, const std::string &varName) {
       int assignmentCount = 0;
-      
-      for (size_t i = 0; i < body.NumChildren(); ++i) {
-        if (body.HasChild(i)) {
-          ASTNode &child = body.GetChild(i);
-          if (isAssignmentTo(child, varName)) {
-            assignmentCount++;
-            if (assignmentCount > 1) {
-              return true; // Found multiple assignments
-            }
-          }
+      countAssignmentsRecursive(body, varName, assignmentCount);
+      return assignmentCount > 1;
+    }
+
+    static void countAssignmentsRecursive(ASTNode &node, const std::string &varName, int &count) {
+      if (isAssignmentTo(node, varName)) ++count;
+      if (auto *parent = dynamic_cast<ASTNode_Parent *>(&node)) {
+        for (size_t i = 0; i < parent->NumChildren(); ++i) {
+          if (parent->HasChild(i)) countAssignmentsRecursive(parent->GetChild(i), varName, count);
         }
       }
-      
-      return false;
     }
 
     // Check if a node is an assignment to a specific variable
@@ -275,6 +293,11 @@ private:
         return cloneMath2(*math2);
       }
 
+      // Handle Math1 nodes (unary operations)
+      if (auto *math1 = dynamic_cast<const ASTNode_Math1 *>(&node)) {
+        return cloneMath1(*math1);
+      }
+
       // Handle Function call nodes
       if (auto *fn = dynamic_cast<const ASTNode_FunctionCall *>(&node)) {
         return cloneFunctionCall(*fn);
@@ -290,9 +313,63 @@ private:
         return cloneIntLit(*intLit);
       }
 
+      // Handle Float literal nodes
+      if (auto *floatLit = dynamic_cast<const ASTNode_FloatLit *>(&node)) {
+        return cloneFloatLit(*floatLit);
+      }
+
+      // Handle Char literal nodes
+      if (auto *charLit = dynamic_cast<const ASTNode_CharLit *>(&node)) {
+        return cloneCharLit(*charLit);
+      }
+
+      // Handle String literal nodes
+      if (auto *strLit = dynamic_cast<const ASTNode_StringLit *>(&node)) {
+        return cloneStringLit(*strLit);
+      }
+
       // Handle Block nodes
       if (auto *block = dynamic_cast<const ASTNode_Block *>(&node)) {
         return cloneBlock(*block);
+      }
+
+      // Handle While nodes
+      if (auto *wh = dynamic_cast<const ASTNode_While *>(&node)) {
+        return cloneWhile(*wh);
+      }
+
+      // Handle If nodes
+      if (auto *ifn = dynamic_cast<const ASTNode_If *>(&node)) {
+        return cloneIf(*ifn);
+      }
+
+      // Handle Return/Break/Continue
+      if (auto *ret = dynamic_cast<const ASTNode_Return *>(&node)) {
+        return cloneReturn(*ret);
+      }
+      if (auto *brk = dynamic_cast<const ASTNode_Break *>(&node)) {
+        return cloneBreak(*brk);
+      }
+      if (auto *cont = dynamic_cast<const ASTNode_Continue *>(&node)) {
+        return cloneContinue(*cont);
+      }
+
+      // Handle Indexing
+      if (auto *idx = dynamic_cast<const ASTNode_Indexing *>(&node)) {
+        return cloneIndexing(*idx);
+      }
+
+      // Handle Size
+      if (auto *sz = dynamic_cast<const ASTNode_Size *>(&node)) {
+        return cloneSize(*sz);
+      }
+
+      // Handle ToDouble/ToString
+      if (auto *td = dynamic_cast<const ASTNode_ToDouble *>(&node)) {
+        return cloneToDouble(*td);
+      }
+      if (auto *ts = dynamic_cast<const ASTNode_ToString *>(&node)) {
+        return cloneToString(*ts);
       }
 
       // For now, return nullptr for unsupported node types
@@ -354,6 +431,105 @@ private:
 
     static std::unique_ptr<ASTNode_IntLit> cloneIntLit(const ASTNode_IntLit &intLit) {
       return std::make_unique<ASTNode_IntLit>(intLit.GetFilePos(), intLit.GetValue());
+    }
+
+    static std::unique_ptr<ASTNode_FloatLit> cloneFloatLit(const ASTNode_FloatLit &floatLit) {
+      return std::make_unique<ASTNode_FloatLit>(floatLit.GetFilePos(), floatLit.GetValue());
+    }
+
+    static std::unique_ptr<ASTNode_CharLit> cloneCharLit(const ASTNode_CharLit &charLit) {
+      const std::string tn = charLit.GetTypeName();
+      int val = 0;
+      auto pos = tn.find(": ");
+      if (pos != std::string::npos) {
+        try { val = std::stoi(tn.substr(pos + 2)); } catch (...) { val = 0; }
+      }
+      return std::make_unique<ASTNode_CharLit>(charLit.GetFilePos(), val);
+    }
+
+    static std::unique_ptr<ASTNode_StringLit> cloneStringLit(const ASTNode_StringLit &str) {
+      return std::make_unique<ASTNode_StringLit>(str.GetFilePos(), str.GetValue());
+    }
+
+    static std::unique_ptr<ASTNode> cloneMath1(const ASTNode_Math1 &math1) {
+      if (math1.NumChildren() >= 1) {
+        auto ch = clone(math1.GetChild(0));
+        if (ch) return std::make_unique<ASTNode_Math1>(math1.GetFilePos(), math1.GetOp(), std::move(ch));
+      }
+      return nullptr;
+    }
+
+    static std::unique_ptr<ASTNode> cloneWhile(const ASTNode_While &wh) {
+      if (wh.NumChildren() >= 2) {
+        auto cond = clone(wh.GetChild(0));
+        auto body = clone(wh.GetChild(1));
+        if (cond && body) return std::make_unique<ASTNode_While>(wh.GetFilePos(), std::move(cond), std::move(body));
+      }
+      return nullptr;
+    }
+
+    static std::unique_ptr<ASTNode> cloneIf(const ASTNode_If &ifn) {
+      if (ifn.NumChildren() == 2) {
+        auto test = clone(ifn.GetChild(0));
+        auto thenB = clone(ifn.GetChild(1));
+        if (test && thenB) return std::make_unique<ASTNode_If>(ifn.GetFilePos(), std::move(test), std::move(thenB));
+      } else if (ifn.NumChildren() == 3) {
+        auto test = clone(ifn.GetChild(0));
+        auto thenB = clone(ifn.GetChild(1));
+        auto elseB = clone(ifn.GetChild(2));
+        if (test && thenB && elseB)
+          return std::make_unique<ASTNode_If>(ifn.GetFilePos(), std::move(test), std::move(thenB), std::move(elseB));
+      }
+      return nullptr;
+    }
+
+    static std::unique_ptr<ASTNode> cloneReturn(const ASTNode_Return &ret) {
+      if (ret.NumChildren() >= 1) {
+        auto expr = clone(ret.GetChild(0));
+        if (expr) return std::make_unique<ASTNode_Return>(ret.GetFilePos(), std::move(expr));
+      }
+      return nullptr;
+    }
+
+    static std::unique_ptr<ASTNode> cloneBreak(const ASTNode_Break &brk) {
+      return std::make_unique<ASTNode_Break>(brk.GetFilePos());
+    }
+
+    static std::unique_ptr<ASTNode> cloneContinue(const ASTNode_Continue &cont) {
+      return std::make_unique<ASTNode_Continue>(cont.GetFilePos());
+    }
+
+    static std::unique_ptr<ASTNode> cloneIndexing(const ASTNode_Indexing &idx) {
+      if (idx.NumChildren() >= 2) {
+        auto base = clone(idx.GetChild(0));
+        auto index = clone(idx.GetChild(1));
+        if (base && index) return std::make_unique<ASTNode_Indexing>(idx.GetFilePos(), std::move(base), std::move(index));
+      }
+      return nullptr;
+    }
+
+    static std::unique_ptr<ASTNode> cloneSize(const ASTNode_Size &sz) {
+      if (sz.NumChildren() >= 1) {
+        auto arg = clone(sz.GetChild(0));
+        if (arg) return std::make_unique<ASTNode_Size>(sz.GetFilePos(), std::move(arg));
+      }
+      return nullptr;
+    }
+
+    static std::unique_ptr<ASTNode> cloneToDouble(const ASTNode_ToDouble &td) {
+      if (td.NumChildren() >= 1) {
+        auto arg = clone(td.GetChild(0));
+        if (arg) return std::make_unique<ASTNode_ToDouble>(std::move(arg));
+      }
+      return nullptr;
+    }
+
+    static std::unique_ptr<ASTNode> cloneToString(const ASTNode_ToString &ts) {
+      if (ts.NumChildren() >= 1) {
+        auto arg = clone(ts.GetChild(0));
+        if (arg) return std::make_unique<ASTNode_ToString>(std::move(arg));
+      }
+      return nullptr;
     }
 
     static std::string getOperator(ASTNode_Math2 &math2) {
@@ -474,7 +650,11 @@ private:
 
   bool isUnrollableLoop(ASTNode_While &loop, LoopPattern &pattern) {
     pattern = LoopAnalyzer::analyzeLoop(loop);
-    return pattern.isUnrollable;
+    if (!pattern.isUnrollable) return false;
+    // Monotonicity: ensure direction matches comparison
+    if ((pattern.comparison == "<" || pattern.comparison == "<=") && pattern.increment <= 0) return false;
+    if ((pattern.comparison == ">" || pattern.comparison == ">=") && pattern.increment >= 0) return false;
+    return true;
   }
 
   // Create a block containing both unrolled and remainder loops  
@@ -548,14 +728,17 @@ private:
     if (auto *math2 = dynamic_cast<const ASTNode_Math2 *>(&originalCondition)) {
       if (math2->NumChildren() >= 2) {
         std::string op = const_cast<ASTNode_Math2*>(math2)->GetOp();
-        
+        const int step = std::abs(pattern.increment);
+        const int adjStrict = (unrollFactor - 1) * step;
+        const int adjLoose  = (unrollFactor) * step;
+
         if (op == "<" && pattern.increment > 0) {
           // Clone the left side (loop variable)
           auto leftClone = ASTCloner::clone(math2->GetChild(0));
           
           // Clone the bound and subtract (unrollFactor - 1)
           auto boundClone = ASTCloner::clone(math2->GetChild(1));
-          auto adjustment = std::make_unique<ASTNode_IntLit>(originalCondition.GetFilePos(), unrollFactor - 1);
+          auto adjustment = std::make_unique<ASTNode_IntLit>(originalCondition.GetFilePos(), adjStrict);
           
           // Create: bound - (unrollFactor - 1)
           auto adjustedBound = std::make_unique<ASTNode_Math2>(originalCondition.GetFilePos(), "-",
@@ -571,7 +754,7 @@ private:
           // For <=, adjust to <= bound - unrollFactor
           auto leftClone = ASTCloner::clone(math2->GetChild(0));
           auto boundClone = ASTCloner::clone(math2->GetChild(1));
-          auto adjustment = std::make_unique<ASTNode_IntLit>(originalCondition.GetFilePos(), unrollFactor);
+          auto adjustment = std::make_unique<ASTNode_IntLit>(originalCondition.GetFilePos(), adjLoose);
           
           auto adjustedBound = std::make_unique<ASTNode_Math2>(originalCondition.GetFilePos(), "-",
                                                                std::move(boundClone), std::move(adjustment));
@@ -585,7 +768,7 @@ private:
           // Decrement loop: i > N becomes i > N + (unrollFactor - 1)
           auto leftClone = ASTCloner::clone(math2->GetChild(0));
           auto boundClone = ASTCloner::clone(math2->GetChild(1));
-          auto adjustment = std::make_unique<ASTNode_IntLit>(originalCondition.GetFilePos(), unrollFactor - 1);
+          auto adjustment = std::make_unique<ASTNode_IntLit>(originalCondition.GetFilePos(), adjStrict);
           
           auto adjustedBound = std::make_unique<ASTNode_Math2>(originalCondition.GetFilePos(), "+",
                                                                std::move(boundClone), std::move(adjustment));
@@ -599,8 +782,8 @@ private:
           // Decrement loop: i >= N becomes i >= N + unrollFactor
           auto leftClone = ASTCloner::clone(math2->GetChild(0));
           auto boundClone = ASTCloner::clone(math2->GetChild(1));
-          auto adjustment = std::make_unique<ASTNode_IntLit>(originalCondition.GetFilePos(), unrollFactor);
-          
+          auto adjustment = std::make_unique<ASTNode_IntLit>(originalCondition.GetFilePos(), adjLoose);
+      
           auto adjustedBound = std::make_unique<ASTNode_Math2>(originalCondition.GetFilePos(), "+",
                                                                std::move(boundClone), std::move(adjustment));
           

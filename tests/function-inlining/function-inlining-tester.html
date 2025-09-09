@@ -105,13 +105,20 @@
     <div class="nav">
       <a href="../index.html">Project 4 Tests</a>
       <a href="../P3-tester.html">Project 3 Tests</a>
-      <a class="active" href="../function-inlining/function-inlining-tester.html">Function Inlining Tests</a>
-      <a href="../loop-unrolling/loop-unrolling-tester.html">Loop Unrolling Tests</a>
+      <a
+        class="active"
+        href="../function-inlining/function-inlining-tester.html"
+        >Function Inlining Tests</a
+      >
+      <a href="../loop-unrolling/loop-unrolling-tester.html"
+        >Loop Unrolling Tests</a
+      >
+      <a href="../tail-recursion/tail-recursion-tester.html"
+        >Tail Recursion Tests</a
+      >
     </div>
 
     <!-- About section moved below results -->
-
-    
 
     <table id="results-table">
       <tr style="height: 30px">
@@ -141,7 +148,9 @@
     <div class="summary-box" style="margin-top: 20px">
       <h3 style="margin-top: 0">About These Tests</h3>
       <p>
-        Compares execution time and correctness with function inlining disabled versus enabled. Each row reports median per‑call time after warm‑up; percent change is relative to the no‑inline baseline.
+        Compares execution time and correctness with function inlining disabled
+        versus enabled. Each row reports median per‑call time after warm‑up;
+        percent change is relative to the no‑inline baseline.
       </p>
       <ul>
         <li>Timing: median of 3 runs; iterations per test may vary.</li>
@@ -163,7 +172,7 @@
           iterations: 1000,
         },
         {
-          file: "inline-test-02", 
+          file: "inline-test-02",
           name: "MultipleInlines",
           function: "main",
           args: [],
@@ -174,7 +183,7 @@
         {
           file: "inline-test-03",
           name: "NestedCalls",
-          function: "main", 
+          function: "main",
           args: [],
           expected: 14,
           description: "Nested function calls - factorial-like computation",
@@ -242,7 +251,7 @@
 
       const inliningModes = [
         { suffix: "-no-inline", name: "Without Inlining", enabled: false },
-        { suffix: "-inline", name: "With Inlining", enabled: true }
+        { suffix: "-inline", name: "With Inlining", enabled: true },
       ];
 
       // Summary counters
@@ -293,11 +302,11 @@
       // Update badges on rows when baseline becomes available
       function refreshInliningPerformance(file) {
         const data = performanceData[file];
-        if (!data || !data['no-inline']) return;
-        const baseTime = data['no-inline'];
+        if (!data || !data["no-inline"]) return;
+        const baseTime = data["no-inline"];
         const rows = rowsByFileMode[file] || {};
 
-        for (const modeKey of ['no-inline', 'inline']) {
+        for (const modeKey of ["no-inline", "inline"]) {
           const row = rows[modeKey];
           const time = data[modeKey];
           if (!row || !time) continue;
@@ -306,8 +315,8 @@
           const performanceCell = row.cells[6];
           const timeText = formatTime(time);
 
-          if (statusCell.textContent === 'PASS') {
-            if (modeKey === 'inline') {
+          if (statusCell.textContent === "PASS") {
+            if (modeKey === "inline") {
               const perfClass = getPerformanceClass(baseTime, time, true);
               const perfText = getPerformanceText(baseTime, time, true);
               performanceCell.innerHTML = `
@@ -350,8 +359,8 @@
           status_cell.textContent = "Testing...";
 
           // Execute the function multiple times to get more reliable timing
-          const iterations = (testConfig.iterations ?? 1000);
-          const warmupIterations = (testConfig.warmupIterations ?? 10);
+          const iterations = testConfig.iterations ?? 1000;
+          const warmupIterations = testConfig.warmupIterations ?? 10;
 
           // Warm-up phase to stabilize JIT compilation
           for (let i = 0; i < warmupIterations; i++) {
@@ -398,7 +407,9 @@
           if (!performanceData[testConfig.file]) {
             performanceData[testConfig.file] = {};
           }
-          performanceData[testConfig.file][mode.enabled ? 'inline' : 'no-inline'] = avgExecutionTime;
+          performanceData[testConfig.file][
+            mode.enabled ? "inline" : "no-inline"
+          ] = avgExecutionTime;
 
           // Update table cells
           const output_cell = table_row.cells[4];
@@ -416,8 +427,8 @@
             pass_count++;
 
             // Add performance comparison for inlined version
-            if (mode.enabled && performanceData[testConfig.file]['no-inline']) {
-              const baseTime = performanceData[testConfig.file]['no-inline'];
+            if (mode.enabled && performanceData[testConfig.file]["no-inline"]) {
+              const baseTime = performanceData[testConfig.file]["no-inline"];
               const perfClass = getPerformanceClass(
                 baseTime,
                 avgExecutionTime,
@@ -525,7 +536,10 @@
 
           for (const mode of inliningModes) {
             const row = results_table.insertRow();
-            row.classList.add("inline-row", mode.enabled ? "with-inlining" : "without-inlining");
+            row.classList.add(
+              "inline-row",
+              mode.enabled ? "with-inlining" : "without-inlining"
+            );
 
             // Test file
             const fileCell = row.insertCell(0);
@@ -555,8 +569,11 @@
             row.insertCell(6);
 
             // Run the test asynchronously and cache rows for later refresh
-            if (!rowsByFileMode[testConfig.file]) rowsByFileMode[testConfig.file] = {};
-            rowsByFileMode[testConfig.file][mode.enabled ? 'inline' : 'no-inline'] = row;
+            if (!rowsByFileMode[testConfig.file])
+              rowsByFileMode[testConfig.file] = {};
+            rowsByFileMode[testConfig.file][
+              mode.enabled ? "inline" : "no-inline"
+            ] = row;
             runTest(testConfig, mode, row);
           }
         }

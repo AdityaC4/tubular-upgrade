@@ -1,0 +1,13 @@
+// Tail-recursive GCD using Euclid's algorithm
+// gcd(a,b): if b == 0 return a; else return gcd(b, a % b)
+// main returns gcd(48,18) = 6
+
+function gcd(int a, int b) : int {
+  if (b == 0) return a;
+  return gcd(b, a % b);
+}
+
+function main() : int {
+  return gcd(48, 18);
+}
+

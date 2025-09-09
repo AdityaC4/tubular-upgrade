@@ -108,11 +108,78 @@
   <body>
     <h1>Loop Unrolling Performance Tests</h1>
 
+    <div class="summary-box" id="env-box" style="margin-top: 10px">
+      <div
+        style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap"
+      >
+        <div><b>Browser:</b> <span id="ua"></span></div>
+        <div><b>Timestamp:</b> <span id="ts"></span></div>
+      </div>
+      <div
+        style="
+          margin-top: 8px;
+          display: flex;
+          gap: 12px;
+          align-items: center;
+          flex-wrap: wrap;
+        "
+      >
+        <div>
+          <label>Warm‑up</label>
+          <input
+            id="warmup"
+            type="number"
+            min="0"
+            step="1"
+            value="10"
+            style="width: 72px"
+          />
+        </div>
+        <div>
+          <label>Runs</label>
+          <input
+            id="runs"
+            type="number"
+            min="1"
+            step="1"
+            value="5"
+            style="width: 72px"
+          />
+        </div>
+        <div>
+          <label>Iterations / run</label>
+          <input
+            id="iters"
+            type="number"
+            min="1"
+            step="1"
+            value="100"
+            style="width: 96px"
+          />
+        </div>
+        <button id="rerun">Run Tests</button>
+        <button id="export">Export CSV</button>
+      </div>
+      <div class="performance-info" style="margin-top: 6px">
+        Timing reports median over N runs (configurable) and excludes warm‑up;
+        percent changes are relative to the 1× baseline. CSV includes quartiles
+        (p25/p75) and artifact sizes. Configure parameters, then select “Run
+        Tests”.
+      </div>
+    </div>
+
     <div class="nav">
       <a href="../index.html">Project 4 Tests</a>
       <a href="../P3-tester.html">Project 3 Tests</a>
-      <a href="../function-inlining/function-inlining-tester.html">Function Inlining Tests</a>
-      <a class="active" href="../loop-unrolling/loop-unrolling-tester.html">Loop Unrolling Tests</a>
+      <a href="../function-inlining/function-inlining-tester.html"
+        >Function Inlining Tests</a
+      >
+      <a class="active" href="../loop-unrolling/loop-unrolling-tester.html"
+        >Loop Unrolling Tests</a
+      >
+      <a href="../tail-recursion/tail-recursion-tester.html"
+        >Tail Recursion Tests</a
+      >
     </div>
 
     <table id="results-table">
@@ -143,7 +210,9 @@
     <div class="summary-box" style="margin-top: 20px">
       <h3 style="margin-top: 0">About These Tests</h3>
       <p>
-        Measures the effect of loop unrolling on execution time using factors 1, 4, 8, and 16. Each row reports median per‑call time after warm‑up; percent change is vs the 1× baseline.
+        Measures the effect of loop unrolling on execution time using factors 1,
+        4, 8, and 16. Each row reports median per‑call time after warm‑up;
+        percent change is vs the 1× baseline.
       </p>
       <ul>
         <li>Timing: median of 3 runs × 100 iterations.</li>
@@ -151,11 +220,10 @@
         <li>Correctness: exact match with expected output.</li>
         <li>
           Note on CallsInLoop: when the loop body contains function calls, high
-          unroll factors (8×–16×) can slow down due to larger loop bodies
-          (more call sites per iteration), increased register pressure and
-          spills, instruction‑cache effects, and less favorable JIT
-          optimizations. In practice, a moderate factor (≈4×) is often the
-          sweet spot.
+          unroll factors (8×–16×) can slow down due to larger loop bodies (more
+          call sites per iteration), increased register pressure and spills,
+          instruction‑cache effects, and less favorable JIT optimizations. In
+          practice, a moderate factor (≈4×) is often the sweet spot.
         </li>
       </ul>
     </div>
@@ -222,6 +290,8 @@
       const performanceData = {};
       // Map of rows to enable retroactive perf badge updates: file -> factor -> row
       const rowsByFileFactor = {};
+      // Collected records for CSV export
+      const collected = [];
 
       function updateSummary() {
         const summary_div = document.getElementById("test-summary");
@@ -289,6 +359,15 @@
         }
       }
 
+      function percentile(arr, p) {
+        if (!arr.length) return NaN;
+        const k = (arr.length - 1) * p;
+        const f = Math.floor(k),
+          c = Math.ceil(k);
+        if (f === c) return arr[f];
+        return arr[f] + (arr[c] - arr[f]) * (k - f);
+      }
+
       // Function to load and test each WASM file
       async function runTest(testConfig, factor, table_row) {
         const filename = `${testConfig.file}-unroll${factor}.wasm`;
@@ -308,14 +387,29 @@
             throw new Error(`Missing file ${filename}`);
           }
           const wasmBuffer = await response.arrayBuffer();
+          const wasmBytes = wasmBuffer.byteLength;
           const wasmModule = await WebAssembly.instantiate(wasmBuffer);
+
+          // Try to fetch the matching WAT to record size (served by tests harness)
+          let watBytes = 0;
+          try {
+            const watResp = await fetch(
+              `${testConfig.file}-unroll${factor}.wat`
+            );
+            if (watResp.ok) {
+              const watBuf = await watResp.arrayBuffer();
+              watBytes = watBuf.byteLength;
+            }
+          } catch (_) {}
 
           // Update status to show testing in progress
           status_cell.textContent = "Testing...";
 
-          // Execute the function multiple times to get more reliable timing
-          const iterations = 100; // Reduced back to reasonable number for 5M loop iterations
-          const warmupIterations = 10; // Reduced warm-up for faster testing
+          // Execute the function multiple times to get more reliable timing (configurable)
+          const iterations =
+            parseInt(document.getElementById("iters").value, 10) || 100;
+          const warmupIterations =
+            parseInt(document.getElementById("warmup").value, 10) || 10;
 
           // Warm-up phase to stabilize JIT compilation
           for (let i = 0; i < warmupIterations; i++) {
@@ -332,7 +426,7 @@
 
           // Actual measurement phase with multiple runs
           const measurements = [];
-          const runs = 3; // Reduced to 3 runs for faster testing
+          const runs = parseInt(document.getElementById("runs").value, 10) || 5;
 
           for (let run = 0; run < runs; run++) {
             const runStartTime = performance.now();
@@ -353,10 +447,12 @@
             if (checksum === 0x12345678) console.log("Impossible checksum");
           }
 
-          // Use median of measurements to reduce noise
+          // Use median and spread (IQR) to reduce/describe noise
           measurements.sort((a, b) => a - b);
-          const avgExecutionTime =
-            measurements[Math.floor(measurements.length / 2)];
+          const p50 = measurements[Math.floor(measurements.length / 2)];
+          const p25 = percentile(measurements, 0.25);
+          const p75 = percentile(measurements, 0.75);
+          const avgExecutionTime = p50;
 
           // Store performance data
           if (!performanceData[testConfig.file]) {
@@ -409,6 +505,23 @@
           }
 
           updateSummary();
+
+          // Record for CSV export
+          collected.push({
+            timestamp: new Date().toISOString(),
+            userAgent: navigator.userAgent,
+            file: `${testConfig.file}`,
+            function: testConfig.function,
+            factor,
+            time_ms: avgExecutionTime,
+            p25_ms: p25,
+            p75_ms: p75,
+            wasm_bytes: wasmBytes,
+            wat_bytes: watBytes,
+            output: String(result),
+            expected: String(testConfig.expected),
+            status: result === testConfig.expected ? "PASS" : "FAIL",
+          });
         } catch (error) {
           // Display any error
           const status_cell = table_row.cells[3];
@@ -424,10 +537,19 @@
         }
       }
 
-
       // Run tests asynchronously
       function runTestsAsync() {
         const results_table = document.getElementById("results-table");
+
+        // Reset counters and rows
+        test_count = pass_count = fail_count = error_count = 0;
+        for (let i = results_table.rows.length - 1; i >= 2; --i) {
+          results_table.deleteRow(i);
+        }
+        updateSummary();
+        collected.length = 0;
+        for (const k in performanceData) delete performanceData[k];
+        for (const k in rowsByFileFactor) delete rowsByFileFactor[k];
 
         for (const testConfig of testConfigs) {
           // Add a header row for each test group
@@ -480,7 +602,60 @@
       }
 
       // Start the tests
-      runTestsAsync();
+      function setupEnvBox() {
+        document.getElementById("ua").textContent = navigator.userAgent;
+        const ts = new Date();
+        document.getElementById("ts").textContent = ts.toLocaleString();
+        document.getElementById("rerun").onclick = () => runTestsAsync();
+        document.getElementById("export").onclick = () => {
+          const header = [
+            "timestamp",
+            "userAgent",
+            "file",
+            "function",
+            "factor",
+            "time_ms",
+            "p25_ms",
+            "p75_ms",
+            "wasm_bytes",
+            "wat_bytes",
+            "output",
+            "expected",
+            "status",
+          ];
+          const rows = [header.join(",")].concat(
+            collected.map((r) =>
+              [
+                r.timestamp,
+                r.userAgent,
+                r.file,
+                r.function,
+                r.factor,
+                r.time_ms,
+                r.p25_ms,
+                r.p75_ms,
+                r.wasm_bytes,
+                r.wat_bytes,
+                r.output,
+                r.expected,
+                r.status,
+              ]
+                .map((v) => String(v).replace(/"/g, '""'))
+                .map((v) => (/[,"]/g.test(v) ? `"${v}"` : v))
+                .join(",")
+            )
+          );
+          const blob = new Blob([rows.join("\n")], { type: "text/csv" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `loop-unrolling-results-${Date.now()}.csv`;
+          a.click();
+          URL.revokeObjectURL(url);
+        };
+      }
+
+      setupEnvBox();
     </script>
   </body>
 </html>

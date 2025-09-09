@@ -1,0 +1,13 @@
+// Tail-recursive power function with accumulator
+// pow_acc(x,n,acc): if n==0 return acc; else return pow_acc(x, n-1, acc*x)
+// main returns 2^20 = 1,048,576
+
+function pow_acc(int x, int n, int acc) : int {
+  if (n == 0) return acc;
+  return pow_acc(x, n - 1, acc * x);
+}
+
+function main() : int {
+  return pow_acc(2, 20, 1);
+}
+

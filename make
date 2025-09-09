@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Make wrapper for CMake-based Tubular project
-# Provides familiar make commands for the CMake build system
-
 case "$1" in
     "test" | "tests")
         echo "Running tests via CMake..."

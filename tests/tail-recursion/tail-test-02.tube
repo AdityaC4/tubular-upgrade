@@ -1,0 +1,11 @@
+// Tail-recursive sum(1..n); main returns sum(100) = 5050
+
+function sum_to(int n, int acc) : int {
+  if (n == 0) return acc;
+  return sum_to(n - 1, acc + n);
+}
+
+function main() : int {
+  return sum_to(100, 0);
+}
+

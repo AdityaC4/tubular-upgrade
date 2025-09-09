@@ -184,6 +184,16 @@ else
     echo "Loop unrolling tests not found (optional)"
 fi
 
+# Tail recursion tests
+echo ---
+echo TAIL RECURSION TESTS
+if [[ -f "tail-recursion/run_tail_tests.sh" ]]; then
+    echo "Running tail recursion tests..."
+    (cd tail-recursion && ./run_tail_tests.sh)
+else
+    echo "Tail recursion tests not found (optional)"
+fi
+
 # Generate function inlining WASM pairs for browser tests (inline vs no-inline)
 echo ---
 echo FUNCTION INLINING ARTIFACTS
