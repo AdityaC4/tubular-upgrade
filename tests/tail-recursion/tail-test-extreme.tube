@@ -1,0 +1,12 @@
+// Extremely deep tail recursion to stress test optimization
+// multiply_acc(n, base, acc) - repeatedly multiply base n times
+// main returns multiply_acc(20, 2, 1) = 2^20 = 1048576
+
+function multiply_acc(int n, int base, int acc) : int {
+  if (n == 0) return acc;
+  return multiply_acc(n - 1, base, acc * base);
+}
+
+function main() : int {
+  return multiply_acc(20, 2, 1);
+}

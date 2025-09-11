@@ -1,0 +1,12 @@
+// Deep countdown to stress test tail calls
+// countdown(n, acc) = acc if n==0, else countdown(n-1, acc+n)
+// main returns countdown(10000, 0) = sum from 10000 down to 1
+
+function countdown(int n, int acc) : int {
+  if (n == 0) return acc;
+  return countdown(n - 1, acc + n);
+}
+
+function main() : int {
+  return countdown(10000, 0);
+}

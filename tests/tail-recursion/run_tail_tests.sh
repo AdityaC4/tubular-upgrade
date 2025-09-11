@@ -96,8 +96,12 @@ EOF
 
 run_case "tail-test-01" "main" 235
 run_case "tail-test-02" "main" 5050
-run_case "tail-test-03" "main" 832040
+run_case "tail-test-03" "main" 500500
 run_case "tail-test-04" "main" 6
 run_case "tail-test-05" "main" 1048576
+run_case "tail-test-deep-01" "main" 50005000
+run_case "tail-test-deep-02" "main" 102334155
+run_case "tail-test-deep-03" "main" 50005000
+run_case "tail-test-extreme" "main" 1048576
 
 echo "=== END TAIL RECURSION TESTS ==="

@@ -1,0 +1,12 @@
+// Deep tail-recursive sum to test stack pressure
+// sum_to(n, acc) = acc if n==0, else sum_to(n-1, acc+n)
+// main returns sum_to(10000, 0) = 50005000
+
+function sum_to(int n, int acc) : int {
+  if (n == 0) return acc;
+  return sum_to(n - 1, acc + n);
+}
+
+function main() : int {
+  return sum_to(10000, 0);
+}

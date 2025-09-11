@@ -63,6 +63,8 @@ add_custom_target(tests
     COMMAND cd tests/loop-unrolling && ./run_unroll_tests.sh
     COMMAND ${CMAKE_COMMAND} -E echo "Running function inlining tests..."
     COMMAND cd tests/function-inlining && ./run_inlining_tests.sh
+    COMMAND ${CMAKE_COMMAND} -E echo "Running tail recursion tests..."
+    COMMAND cd tests/tail-recursion && ./run_tail_tests.sh
     COMMAND ${CMAKE_COMMAND} -E echo "All tests completed."
     DEPENDS ${PROJECT_NAME}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}

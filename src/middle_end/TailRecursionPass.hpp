@@ -127,7 +127,8 @@ public:
             }
 
             if (order.size() != nodes.size()) {
-              // cycle detected (e.g., gcd or fib accum). Skip transform.
+              // Cycle detected - for now, just skip transformation to avoid complexity
+              // TODO: Implement proper cycle breaking with temporary variables
               return ASTCloner::clone(*ret);
             }
 

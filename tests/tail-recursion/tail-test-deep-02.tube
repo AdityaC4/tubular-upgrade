@@ -1,0 +1,13 @@
+// Different fibonacci approach - iterative counter 
+// fib_count(n, curr, prev, count) - counts down from n
+// main returns fib_count(40, 1, 0, 40) = 102334155
+
+function fib_count(int n, int curr, int prev, int count) : int {
+  if (count == 0) return prev;
+  if (count == 1) return curr;
+  return fib_count(n, curr + prev, curr, count - 1);
+}
+
+function main() : int {
+  return fib_count(40, 1, 0, 40);
+}
