@@ -1,0 +1,26 @@
+// Stress test: Many small functions that should all be inlined
+// This should test the compiler's ability to handle many inlining decisions
+
+function f1(int x) : int { return x + 1; }
+function f2(int x) : int { return x + 2; }
+function f3(int x) : int { return x + 3; }
+function f4(int x) : int { return x + 4; }
+function f5(int x) : int { return x + 5; }
+
+function main() : int {
+    int result = 0;
+    int i = 0;
+    
+    while (i < 5) {
+        result = result + f1(i);
+        result = result + f2(i);
+        result = result + f3(i);
+        result = result + f4(i);
+        result = result + f5(i);
+        i = i + 1;
+    }
+    
+    return result;
+}
+
+

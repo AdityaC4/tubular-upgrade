@@ -247,6 +247,56 @@
           iterations: 5,
           warmupIterations: 2,
         },
+        {
+          file: "inline-perf-04",
+          name: "ComplexMath",
+          function: "main",
+          args: [],
+          expected: 1472380828, // Actual output from test run
+          description: "Complex mathematical functions in hot loop (10M iterations)",
+          iterations: 3,
+          warmupIterations: 1,
+        },
+        {
+          file: "inline-perf-05",
+          name: "NestedCalls",
+          function: "main",
+          args: [],
+          expected: -1277387776, // Actual output from test run
+          description: "Nested function calls in hot loop (8M iterations)",
+          iterations: 3,
+          warmupIterations: 1,
+        },
+        {
+          file: "inline-perf-06",
+          name: "ConditionalLogic",
+          function: "main",
+          args: [],
+          expected: 284776512, // Actual output from test run
+          description: "Conditional logic in inlined functions (12M iterations)",
+          iterations: 3,
+          warmupIterations: 1,
+        },
+        {
+          file: "inline-perf-07",
+          name: "MemoryAccess",
+          function: "main",
+          args: [],
+          expected: -1941411136, // Actual output from test run
+          description: "Memory access pattern in inlined functions (15M iterations)",
+          iterations: 3,
+          warmupIterations: 1,
+        },
+        {
+          file: "inline-perf-08",
+          name: "MultipleFunctions",
+          function: "main",
+          args: [],
+          expected: 256447233, // Actual output from test run
+          description: "Multiple small functions in hot loop (20M iterations)",
+          iterations: 3,
+          warmupIterations: 1,
+        },
       ];
 
       const inliningModes = [

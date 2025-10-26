@@ -1,0 +1,24 @@
+// Regression test: Function with side effects should NOT be inlined
+// This should test that our side effect detection works correctly
+
+function side_effect_func(int x) : int {
+    // This function has a side effect (assignment to global-like behavior)
+    // It should NOT be inlined
+    int temp = x;
+    temp = temp * 2;
+    return temp;
+}
+
+function pure_func(int x) : int {
+    // This function is pure and should be inlined
+    return x * 2;
+}
+
+function main() : int {
+    int result = 0;
+    result = result + side_effect_func(5);
+    result = result + pure_func(3);
+    return result;
+}
+
+

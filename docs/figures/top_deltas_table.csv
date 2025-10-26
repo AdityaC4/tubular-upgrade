@@ -1,0 +1,11 @@
+benchmark,variant,label,avg_delta_pct
+rt04-stride-heavy-loop,combo-inline-unroll,rt04-stride-heavy-loop (combo-inline-unroll),4.4723
+rt05-nested-mix,no-inline,rt05-nested-mix (no-inline),4.0082
+rt05-nested-mix,unroll-8,rt05-nested-mix (unroll-8),3.9536
+rt04-stride-heavy-loop,unroll-8,rt04-stride-heavy-loop (unroll-8),3.6683
+rt05-nested-mix,combo-inline-unroll,rt05-nested-mix (combo-inline-unroll),3.5145
+rt04-stride-heavy-loop,baseline,rt04-stride-heavy-loop (baseline),3.3990
+rt03-loop-summation,no-inline,rt03-loop-summation (no-inline),3.3793
+rt03-loop-summation,unroll-8,rt03-loop-summation (unroll-8),3.2170
+rt02-tail-factorial,unroll-4,rt02-tail-factorial (unroll-4),3.0146
+rt04-stride-heavy-loop,no-inline,rt04-stride-heavy-loop (no-inline),2.8559

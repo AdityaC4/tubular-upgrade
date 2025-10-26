@@ -1,0 +1,25 @@
+// Test aggressive loop unrolling with complex increment patterns
+// This should test the new aggressive unrolling features
+
+function main(): int {
+    local sum: int;
+    sum = 0;
+    local i: int;
+    local j: int;
+    
+    i = 0;
+    while (i < 8) {
+        sum = sum + i;
+        i = i + 2;  // Step by 2
+    }
+    
+    j = 10;
+    while (j > 0) {
+        sum = sum + j;
+        j = j - 1;
+    }
+    
+    return sum;
+}
+
+

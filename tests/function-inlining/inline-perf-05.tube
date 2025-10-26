@@ -1,0 +1,25 @@
+// Performance Test 5: Nested Function Calls in Hot Loop
+// Goal: Test inlining of multiple nested function calls
+// This creates significant call overhead that should be eliminated by inlining
+
+function inner_func(int x) : int {
+  return x * x + x + 1;
+}
+
+function middle_func(int x) : int {
+  return inner_func(x) + inner_func(x + 1);
+}
+
+function outer_func(int x) : int {
+  return middle_func(x) + middle_func(x + 1);
+}
+
+function main() : int {
+  int sum = 0;
+  int i = 0;
+  while (i < 8000000) { // 8M iterations with 3-level call chain
+    sum = sum + outer_func(i);
+    i = i + 1;
+  }
+  return sum; // Expected: Large positive number
+}

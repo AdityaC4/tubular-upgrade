@@ -1,0 +1,15 @@
+// Loop with continue/break-style flow to test unroller safety.
+function main() : int {
+  int i = 0;
+  int hits = 0;
+  while (i < 12000) {
+    if (i % 7 == 0) {
+      i = i + 1;
+      continue;
+    }
+    if (i % 5 == 0) hits = hits + 2;
+    else hits = hits + 1;
+    i = i + 1;
+  }
+  return hits; // 12,342
+}

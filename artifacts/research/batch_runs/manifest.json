@@ -1,0 +1,46 @@
+{
+  "runs": [
+    {
+      "run": 1,
+      "summary": "artifacts/research/batch_runs/run1/summary.json",
+      "results": "artifacts/research/batch_runs/run1/results.csv",
+      "log": "artifacts/research/batch_runs/run1/collect.log",
+      "timestamp": "2025-10-26T18:40:54Z",
+      "top_delta": {
+        "benchmark": "rt07-helper-inline",
+        "variant": "unroll-4",
+        "delta_pct": 3.25092319958697,
+        "best_order": "inline-unroll-tail",
+        "worst_order": "unroll-tail-inline"
+      }
+    },
+    {
+      "run": 2,
+      "summary": "artifacts/research/batch_runs/run2/summary.json",
+      "results": "artifacts/research/batch_runs/run2/results.csv",
+      "log": "artifacts/research/batch_runs/run2/collect.log",
+      "timestamp": "2025-10-26T18:48:14Z",
+      "top_delta": {
+        "benchmark": "rt04-stride-heavy-loop",
+        "variant": "combo-inline-unroll",
+        "delta_pct": 10.062457049703136,
+        "best_order": "inline-unroll-tail",
+        "worst_order": "tail-unroll-inline"
+      }
+    },
+    {
+      "run": 3,
+      "summary": "artifacts/research/batch_runs/run3/summary.json",
+      "results": "artifacts/research/batch_runs/run3/results.csv",
+      "log": "artifacts/research/batch_runs/run3/collect.log",
+      "timestamp": "2025-10-26T18:55:30Z",
+      "top_delta": {
+        "benchmark": "rt02-tail-factorial",
+        "variant": "unroll-4",
+        "delta_pct": 4.172979057422928,
+        "best_order": "inline-tail-unroll",
+        "worst_order": "tail-unroll-inline"
+      }
+    }
+  ]
+}

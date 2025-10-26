@@ -1,0 +1,361 @@
+benchmark,variant,pass_order,flags,wat_size,wasm_size,runs,warmup_runs,p25_ms,median_ms,p75_ms,result
+rt01-fib-recursive,baseline,inline-unroll-tail,"--pass-order=inline,unroll,tail",10243,612,5,1,21.105687497765757,21.28014399204403,22.04237449768698,75025
+rt01-fib-recursive,baseline,inline-tail-unroll,"--pass-order=inline,tail,unroll",10243,612,5,1,20.8297909994144,21.289735988830216,22.648286503681447,75025
+rt01-fib-recursive,baseline,unroll-inline-tail,"--pass-order=unroll,inline,tail",10243,612,5,1,20.96190900192596,21.105131003423594,21.724247999372892,75025
+rt01-fib-recursive,baseline,unroll-tail-inline,"--pass-order=unroll,tail,inline",10243,612,5,1,20.950206999259535,21.684655992430635,22.217594494577497,75025
+rt01-fib-recursive,baseline,tail-inline-unroll,"--pass-order=tail,inline,unroll",10243,612,5,1,21.05852450040402,21.483073011040688,21.820831498189364,75025
+rt01-fib-recursive,baseline,tail-unroll-inline,"--pass-order=tail,unroll,inline",10243,612,5,1,20.955102001607884,21.0684939956991,21.123774495208636,75025
+rt01-fib-recursive,no-inline,inline-unroll-tail,"--no-inline --pass-order=inline,unroll,tail",10243,612,5,1,20.6855500000529,20.876541995676234,21.04791499732528,75025
+rt01-fib-recursive,no-inline,inline-tail-unroll,"--no-inline --pass-order=inline,tail,unroll",10243,612,5,1,20.222406994435005,20.92105599876959,22.245632506383117,75025
+rt01-fib-recursive,no-inline,unroll-inline-tail,"--no-inline --pass-order=unroll,inline,tail",10243,612,5,1,20.90564749960322,21.147035993635654,21.532241997192614,75025
+rt01-fib-recursive,no-inline,unroll-tail-inline,"--no-inline --pass-order=unroll,tail,inline",10243,612,5,1,20.60311099921819,21.526314987568185,21.58019450143911,75025
+rt01-fib-recursive,no-inline,tail-inline-unroll,"--no-inline --pass-order=tail,inline,unroll",10243,612,5,1,21.232993502053432,21.510204998776317,22.317124501569197,75025
+rt01-fib-recursive,no-inline,tail-unroll-inline,"--no-inline --pass-order=tail,unroll,inline",10243,612,5,1,21.055860997876152,21.66894599213265,21.77197799755959,75025
+rt01-fib-recursive,unroll-4,inline-unroll-tail,"--unroll-factor=4 --pass-order=inline,unroll,tail",10243,612,5,1,20.827859996643383,21.450170999742113,22.002967503794935,75025
+rt01-fib-recursive,unroll-4,inline-tail-unroll,"--unroll-factor=4 --pass-order=inline,tail,unroll",10243,612,5,1,20.65525550278835,20.94967600714881,21.542929498536978,75025
+rt01-fib-recursive,unroll-4,unroll-inline-tail,"--unroll-factor=4 --pass-order=unroll,inline,tail",10243,612,5,1,21.159687494218815,21.317684004316106,21.882267996261362,75025
+rt01-fib-recursive,unroll-4,unroll-tail-inline,"--unroll-factor=4 --pass-order=unroll,tail,inline",10243,612,5,1,21.00363399949856,21.75525999336969,22.134143495350145,75025
+rt01-fib-recursive,unroll-4,tail-inline-unroll,"--unroll-factor=4 --pass-order=tail,inline,unroll",10243,612,5,1,20.244348495907616,20.88935099891387,21.082655497593805,75025
+rt01-fib-recursive,unroll-4,tail-unroll-inline,"--unroll-factor=4 --pass-order=tail,unroll,inline",10243,612,5,1,20.54659349960275,21.104038998601027,21.373094990849495,75025
+rt01-fib-recursive,unroll-8,inline-unroll-tail,"--unroll-factor=8 --pass-order=inline,unroll,tail",10243,612,5,1,21.428556501632556,22.11840900417883,22.539809993759263,75025
+rt01-fib-recursive,unroll-8,inline-tail-unroll,"--unroll-factor=8 --pass-order=inline,tail,unroll",10243,612,5,1,20.702394998806994,21.177793998504058,21.956986507575493,75025
+rt01-fib-recursive,unroll-8,unroll-inline-tail,"--unroll-factor=8 --pass-order=unroll,inline,tail",10243,612,5,1,20.59039249434136,20.92003398865927,22.051235995604657,75025
+rt01-fib-recursive,unroll-8,unroll-tail-inline,"--unroll-factor=8 --pass-order=unroll,tail,inline",10243,612,5,1,21.30234749347437,21.66069899976719,22.186107002198696,75025
+rt01-fib-recursive,unroll-8,tail-inline-unroll,"--unroll-factor=8 --pass-order=tail,inline,unroll",10243,612,5,1,20.821508500375785,20.932928993715905,21.61399200122105,75025
+rt01-fib-recursive,unroll-8,tail-unroll-inline,"--unroll-factor=8 --pass-order=tail,unroll,inline",10243,612,5,1,21.473805492860265,22.28073700098321,22.406905998650473,75025
+rt01-fib-recursive,tail-off,inline-unroll-tail,"--tail=off --pass-order=inline,unroll,tail",10243,612,5,1,20.858412492088974,21.952773997327313,22.260675999859814,75025
+rt01-fib-recursive,tail-off,inline-tail-unroll,"--tail=off --pass-order=inline,tail,unroll",10243,612,5,1,21.503449002921116,21.549327997490764,22.202256994205527,75025
+rt01-fib-recursive,tail-off,unroll-inline-tail,"--tail=off --pass-order=unroll,inline,tail",10243,612,5,1,21.690602006856352,21.77204999316018,22.509119502501562,75025
+rt01-fib-recursive,tail-off,unroll-tail-inline,"--tail=off --pass-order=unroll,tail,inline",10243,612,5,1,21.530256999540143,21.977376003633253,22.196368990989868,75025
+rt01-fib-recursive,tail-off,tail-inline-unroll,"--tail=off --pass-order=tail,inline,unroll",10243,612,5,1,21.38683100201888,21.59061199927237,22.150001001136843,75025
+rt01-fib-recursive,tail-off,tail-unroll-inline,"--tail=off --pass-order=tail,unroll,inline",10243,612,5,1,21.34673699765699,21.40757600136567,22.040139498130884,75025
+rt01-fib-recursive,combo-inline-unroll,inline-unroll-tail,"--unroll-factor=4 --no-inline --pass-order=inline,unroll,tail",10243,612,5,1,21.13929599727271,21.265975999995135,21.740010000939947,75025
+rt01-fib-recursive,combo-inline-unroll,inline-tail-unroll,"--unroll-factor=4 --no-inline --pass-order=inline,tail,unroll",10243,612,5,1,20.769156493770424,21.343913991586305,22.388560995750595,75025
+rt01-fib-recursive,combo-inline-unroll,unroll-inline-tail,"--unroll-factor=4 --no-inline --pass-order=unroll,inline,tail",10243,612,5,1,21.23864400346065,21.852874997421168,22.38649150240235,75025
+rt01-fib-recursive,combo-inline-unroll,unroll-tail-inline,"--unroll-factor=4 --no-inline --pass-order=unroll,tail,inline",10243,612,5,1,21.186125006352086,21.408611995866522,22.33581599284662,75025
+rt01-fib-recursive,combo-inline-unroll,tail-inline-unroll,"--unroll-factor=4 --no-inline --pass-order=tail,inline,unroll",10243,612,5,1,21.447801002068445,21.49378899775911,22.272372501902282,75025
+rt01-fib-recursive,combo-inline-unroll,tail-unroll-inline,"--unroll-factor=4 --no-inline --pass-order=tail,unroll,inline",10243,612,5,1,21.2952994988882,21.701014004065655,22.129148994281422,75025
+rt02-tail-factorial,baseline,inline-unroll-tail,"--pass-order=inline,unroll,tail",12560,665,5,1,19.478382499073632,20.80653999291826,21.365951004554518,479001600
+rt02-tail-factorial,baseline,inline-tail-unroll,"--pass-order=inline,tail,unroll",12560,665,5,1,19.624084001407027,20.624103999580257,20.667058503022417,479001600
+rt02-tail-factorial,baseline,unroll-inline-tail,"--pass-order=unroll,inline,tail",12560,665,5,1,20.017651506350376,20.116945990594104,20.646631506679114,479001600
+rt02-tail-factorial,baseline,unroll-tail-inline,"--pass-order=unroll,tail,inline",12560,665,5,1,19.575275997340214,19.81500900001265,20.117545500397682,479001600
+rt02-tail-factorial,baseline,tail-inline-unroll,"--pass-order=tail,inline,unroll",12560,665,5,1,19.34282849833835,20.408355005201884,20.898243492410984,479001600
+rt02-tail-factorial,baseline,tail-unroll-inline,"--pass-order=tail,unroll,inline",12560,665,5,1,20.025946003443096,20.69514298636932,21.092937495268416,479001600
+rt02-tail-factorial,no-inline,inline-unroll-tail,"--no-inline --pass-order=inline,unroll,tail",12560,665,5,1,20.64742799848318,20.89435700327158,21.31186048791278,479001600
+rt02-tail-factorial,no-inline,inline-tail-unroll,"--no-inline --pass-order=inline,tail,unroll",12560,665,5,1,19.4420789994183,19.772658997680992,20.55304599343799,479001600
+rt02-tail-factorial,no-inline,unroll-inline-tail,"--no-inline --pass-order=unroll,inline,tail",12560,665,5,1,19.699522003065795,20.285721999243833,22.762484499253333,479001600
+rt02-tail-factorial,no-inline,unroll-tail-inline,"--no-inline --pass-order=unroll,tail,inline",12560,665,5,1,19.712176501343492,20.3192759945523,20.842629004619084,479001600
+rt02-tail-factorial,no-inline,tail-inline-unroll,"--no-inline --pass-order=tail,inline,unroll",12560,665,5,1,20.28315899951849,20.67407499998808,20.736922495416366,479001600
+rt02-tail-factorial,no-inline,tail-unroll-inline,"--no-inline --pass-order=tail,unroll,inline",12560,665,5,1,19.45475349930348,20.425706999958493,20.73053851199802,479001600
+rt02-tail-factorial,unroll-4,inline-unroll-tail,"--unroll-factor=4 --pass-order=inline,unroll,tail",12560,665,5,1,19.883312997990288,20.27295800508,20.91521099646343,479001600
+rt02-tail-factorial,unroll-4,inline-tail-unroll,"--unroll-factor=4 --pass-order=inline,tail,unroll",12560,665,5,1,19.93032499740366,20.17482099472545,20.669202000135556,479001600
+rt02-tail-factorial,unroll-4,unroll-inline-tail,"--unroll-factor=4 --pass-order=unroll,inline,tail",12560,665,5,1,19.96314449206693,20.76491600018926,21.300406493537594,479001600
+rt02-tail-factorial,unroll-4,unroll-tail-inline,"--unroll-factor=4 --pass-order=unroll,tail,inline",12560,665,5,1,20.013771005324088,20.82427399000153,20.983604998036753,479001600
+rt02-tail-factorial,unroll-4,tail-inline-unroll,"--unroll-factor=4 --pass-order=tail,inline,unroll",12560,665,5,1,20.618847498553805,20.85380000062287,20.999702501285356,479001600
+rt02-tail-factorial,unroll-4,tail-unroll-inline,"--unroll-factor=4 --pass-order=tail,unroll,inline",12560,665,5,1,20.544467493891716,20.781733008334413,20.996455008571502,479001600
+rt02-tail-factorial,unroll-8,inline-unroll-tail,"--unroll-factor=8 --pass-order=inline,unroll,tail",12560,665,5,1,20.673426995927002,20.72569099254906,21.157130002393387,479001600
+rt02-tail-factorial,unroll-8,inline-tail-unroll,"--unroll-factor=8 --pass-order=inline,tail,unroll",12560,665,5,1,20.602848002454266,21.174743000301532,21.689385997888166,479001600
+rt02-tail-factorial,unroll-8,unroll-inline-tail,"--unroll-factor=8 --pass-order=unroll,inline,tail",12560,665,5,1,19.419494004978333,20.100720998016186,21.05037449655356,479001600
+rt02-tail-factorial,unroll-8,unroll-tail-inline,"--unroll-factor=8 --pass-order=unroll,tail,inline",12560,665,5,1,19.901706000382546,21.243868992314674,21.660142003383953,479001600
+rt02-tail-factorial,unroll-8,tail-inline-unroll,"--unroll-factor=8 --pass-order=tail,inline,unroll",12560,665,5,1,20.128839496464934,20.797402001335286,21.102581500599626,479001600
+rt02-tail-factorial,unroll-8,tail-unroll-inline,"--unroll-factor=8 --pass-order=tail,unroll,inline",12560,665,5,1,19.932321498345118,20.314870998845436,21.23842350556515,479001600
+rt02-tail-factorial,tail-off,inline-unroll-tail,"--tail=off --pass-order=inline,unroll,tail",10680,636,5,1,20.03254349983763,20.204217013088055,21.842189999006223,479001600
+rt02-tail-factorial,tail-off,inline-tail-unroll,"--tail=off --pass-order=inline,tail,unroll",10680,636,5,1,20.298802497563884,20.575536007527262,21.01649300311692,479001600
+rt02-tail-factorial,tail-off,unroll-inline-tail,"--tail=off --pass-order=unroll,inline,tail",10680,636,5,1,20.428958501724992,20.923913005390204,21.240590504021384,479001600
+rt02-tail-factorial,tail-off,unroll-tail-inline,"--tail=off --pass-order=unroll,tail,inline",10680,636,5,1,20.691138997790404,20.88130099582486,21.218107503955252,479001600
+rt02-tail-factorial,tail-off,tail-inline-unroll,"--tail=off --pass-order=tail,inline,unroll",10680,636,5,1,19.914429998607375,20.229549991199747,20.768639995367266,479001600
+rt02-tail-factorial,tail-off,tail-unroll-inline,"--tail=off --pass-order=tail,unroll,inline",10680,636,5,1,19.477139510854613,20.541311998385936,21.338253005524166,479001600
+rt02-tail-factorial,combo-inline-unroll,inline-unroll-tail,"--unroll-factor=4 --no-inline --pass-order=inline,unroll,tail",12560,665,5,1,19.510451493260916,19.620860999566503,21.93203449860448,479001600
+rt02-tail-factorial,combo-inline-unroll,inline-tail-unroll,"--unroll-factor=4 --no-inline --pass-order=inline,tail,unroll",12560,665,5,1,19.740908006497193,19.818129992927425,20.49973599787336,479001600
+rt02-tail-factorial,combo-inline-unroll,unroll-inline-tail,"--unroll-factor=4 --no-inline --pass-order=unroll,inline,tail",12560,665,5,1,20.508547495410312,20.903067008475773,21.26888150087325,479001600
+rt02-tail-factorial,combo-inline-unroll,unroll-tail-inline,"--unroll-factor=4 --no-inline --pass-order=unroll,tail,inline",12560,665,5,1,20.241132500814274,20.450408002943732,21.49429000564851,479001600
+rt02-tail-factorial,combo-inline-unroll,tail-inline-unroll,"--unroll-factor=4 --no-inline --pass-order=tail,inline,unroll",12560,665,5,1,20.343787495221477,21.522597002331167,21.761035503004678,479001600
+rt02-tail-factorial,combo-inline-unroll,tail-unroll-inline,"--unroll-factor=4 --no-inline --pass-order=tail,unroll,inline",12560,665,5,1,20.458103499549907,20.7846779958345,21.08775300439447,479001600
+rt03-loop-summation,baseline,inline-unroll-tail,"--pass-order=inline,unroll,tail",14738,678,5,1,19.359003999852575,20.62635800393764,21.1222935031401,200010000
+rt03-loop-summation,baseline,inline-tail-unroll,"--pass-order=inline,tail,unroll",14738,678,5,1,19.970080502389465,20.369480989756994,21.347952497308142,200010000
+rt03-loop-summation,baseline,unroll-inline-tail,"--pass-order=unroll,inline,tail",14738,678,5,1,19.61584648961434,21.05025299533736,21.76595949276816,200010000
+rt03-loop-summation,baseline,unroll-tail-inline,"--pass-order=unroll,tail,inline",14738,678,5,1,19.324082997627556,19.528866003383882,19.80651250050869,200010000
+rt03-loop-summation,baseline,tail-inline-unroll,"--pass-order=tail,inline,unroll",14738,678,5,1,19.40708999609342,19.751483996515162,20.612719003111124,200010000
+rt03-loop-summation,baseline,tail-unroll-inline,"--pass-order=tail,unroll,inline",14738,678,5,1,19.85915300610941,20.029769992106594,20.314473498729058,200010000
+rt03-loop-summation,no-inline,inline-unroll-tail,"--no-inline --pass-order=inline,unroll,tail",14738,678,5,1,19.92231249460019,20.34309000009671,21.112921502208337,200010000
+rt03-loop-summation,no-inline,inline-tail-unroll,"--no-inline --pass-order=inline,tail,unroll",14738,678,5,1,19.423772995651234,19.97146000212524,20.570143999066204,200010000
+rt03-loop-summation,no-inline,unroll-inline-tail,"--no-inline --pass-order=unroll,inline,tail",14738,678,5,1,19.283831999928225,19.89460400363896,20.838024007389322,200010000
+rt03-loop-summation,no-inline,unroll-tail-inline,"--no-inline --pass-order=unroll,tail,inline",14738,678,5,1,19.307981005113106,19.74656399397645,20.557522504532244,200010000
+rt03-loop-summation,no-inline,tail-inline-unroll,"--no-inline --pass-order=tail,inline,unroll",14738,678,5,1,19.849374497425742,20.108144992263988,20.236733995261602,200010000
+rt03-loop-summation,no-inline,tail-unroll-inline,"--no-inline --pass-order=tail,unroll,inline",14738,678,5,1,19.50550400215434,20.25730699824635,21.464508499775548,200010000
+rt03-loop-summation,unroll-4,inline-unroll-tail,"--unroll-factor=4 --pass-order=inline,unroll,tail",14738,678,5,1,19.689788496179972,20.066290002432652,20.393694496306125,200010000
+rt03-loop-summation,unroll-4,inline-tail-unroll,"--unroll-factor=4 --pass-order=inline,tail,unroll",14738,678,5,1,19.393303999095224,20.00731301086489,20.809417503187433,200010000
+rt03-loop-summation,unroll-4,unroll-inline-tail,"--unroll-factor=4 --pass-order=unroll,inline,tail",14738,678,5,1,19.78908700402826,19.95036100561265,20.324324497778434,200010000
+rt03-loop-summation,unroll-4,unroll-tail-inline,"--unroll-factor=4 --pass-order=unroll,tail,inline",14738,678,5,1,20.65076299913926,20.954444000381045,21.29563200287521,200010000
+rt03-loop-summation,unroll-4,tail-inline-unroll,"--unroll-factor=4 --pass-order=tail,inline,unroll",14738,678,5,1,19.738133501959965,19.922482999390922,20.134108999627642,200010000
+rt03-loop-summation,unroll-4,tail-unroll-inline,"--unroll-factor=4 --pass-order=tail,unroll,inline",14738,678,5,1,19.582131499191746,20.000581003841944,20.453585500945337,200010000
+rt03-loop-summation,unroll-8,inline-unroll-tail,"--unroll-factor=8 --pass-order=inline,unroll,tail",17322,719,5,1,19.888463502866216,20.01840400043875,20.63623400317738,200010000
+rt03-loop-summation,unroll-8,inline-tail-unroll,"--unroll-factor=8 --pass-order=inline,tail,unroll",17322,719,5,1,19.985935505246744,20.181204003165476,20.91325999936089,200010000
+rt03-loop-summation,unroll-8,unroll-inline-tail,"--unroll-factor=8 --pass-order=unroll,inline,tail",17322,719,5,1,20.16965549410088,20.78402201004792,21.07970349607058,200010000
+rt03-loop-summation,unroll-8,unroll-tail-inline,"--unroll-factor=8 --pass-order=unroll,tail,inline",17322,719,5,1,19.422827499511186,19.727036997210234,20.046377496328205,200010000
+rt03-loop-summation,unroll-8,tail-inline-unroll,"--unroll-factor=8 --pass-order=tail,inline,unroll",17322,719,5,1,19.955736010160763,20.590840009390377,21.015040496422444,200010000
+rt03-loop-summation,unroll-8,tail-unroll-inline,"--unroll-factor=8 --pass-order=tail,unroll,inline",17322,719,5,1,20.073964500625152,20.790042995940894,21.21515299222665,200010000
+rt03-loop-summation,tail-off,inline-unroll-tail,"--tail=off --pass-order=inline,unroll,tail",14738,678,5,1,19.213482999475673,19.862223998643458,20.537582000542898,200010000
+rt03-loop-summation,tail-off,inline-tail-unroll,"--tail=off --pass-order=inline,tail,unroll",14738,678,5,1,19.470380007987842,19.832302001304924,20.441111504624132,200010000
+rt03-loop-summation,tail-off,unroll-inline-tail,"--tail=off --pass-order=unroll,inline,tail",14738,678,5,1,20.08641650172649,20.40635400044266,20.613408501958475,200010000
+rt03-loop-summation,tail-off,unroll-tail-inline,"--tail=off --pass-order=unroll,tail,inline",14738,678,5,1,19.876157995895483,20.09561099112034,21.216274493781384,200010000
+rt03-loop-summation,tail-off,tail-inline-unroll,"--tail=off --pass-order=tail,inline,unroll",14738,678,5,1,19.65391749399714,19.886565001797862,20.61020950350212,200010000
+rt03-loop-summation,tail-off,tail-unroll-inline,"--tail=off --pass-order=tail,unroll,inline",14738,678,5,1,19.923990505049005,20.196958997985348,20.559636999678332,200010000
+rt03-loop-summation,combo-inline-unroll,inline-unroll-tail,"--unroll-factor=4 --no-inline --pass-order=inline,unroll,tail",14738,678,5,1,19.853942998452112,20.22861799923703,20.80422800645465,200010000
+rt03-loop-summation,combo-inline-unroll,inline-tail-unroll,"--unroll-factor=4 --no-inline --pass-order=inline,tail,unroll",14738,678,5,1,19.943302002502605,20.34882099542301,20.60701650043484,200010000
+rt03-loop-summation,combo-inline-unroll,unroll-inline-tail,"--unroll-factor=4 --no-inline --pass-order=unroll,inline,tail",14738,678,5,1,19.799219502601773,20.06755799811799,20.589683495927602,200010000
+rt03-loop-summation,combo-inline-unroll,unroll-tail-inline,"--unroll-factor=4 --no-inline --pass-order=unroll,tail,inline",14738,678,5,1,19.90361450589262,20.327901002019644,21.464445497258566,200010000
+rt03-loop-summation,combo-inline-unroll,tail-inline-unroll,"--unroll-factor=4 --no-inline --pass-order=tail,inline,unroll",14738,678,5,1,19.80447199457558,19.98465099313762,20.73533149814466,200010000
+rt03-loop-summation,combo-inline-unroll,tail-unroll-inline,"--unroll-factor=4 --no-inline --pass-order=tail,unroll,inline",14738,678,5,1,19.731740496354178,20.266068997443654,21.27325500623556,200010000
+rt04-stride-heavy-loop,baseline,inline-unroll-tail,"--pass-order=inline,unroll,tail",18845,754,5,1,20.434854995983187,20.935184002155438,21.15992049948545,24450418
+rt04-stride-heavy-loop,baseline,inline-tail-unroll,"--pass-order=inline,tail,unroll",18845,754,5,1,20.04899700114038,20.581557997502387,21.67566600110149,24450418
+rt04-stride-heavy-loop,baseline,unroll-inline-tail,"--pass-order=unroll,inline,tail",18845,754,5,1,20.17937049822649,20.895046996884048,21.42700899275951,24450418
+rt04-stride-heavy-loop,baseline,unroll-tail-inline,"--pass-order=unroll,tail,inline",18845,754,5,1,19.673825503559783,20.53078598692082,21.141492507013027,24450418
+rt04-stride-heavy-loop,baseline,tail-inline-unroll,"--pass-order=tail,inline,unroll",18845,754,5,1,20.090013487788383,20.30206800554879,20.7574564992683,24450418
+rt04-stride-heavy-loop,baseline,tail-unroll-inline,"--pass-order=tail,unroll,inline",18845,754,5,1,20.06606500799535,20.376763990498148,20.89207249809988,24450418
+rt04-stride-heavy-loop,no-inline,inline-unroll-tail,"--no-inline --pass-order=inline,unroll,tail",18845,754,5,1,19.820601497485768,20.015503992908634,20.370873491629027,24450418
+rt04-stride-heavy-loop,no-inline,inline-tail-unroll,"--no-inline --pass-order=inline,tail,unroll",18845,754,5,1,20.43845399748534,20.908769001835026,21.294034500897396,24450418
+rt04-stride-heavy-loop,no-inline,unroll-inline-tail,"--no-inline --pass-order=unroll,inline,tail",18845,754,5,1,20.189128001220524,20.812711998587474,20.88985699811019,24450418
+rt04-stride-heavy-loop,no-inline,unroll-tail-inline,"--no-inline --pass-order=unroll,tail,inline",18845,754,5,1,20.254263996321242,20.41822399769444,20.71519949095091,24450418
+rt04-stride-heavy-loop,no-inline,tail-inline-unroll,"--no-inline --pass-order=tail,inline,unroll",18845,754,5,1,19.81705099751707,21.20312199986074,21.439467491290998,24450418
+rt04-stride-heavy-loop,no-inline,tail-unroll-inline,"--no-inline --pass-order=tail,unroll,inline",18845,754,5,1,20.038201997522265,20.276374008972198,20.982784502848517,24450418
+rt04-stride-heavy-loop,unroll-4,inline-unroll-tail,"--unroll-factor=4 --pass-order=inline,unroll,tail",18845,754,5,1,20.12383249530103,21.00153399806004,21.674976509530097,24450418
+rt04-stride-heavy-loop,unroll-4,inline-tail-unroll,"--unroll-factor=4 --pass-order=inline,tail,unroll",18845,754,5,1,20.51001250219997,21.14600299682934,21.333690507162828,24450418
+rt04-stride-heavy-loop,unroll-4,unroll-inline-tail,"--unroll-factor=4 --pass-order=unroll,inline,tail",18845,754,5,1,20.405613504408393,20.479549988522194,21.134902999619953,24450418
+rt04-stride-heavy-loop,unroll-4,unroll-tail-inline,"--unroll-factor=4 --pass-order=unroll,tail,inline",18845,754,5,1,19.99130250624148,20.519215002423152,20.973091006453615,24450418
+rt04-stride-heavy-loop,unroll-4,tail-inline-unroll,"--unroll-factor=4 --pass-order=tail,inline,unroll",18845,754,5,1,19.802066999545787,20.237067990819924,20.90003500779858,24450418
+rt04-stride-heavy-loop,unroll-4,tail-unroll-inline,"--unroll-factor=4 --pass-order=tail,unroll,inline",18845,754,5,1,20.648157500545494,20.797482997295447,21.31623100285651,24450418
+rt04-stride-heavy-loop,unroll-8,inline-unroll-tail,"--unroll-factor=8 --pass-order=inline,unroll,tail",22685,818,5,1,20.315678011684213,21.275254010106437,21.524396499444265,24450418
+rt04-stride-heavy-loop,unroll-8,inline-tail-unroll,"--unroll-factor=8 --pass-order=inline,tail,unroll",22685,818,5,1,19.700398996064905,20.46012801292818,21.426261504529975,24450418
+rt04-stride-heavy-loop,unroll-8,unroll-inline-tail,"--unroll-factor=8 --pass-order=unroll,inline,tail",22685,818,5,1,19.601912499638274,20.5752659967402,20.79588449851144,24450418
+rt04-stride-heavy-loop,unroll-8,unroll-tail-inline,"--unroll-factor=8 --pass-order=unroll,tail,inline",22685,818,5,1,19.609391994890757,19.89607300492935,21.050918505352456,24450418
+rt04-stride-heavy-loop,unroll-8,tail-inline-unroll,"--unroll-factor=8 --pass-order=tail,inline,unroll",22685,818,5,1,19.625624008767772,19.814489991404116,20.263208003598265,24450418
+rt04-stride-heavy-loop,unroll-8,tail-unroll-inline,"--unroll-factor=8 --pass-order=tail,unroll,inline",22685,818,5,1,20.337991503765807,20.405333998496644,21.176987494982313,24450418
+rt04-stride-heavy-loop,tail-off,inline-unroll-tail,"--tail=off --pass-order=inline,unroll,tail",18845,754,5,1,20.242537000740413,20.438646999537013,20.855921000475064,24450418
+rt04-stride-heavy-loop,tail-off,inline-tail-unroll,"--tail=off --pass-order=inline,tail,unroll",18845,754,5,1,19.696351504535414,20.296041009714827,20.747570000821725,24450418
+rt04-stride-heavy-loop,tail-off,unroll-inline-tail,"--tail=off --pass-order=unroll,inline,tail",18845,754,5,1,19.883759508957155,20.644648000597954,21.394459006842226,24450418
+rt04-stride-heavy-loop,tail-off,unroll-tail-inline,"--tail=off --pass-order=unroll,tail,inline",18845,754,5,1,19.815269006357994,20.87291500356514,21.523438997974154,24450418
+rt04-stride-heavy-loop,tail-off,tail-inline-unroll,"--tail=off --pass-order=tail,inline,unroll",18845,754,5,1,19.708077001268975,20.219756988808513,20.431316494068597,24450418
+rt04-stride-heavy-loop,tail-off,tail-unroll-inline,"--tail=off --pass-order=tail,unroll,inline",18845,754,5,1,20.02838350017555,20.261625002603978,20.4179025022313,24450418
+rt04-stride-heavy-loop,combo-inline-unroll,inline-unroll-tail,"--unroll-factor=4 --no-inline --pass-order=inline,unroll,tail",18845,754,5,1,20.052543994097505,20.145165006397292,20.570597000187263,24450418
+rt04-stride-heavy-loop,combo-inline-unroll,inline-tail-unroll,"--unroll-factor=4 --no-inline --pass-order=inline,tail,unroll",18845,754,5,1,20.1727320018108,20.356105000246316,20.831481502682436,24450418
+rt04-stride-heavy-loop,combo-inline-unroll,unroll-inline-tail,"--unroll-factor=4 --no-inline --pass-order=unroll,inline,tail",18845,754,5,1,19.683073500345927,20.65154600131791,21.104750005179085,24450418
+rt04-stride-heavy-loop,combo-inline-unroll,unroll-tail-inline,"--unroll-factor=4 --no-inline --pass-order=unroll,tail,inline",18845,754,5,1,20.250469497113954,20.649190992116928,20.984672504710034,24450418
+rt04-stride-heavy-loop,combo-inline-unroll,tail-inline-unroll,"--unroll-factor=4 --no-inline --pass-order=tail,inline,unroll",18845,754,5,1,20.489945003646426,20.73333100997843,21.060881503217388,24450418
+rt04-stride-heavy-loop,combo-inline-unroll,tail-unroll-inline,"--unroll-factor=4 --no-inline --pass-order=tail,unroll,inline",18845,754,5,1,20.903265998640563,21.575402992311865,24.073642496659886,24450418
+rt05-nested-mix,baseline,inline-unroll-tail,"--pass-order=inline,unroll,tail",20533,755,5,1,20.072220999281853,21.001959990826435,21.622512002068106,36414
+rt05-nested-mix,baseline,inline-tail-unroll,"--pass-order=inline,tail,unroll",20533,755,5,1,20.147534996795002,20.88329599064309,21.002050503739156,36414
+rt05-nested-mix,baseline,unroll-inline-tail,"--pass-order=unroll,inline,tail",20533,755,5,1,20.417752508365083,20.779737998964265,21.04212150152307,36414
+rt05-nested-mix,baseline,unroll-tail-inline,"--pass-order=unroll,tail,inline",20533,755,5,1,20.02380850171903,20.94419300556183,21.16993950039614,36414
+rt05-nested-mix,baseline,tail-inline-unroll,"--pass-order=tail,inline,unroll",20533,755,5,1,19.924527492548805,20.38132300367579,20.828947504924145,36414
+rt05-nested-mix,baseline,tail-unroll-inline,"--pass-order=tail,unroll,inline",20533,755,5,1,20.392754500790033,21.149188993149437,21.473464505106676,36414
+rt05-nested-mix,no-inline,inline-unroll-tail,"--no-inline --pass-order=inline,unroll,tail",20533,755,5,1,19.632297502539586,19.89744599268306,20.661328999267425,36414
+rt05-nested-mix,no-inline,inline-tail-unroll,"--no-inline --pass-order=inline,tail,unroll",20533,755,5,1,19.829847500659525,21.08481699542608,21.880827996938024,36414
+rt05-nested-mix,no-inline,unroll-inline-tail,"--no-inline --pass-order=unroll,inline,tail",20533,755,5,1,19.491460494464263,20.784238004125655,21.57136999448994,36414
+rt05-nested-mix,no-inline,unroll-tail-inline,"--no-inline --pass-order=unroll,tail,inline",20533,755,5,1,20.090778001758736,20.367365999845788,20.849185006227344,36414
+rt05-nested-mix,no-inline,tail-inline-unroll,"--no-inline --pass-order=tail,inline,unroll",20533,755,5,1,19.57581049646251,19.87018399813678,21.04740700451657,36414
+rt05-nested-mix,no-inline,tail-unroll-inline,"--no-inline --pass-order=tail,unroll,inline",20533,755,5,1,19.62398100295104,20.71655899635516,21.062745996459853,36414
+rt05-nested-mix,unroll-4,inline-unroll-tail,"--unroll-factor=4 --pass-order=inline,unroll,tail",20533,755,5,1,19.73090399405919,20.915778004564345,21.230963997368235,36414
+rt05-nested-mix,unroll-4,inline-tail-unroll,"--unroll-factor=4 --pass-order=inline,tail,unroll",20533,755,5,1,19.559749503969215,20.526298001641408,20.763834501849487,36414
+rt05-nested-mix,unroll-4,unroll-inline-tail,"--unroll-factor=4 --pass-order=unroll,inline,tail",20533,755,5,1,19.5109469932504,19.715660004294477,20.796711505681742,36414
+rt05-nested-mix,unroll-4,unroll-tail-inline,"--unroll-factor=4 --pass-order=unroll,tail,inline",20533,755,5,1,20.533292008622084,20.67600199370645,20.88963199639693,36414
+rt05-nested-mix,unroll-4,tail-inline-unroll,"--unroll-factor=4 --pass-order=tail,inline,unroll",20533,755,5,1,19.703842503076885,19.916671997634694,20.67872699990403,36414
+rt05-nested-mix,unroll-4,tail-unroll-inline,"--unroll-factor=4 --pass-order=tail,unroll,inline",20533,755,5,1,20.346131503174547,20.822807986405678,21.059774997411296,36414
+rt05-nested-mix,unroll-8,inline-unroll-tail,"--unroll-factor=8 --pass-order=inline,unroll,tail",25973,835,5,1,19.792244005657267,20.552649002638645,21.113877002790105,36414
+rt05-nested-mix,unroll-8,inline-tail-unroll,"--unroll-factor=8 --pass-order=inline,tail,unroll",25973,835,5,1,20.462617503653746,21.090819005621597,21.721254503063392,36414
+rt05-nested-mix,unroll-8,unroll-inline-tail,"--unroll-factor=8 --pass-order=unroll,inline,tail",25973,835,5,1,20.30075500078965,20.691180994617753,20.945172000210732,36414
+rt05-nested-mix,unroll-8,unroll-tail-inline,"--unroll-factor=8 --pass-order=unroll,tail,inline",25973,835,5,1,19.997594004962593,20.155199003056623,20.97177850373555,36414
+rt05-nested-mix,unroll-8,tail-inline-unroll,"--unroll-factor=8 --pass-order=tail,inline,unroll",25973,835,5,1,20.185861496429425,20.72774500993546,21.082701001432724,36414
+rt05-nested-mix,unroll-8,tail-unroll-inline,"--unroll-factor=8 --pass-order=tail,unroll,inline",25973,835,5,1,19.697671501489822,19.857223000144586,20.19888699578587,36414
+rt05-nested-mix,tail-off,inline-unroll-tail,"--tail=off --pass-order=inline,unroll,tail",20533,755,5,1,19.758656992053147,20.059186994330958,20.339460992545355,36414
+rt05-nested-mix,tail-off,inline-tail-unroll,"--tail=off --pass-order=inline,tail,unroll",20533,755,5,1,19.881094500306062,20.04615298938006,20.49297700432362,36414
+rt05-nested-mix,tail-off,unroll-inline-tail,"--tail=off --pass-order=unroll,inline,tail",20533,755,5,1,20.108336000703275,20.742742999573238,21.128998494532425,36414
+rt05-nested-mix,tail-off,unroll-tail-inline,"--tail=off --pass-order=unroll,tail,inline",20533,755,5,1,19.90335549635347,20.209197988151573,20.861909491941333,36414
+rt05-nested-mix,tail-off,tail-inline-unroll,"--tail=off --pass-order=tail,inline,unroll",20533,755,5,1,19.706962506461423,19.864293004502542,20.3681364946533,36414
+rt05-nested-mix,tail-off,tail-unroll-inline,"--tail=off --pass-order=tail,unroll,inline",20533,755,5,1,19.897885496902745,20.28620299824979,20.844206497713458,36414
+rt05-nested-mix,combo-inline-unroll,inline-unroll-tail,"--unroll-factor=4 --no-inline --pass-order=inline,unroll,tail",20533,755,5,1,19.942509999964386,20.303925994085148,20.946435499354266,36414
+rt05-nested-mix,combo-inline-unroll,inline-tail-unroll,"--unroll-factor=4 --no-inline --pass-order=inline,tail,unroll",20533,755,5,1,19.707358995219693,20.02437599003315,20.249473505828064,36414
+rt05-nested-mix,combo-inline-unroll,unroll-inline-tail,"--unroll-factor=4 --no-inline --pass-order=unroll,inline,tail",20533,755,5,1,19.467903999611735,20.164403002127074,20.644617499783635,36414
+rt05-nested-mix,combo-inline-unroll,unroll-tail-inline,"--unroll-factor=4 --no-inline --pass-order=unroll,tail,inline",20533,755,5,1,19.787911500316113,20.205610009725206,20.612925494788215,36414
+rt05-nested-mix,combo-inline-unroll,tail-inline-unroll,"--unroll-factor=4 --no-inline --pass-order=tail,inline,unroll",20533,755,5,1,19.550436503777746,19.810330006293952,20.338676498795394,36414
+rt05-nested-mix,combo-inline-unroll,tail-unroll-inline,"--unroll-factor=4 --no-inline --pass-order=tail,unroll,inline",20533,755,5,1,19.833789498079568,20.011390995932743,20.54531699832296,36414
+rt06-string-wrapping,baseline,inline-unroll-tail,"--pass-order=inline,unroll,tail",15264,738,5,1,19.63356499618385,20.233853996614926,20.709034004539717,28
+rt06-string-wrapping,baseline,inline-tail-unroll,"--pass-order=inline,tail,unroll",15264,738,5,1,20.016190501337405,20.59824399475474,21.46253400860587,28
+rt06-string-wrapping,baseline,unroll-inline-tail,"--pass-order=unroll,inline,tail",15264,738,5,1,19.561337496270426,20.27134499803651,20.865842001512647,28
+rt06-string-wrapping,baseline,unroll-tail-inline,"--pass-order=unroll,tail,inline",15264,738,5,1,19.297180995636154,19.87402100348845,20.25565700023435,28
+rt06-string-wrapping,baseline,tail-inline-unroll,"--pass-order=tail,inline,unroll",15264,738,5,1,19.856622006045654,20.32474600127898,21.23880950239254,28
+rt06-string-wrapping,baseline,tail-unroll-inline,"--pass-order=tail,unroll,inline",15264,738,5,1,19.629792499472387,19.96864000102505,20.217757504724432,28
+rt06-string-wrapping,no-inline,inline-unroll-tail,"--no-inline --pass-order=inline,unroll,tail",15264,738,5,1,19.38902550318744,19.83636899967678,20.035391506098676,28
+rt06-string-wrapping,no-inline,inline-tail-unroll,"--no-inline --pass-order=inline,tail,unroll",15264,738,5,1,19.44203099992592,20.152117998804897,21.1460989958141,28
+rt06-string-wrapping,no-inline,unroll-inline-tail,"--no-inline --pass-order=unroll,inline,tail",15264,738,5,1,20.29157250217395,21.282601999701,21.61906900437316,28
+rt06-string-wrapping,no-inline,unroll-tail-inline,"--no-inline --pass-order=unroll,tail,inline",15264,738,5,1,19.65010799904121,20.257538999430835,20.579669500875752,28
+rt06-string-wrapping,no-inline,tail-inline-unroll,"--no-inline --pass-order=tail,inline,unroll",15264,738,5,1,19.96918299846584,20.420463013579138,21.200411996687762,28
+rt06-string-wrapping,no-inline,tail-unroll-inline,"--no-inline --pass-order=tail,unroll,inline",15264,738,5,1,19.663686995045282,20.615657995222136,20.722772998851724,28
+rt06-string-wrapping,unroll-4,inline-unroll-tail,"--unroll-factor=4 --pass-order=inline,unroll,tail",15264,738,5,1,19.74177799274912,19.91505299520213,20.345701501355506,28
+rt06-string-wrapping,unroll-4,inline-tail-unroll,"--unroll-factor=4 --pass-order=inline,tail,unroll",15264,738,5,1,19.50203450542176,20.533518007141538,21.20163449581014,28
+rt06-string-wrapping,unroll-4,unroll-inline-tail,"--unroll-factor=4 --pass-order=unroll,inline,tail",15264,738,5,1,19.582519991672598,19.92440600588452,20.83542699983809,28
+rt06-string-wrapping,unroll-4,unroll-tail-inline,"--unroll-factor=4 --pass-order=unroll,tail,inline",15264,738,5,1,19.756848996621557,19.8909609898692,20.391742502397392,28
+rt06-string-wrapping,unroll-4,tail-inline-unroll,"--unroll-factor=4 --pass-order=tail,inline,unroll",15264,738,5,1,19.993501002318226,20.40634000150021,21.0639924989664,28
+rt06-string-wrapping,unroll-4,tail-unroll-inline,"--unroll-factor=4 --pass-order=tail,unroll,inline",15264,738,5,1,19.615510005678516,19.888281996827573,20.4295674993773,28
+rt06-string-wrapping,unroll-8,inline-unroll-tail,"--unroll-factor=8 --pass-order=inline,unroll,tail",17180,799,5,1,19.532811507815495,20.152003999100998,20.648358498874586,28
+rt06-string-wrapping,unroll-8,inline-tail-unroll,"--unroll-factor=8 --pass-order=inline,tail,unroll",17180,799,5,1,19.612286996562034,19.974341004854068,20.568415995512623,28
+rt06-string-wrapping,unroll-8,unroll-inline-tail,"--unroll-factor=8 --pass-order=unroll,inline,tail",17180,799,5,1,19.795351996435784,19.90821200888604,20.483619504375383,28
+rt06-string-wrapping,unroll-8,unroll-tail-inline,"--unroll-factor=8 --pass-order=unroll,tail,inline",17180,799,5,1,19.980667493655346,20.608548991731368,20.648973004426807,28
+rt06-string-wrapping,unroll-8,tail-inline-unroll,"--unroll-factor=8 --pass-order=tail,inline,unroll",17180,799,5,1,19.360348996997345,19.481419993098825,20.2411395002855,28
+rt06-string-wrapping,unroll-8,tail-unroll-inline,"--unroll-factor=8 --pass-order=tail,unroll,inline",17180,799,5,1,19.765732002269942,20.136013001319952,21.16651499818545,28
+rt06-string-wrapping,tail-off,inline-unroll-tail,"--tail=off --pass-order=inline,unroll,tail",15264,738,5,1,19.574332996853627,19.800405003479682,20.132281999394763,28
+rt06-string-wrapping,tail-off,inline-tail-unroll,"--tail=off --pass-order=inline,tail,unroll",15264,738,5,1,19.51414100767579,19.819540990283713,20.23940849903738,28
+rt06-string-wrapping,tail-off,unroll-inline-tail,"--tail=off --pass-order=unroll,inline,tail",15264,738,5,1,19.192437997844536,19.549782009562477,20.615500005078502,28
+rt06-string-wrapping,tail-off,unroll-tail-inline,"--tail=off --pass-order=unroll,tail,inline",15264,738,5,1,19.57358600338921,19.64053700794466,20.261563498934265,28
+rt06-string-wrapping,tail-off,tail-inline-unroll,"--tail=off --pass-order=tail,inline,unroll",15264,738,5,1,19.21842499723425,19.819231005385518,20.168484501482453,28
+rt06-string-wrapping,tail-off,tail-unroll-inline,"--tail=off --pass-order=tail,unroll,inline",15264,738,5,1,19.851984499837272,20.137910003541037,20.541180994769093,28
+rt06-string-wrapping,combo-inline-unroll,inline-unroll-tail,"--unroll-factor=4 --no-inline --pass-order=inline,unroll,tail",15264,738,5,1,19.90274050331209,20.238693003193475,21.180784002353903,28
+rt06-string-wrapping,combo-inline-unroll,inline-tail-unroll,"--unroll-factor=4 --no-inline --pass-order=inline,tail,unroll",15264,738,5,1,19.687687505211215,19.751037994865328,20.851840999966953,28
+rt06-string-wrapping,combo-inline-unroll,unroll-inline-tail,"--unroll-factor=4 --no-inline --pass-order=unroll,inline,tail",15264,738,5,1,19.361759506864473,19.57347099960316,19.853933998092543,28
+rt06-string-wrapping,combo-inline-unroll,unroll-tail-inline,"--unroll-factor=4 --no-inline --pass-order=unroll,tail,inline",15264,738,5,1,19.6980615000939,19.879425992257893,20.953387996996753,28
+rt06-string-wrapping,combo-inline-unroll,tail-inline-unroll,"--unroll-factor=4 --no-inline --pass-order=tail,inline,unroll",15264,738,5,1,19.67871200031368,19.796213004156016,20.472340991545934,28
+rt06-string-wrapping,combo-inline-unroll,tail-unroll-inline,"--unroll-factor=4 --no-inline --pass-order=tail,unroll,inline",15264,738,5,1,19.467273996269796,19.841919987811707,20.56065299984766,28
+rt07-helper-inline,baseline,inline-unroll-tail,"--pass-order=inline,unroll,tail",20389,791,5,1,20.072020997758955,20.414384998730384,20.684350507508498,767979
+rt07-helper-inline,baseline,inline-tail-unroll,"--pass-order=inline,tail,unroll",20389,791,5,1,19.386720996408258,19.50589899206534,19.5466570003191,767979
+rt07-helper-inline,baseline,unroll-inline-tail,"--pass-order=unroll,inline,tail",20389,791,5,1,19.607094502134714,20.19432801171206,20.64027499727672,767979
+rt07-helper-inline,baseline,unroll-tail-inline,"--pass-order=unroll,tail,inline",20389,791,5,1,20.31516400165856,21.0253039986128,22.00621349766152,767979
+rt07-helper-inline,baseline,tail-inline-unroll,"--pass-order=tail,inline,unroll",20389,791,5,1,20.120157991186716,20.673813007306308,21.483996999450028,767979
+rt07-helper-inline,baseline,tail-unroll-inline,"--pass-order=tail,unroll,inline",20389,791,5,1,19.578557505155914,20.17926400003489,20.764263994351495,767979
+rt07-helper-inline,no-inline,inline-unroll-tail,"--no-inline --pass-order=inline,unroll,tail",20389,791,5,1,19.882376996974926,20.16993700817693,20.401655994646717,767979
+rt07-helper-inline,no-inline,inline-tail-unroll,"--no-inline --pass-order=inline,tail,unroll",20389,791,5,1,19.436620001215488,19.64733999921009,20.209624999552034,767979
+rt07-helper-inline,no-inline,unroll-inline-tail,"--no-inline --pass-order=unroll,inline,tail",20389,791,5,1,19.639711499621626,19.746738995308988,20.322251002653502,767979
+rt07-helper-inline,no-inline,unroll-tail-inline,"--no-inline --pass-order=unroll,tail,inline",20389,791,5,1,19.655793999845628,20.239694000338204,20.52180650207447,767979
+rt07-helper-inline,no-inline,tail-inline-unroll,"--no-inline --pass-order=tail,inline,unroll",20389,791,5,1,19.877008999173995,20.165880006970838,20.55457400274463,767979
+rt07-helper-inline,no-inline,tail-unroll-inline,"--no-inline --pass-order=tail,unroll,inline",20389,791,5,1,19.57189950189786,20.102982001844794,20.621869000024162,767979
+rt07-helper-inline,unroll-4,inline-unroll-tail,"--unroll-factor=4 --pass-order=inline,unroll,tail",20389,791,5,1,19.769708495005034,19.95921200432349,21.063747502921615,767979
+rt07-helper-inline,unroll-4,inline-tail-unroll,"--unroll-factor=4 --pass-order=inline,tail,unroll",20389,791,5,1,19.540745990525465,19.64573300210759,20.43983650219161,767979
+rt07-helper-inline,unroll-4,unroll-inline-tail,"--unroll-factor=4 --pass-order=unroll,inline,tail",20389,791,5,1,19.811658501566853,20.108113007154316,20.66949749860214,767979
+rt07-helper-inline,unroll-4,unroll-tail-inline,"--unroll-factor=4 --pass-order=unroll,tail,inline",20389,791,5,1,19.51404600549722,20.039884999278,20.35167149733752,767979
+rt07-helper-inline,unroll-4,tail-inline-unroll,"--unroll-factor=4 --pass-order=tail,inline,unroll",20389,791,5,1,19.629161492048297,19.98034300049767,20.25865799805615,767979
+rt07-helper-inline,unroll-4,tail-unroll-inline,"--unroll-factor=4 --pass-order=tail,unroll,inline",20389,791,5,1,19.859152504068334,20.071035003638826,20.405902003403753,767979
+rt07-helper-inline,unroll-8,inline-unroll-tail,"--unroll-factor=8 --pass-order=inline,unroll,tail",26821,891,5,1,19.236198495491408,19.84270200773608,20.559481010423042,767979
+rt07-helper-inline,unroll-8,inline-tail-unroll,"--unroll-factor=8 --pass-order=inline,tail,unroll",26821,891,5,1,19.796372995187994,20.069190999493003,20.37179000035394,767979
+rt07-helper-inline,unroll-8,unroll-inline-tail,"--unroll-factor=8 --pass-order=unroll,inline,tail",26821,891,5,1,20.013370500237215,20.1252429978922,20.57108450389933,767979
+rt07-helper-inline,unroll-8,unroll-tail-inline,"--unroll-factor=8 --pass-order=unroll,tail,inline",26821,891,5,1,19.520785499480553,19.809510005870834,20.280659504351206,767979
+rt07-helper-inline,unroll-8,tail-inline-unroll,"--unroll-factor=8 --pass-order=tail,inline,unroll",26821,891,5,1,19.56415799941169,19.726240003365092,20.153881996520795,767979
+rt07-helper-inline,unroll-8,tail-unroll-inline,"--unroll-factor=8 --pass-order=tail,unroll,inline",26821,891,5,1,19.570575503166765,19.633784992038272,20.42016199993668,767979
+rt07-helper-inline,tail-off,inline-unroll-tail,"--tail=off --pass-order=inline,unroll,tail",20389,791,5,1,19.324352993862703,19.880046005710028,20.73426200513495,767979
+rt07-helper-inline,tail-off,inline-tail-unroll,"--tail=off --pass-order=inline,tail,unroll",20389,791,5,1,19.6492890099762,19.8782989900792,20.115188002819195,767979
+rt07-helper-inline,tail-off,unroll-inline-tail,"--tail=off --pass-order=unroll,inline,tail",20389,791,5,1,19.907745001546573,20.025612990139052,20.886644000711385,767979
+rt07-helper-inline,tail-off,unroll-tail-inline,"--tail=off --pass-order=unroll,tail,inline",20389,791,5,1,19.565141505154315,19.704470003489405,20.247883003321476,767979
+rt07-helper-inline,tail-off,tail-inline-unroll,"--tail=off --pass-order=tail,inline,unroll",20389,791,5,1,19.617809499322902,20.061696006450802,20.35906100354623,767979
+rt07-helper-inline,tail-off,tail-unroll-inline,"--tail=off --pass-order=tail,unroll,inline",20389,791,5,1,19.45506050833501,20.14160899852868,20.660767499066424,767979
+rt07-helper-inline,combo-inline-unroll,inline-unroll-tail,"--unroll-factor=4 --no-inline --pass-order=inline,unroll,tail",20389,791,5,1,19.977176998509094,20.361293005407788,20.891620995826088,767979
+rt07-helper-inline,combo-inline-unroll,inline-tail-unroll,"--unroll-factor=4 --no-inline --pass-order=inline,tail,unroll",20389,791,5,1,19.949433495639823,20.257860989659093,20.726246999402065,767979
+rt07-helper-inline,combo-inline-unroll,unroll-inline-tail,"--unroll-factor=4 --no-inline --pass-order=unroll,inline,tail",20389,791,5,1,20.494743490417022,21.09333500266075,21.277872503560502,767979
+rt07-helper-inline,combo-inline-unroll,unroll-tail-inline,"--unroll-factor=4 --no-inline --pass-order=unroll,tail,inline",20389,791,5,1,19.803554998361506,20.19157299946528,20.907857004203834,767979
+rt07-helper-inline,combo-inline-unroll,tail-inline-unroll,"--unroll-factor=4 --no-inline --pass-order=tail,inline,unroll",20389,791,5,1,20.088259494514205,20.38323700253386,20.660239497374278,767979
+rt07-helper-inline,combo-inline-unroll,tail-unroll-inline,"--unroll-factor=4 --no-inline --pass-order=tail,unroll,inline",20389,791,5,1,19.92771450022701,20.62373299850151,21.366522007156163,767979
+rt08-branchy-loop,baseline,inline-unroll-tail,"--pass-order=inline,unroll,tail",13916,655,5,1,19.040779501665384,19.531776997609995,19.54609400127083,12342
+rt08-branchy-loop,baseline,inline-tail-unroll,"--pass-order=inline,tail,unroll",13916,655,5,1,19.947701002820395,20.217912999214604,20.76759400370065,12342
+rt08-branchy-loop,baseline,unroll-inline-tail,"--pass-order=unroll,inline,tail",13916,655,5,1,19.896528996468987,20.188176989904605,20.398648499394767,12342
+rt08-branchy-loop,baseline,unroll-tail-inline,"--pass-order=unroll,tail,inline",13916,655,5,1,19.57876449887408,20.117203996051103,20.398629996634554,12342
+rt08-branchy-loop,baseline,tail-inline-unroll,"--pass-order=tail,inline,unroll",13916,655,5,1,19.37960000213934,19.780322996666655,20.449747498787474,12342
+rt08-branchy-loop,baseline,tail-unroll-inline,"--pass-order=tail,unroll,inline",13916,655,5,1,19.70376999815926,20.189628994558007,20.86640099878423,12342
+rt08-branchy-loop,no-inline,inline-unroll-tail,"--no-inline --pass-order=inline,unroll,tail",13916,655,5,1,19.729341998754535,19.983522011898458,20.913759493851103,12342
+rt08-branchy-loop,no-inline,inline-tail-unroll,"--no-inline --pass-order=inline,tail,unroll",13916,655,5,1,19.503553499816917,20.0973289902322,20.576224495016504,12342
+rt08-branchy-loop,no-inline,unroll-inline-tail,"--no-inline --pass-order=unroll,inline,tail",13916,655,5,1,19.598044498707168,20.033848006278276,20.30977300455561,12342
+rt08-branchy-loop,no-inline,unroll-tail-inline,"--no-inline --pass-order=unroll,tail,inline",13916,655,5,1,19.69280999765033,20.349341997643933,20.827694002946373,12342
+rt08-branchy-loop,no-inline,tail-inline-unroll,"--no-inline --pass-order=tail,inline,unroll",13916,655,5,1,19.718946496141143,19.82965700153727,19.93782950012246,12342
+rt08-branchy-loop,no-inline,tail-unroll-inline,"--no-inline --pass-order=tail,unroll,inline",13916,655,5,1,19.6728344890289,19.920432998333126,20.047945996338967,12342
+rt08-branchy-loop,unroll-4,inline-unroll-tail,"--unroll-factor=4 --pass-order=inline,unroll,tail",13916,655,5,1,19.549274002201855,20.143903995631263,20.36783249786822,12342
+rt08-branchy-loop,unroll-4,inline-tail-unroll,"--unroll-factor=4 --pass-order=inline,tail,unroll",13916,655,5,1,19.521784997778013,19.842255002004094,20.780159502464812,12342
+rt08-branchy-loop,unroll-4,unroll-inline-tail,"--unroll-factor=4 --pass-order=unroll,inline,tail",13916,655,5,1,19.88393850479042,19.948426008340903,20.348613994428888,12342
+rt08-branchy-loop,unroll-4,unroll-tail-inline,"--unroll-factor=4 --pass-order=unroll,tail,inline",13916,655,5,1,19.929543996113352,20.386182004585862,20.608676997653674,12342
+rt08-branchy-loop,unroll-4,tail-inline-unroll,"--unroll-factor=4 --pass-order=tail,inline,unroll",13916,655,5,1,19.453287502983585,19.67393499216996,21.258970999042504,12342
+rt08-branchy-loop,unroll-4,tail-unroll-inline,"--unroll-factor=4 --pass-order=tail,unroll,inline",13916,655,5,1,19.901767998817377,20.362516996101476,21.417820993519854,12342
+rt08-branchy-loop,unroll-8,inline-unroll-tail,"--unroll-factor=8 --pass-order=inline,unroll,tail",13916,655,5,1,19.885642504959833,19.93560699338559,20.323102493421175,12342
+rt08-branchy-loop,unroll-8,inline-tail-unroll,"--unroll-factor=8 --pass-order=inline,tail,unroll",13916,655,5,1,19.53064649569569,19.671807007398456,20.355824992293492,12342
+rt08-branchy-loop,unroll-8,unroll-inline-tail,"--unroll-factor=8 --pass-order=unroll,inline,tail",13916,655,5,1,19.60428399615921,19.94973399268929,20.65876899723662,12342
+rt08-branchy-loop,unroll-8,unroll-tail-inline,"--unroll-factor=8 --pass-order=unroll,tail,inline",13916,655,5,1,19.565936498111114,20.011927001178265,21.199892995355185,12342
+rt08-branchy-loop,unroll-8,tail-inline-unroll,"--unroll-factor=8 --pass-order=tail,inline,unroll",13916,655,5,1,19.779628499236424,20.333723005023785,21.082478000607807,12342
+rt08-branchy-loop,unroll-8,tail-unroll-inline,"--unroll-factor=8 --pass-order=tail,unroll,inline",13916,655,5,1,19.58078250027029,20.231318994774483,20.7311310005025,12342
+rt08-branchy-loop,tail-off,inline-unroll-tail,"--tail=off --pass-order=inline,unroll,tail",13916,655,5,1,19.756067500566132,19.899139006156474,20.174650497210678,12342
+rt08-branchy-loop,tail-off,inline-tail-unroll,"--tail=off --pass-order=inline,tail,unroll",13916,655,5,1,19.584607500291895,19.890944007784128,20.61025250441162,12342
+rt08-branchy-loop,tail-off,unroll-inline-tail,"--tail=off --pass-order=unroll,inline,tail",13916,655,5,1,19.417629497183952,19.66076099779457,20.614671004295815,12342
+rt08-branchy-loop,tail-off,unroll-tail-inline,"--tail=off --pass-order=unroll,tail,inline",13916,655,5,1,19.898697501048446,20.069480990059674,20.6526354959351,12342
+rt08-branchy-loop,tail-off,tail-inline-unroll,"--tail=off --pass-order=tail,inline,unroll",13916,655,5,1,19.335502001922578,19.490783000946976,19.753367007069755,12342
+rt08-branchy-loop,tail-off,tail-unroll-inline,"--tail=off --pass-order=tail,unroll,inline",13916,655,5,1,19.645550491986796,20.32453499850817,21.362224499171134,12342
+rt08-branchy-loop,combo-inline-unroll,inline-unroll-tail,"--unroll-factor=4 --no-inline --pass-order=inline,unroll,tail",13916,655,5,1,19.57837499503512,19.893203003448434,20.884620003926102,12342
+rt08-branchy-loop,combo-inline-unroll,inline-tail-unroll,"--unroll-factor=4 --no-inline --pass-order=inline,tail,unroll",13916,655,5,1,19.694420487212483,19.939338002586737,20.080852998944465,12342
+rt08-branchy-loop,combo-inline-unroll,unroll-inline-tail,"--unroll-factor=4 --no-inline --pass-order=unroll,inline,tail",13916,655,5,1,19.686130006448366,20.065063014044426,20.407757998327725,12342
+rt08-branchy-loop,combo-inline-unroll,unroll-tail-inline,"--unroll-factor=4 --no-inline --pass-order=unroll,tail,inline",13916,655,5,1,19.494049498462118,19.96294900891371,20.54654699168168,12342
+rt08-branchy-loop,combo-inline-unroll,tail-inline-unroll,"--unroll-factor=4 --no-inline --pass-order=tail,inline,unroll",13916,655,5,1,19.703933503478765,20.426920003956184,21.61069500289159,12342
+rt08-branchy-loop,combo-inline-unroll,tail-unroll-inline,"--unroll-factor=4 --no-inline --pass-order=tail,unroll,inline",13916,655,5,1,19.793600506091025,19.892436001100577,20.20050499413628,12342
+rt09-matrix-mix,baseline,inline-unroll-tail,"--pass-order=inline,unroll,tail",19534,756,5,1,19.505075993947685,19.685778010170907,19.922968502214644,9992080
+rt09-matrix-mix,baseline,inline-tail-unroll,"--pass-order=inline,tail,unroll",19534,756,5,1,19.508412508002948,19.733623004867695,21.09597300295718,9992080
+rt09-matrix-mix,baseline,unroll-inline-tail,"--pass-order=unroll,inline,tail",19534,756,5,1,19.808892000583,20.31830399937462,20.688026495918166,9992080
+rt09-matrix-mix,baseline,unroll-tail-inline,"--pass-order=unroll,tail,inline",19534,756,5,1,19.699870004842523,20.173257988062687,20.481642997765448,9992080
+rt09-matrix-mix,baseline,tail-inline-unroll,"--pass-order=tail,inline,unroll",19534,756,5,1,20.39032700122334,20.887919992674142,21.187781007029116,9992080
+rt09-matrix-mix,baseline,tail-unroll-inline,"--pass-order=tail,unroll,inline",19534,756,5,1,19.490204998874106,20.009683998068795,20.645190503273625,9992080
+rt09-matrix-mix,no-inline,inline-unroll-tail,"--no-inline --pass-order=inline,unroll,tail",19534,756,5,1,19.608852002420463,19.711152999661863,19.96790850535035,9992080
+rt09-matrix-mix,no-inline,inline-tail-unroll,"--no-inline --pass-order=inline,tail,unroll",19534,756,5,1,19.64429999497952,19.995791008113883,20.39767400128767,9992080
+rt09-matrix-mix,no-inline,unroll-inline-tail,"--no-inline --pass-order=unroll,inline,tail",19534,756,5,1,19.841238005028572,20.303976998548023,20.492413997999392,9992080
+rt09-matrix-mix,no-inline,unroll-tail-inline,"--no-inline --pass-order=unroll,tail,inline",19534,756,5,1,19.74954550678376,20.72662800492253,20.77366651064949,9992080
+rt09-matrix-mix,no-inline,tail-inline-unroll,"--no-inline --pass-order=tail,inline,unroll",19534,756,5,1,19.796718494035304,20.381883994559757,21.150362503249198,9992080
+rt09-matrix-mix,no-inline,tail-unroll-inline,"--no-inline --pass-order=tail,unroll,inline",19534,756,5,1,19.51233499130467,20.191892006550916,21.31304950307822,9992080
+rt09-matrix-mix,unroll-4,inline-unroll-tail,"--unroll-factor=4 --pass-order=inline,unroll,tail",19534,756,5,1,20.35623100528028,20.461635998799466,20.792777504539117,9992080
+rt09-matrix-mix,unroll-4,inline-tail-unroll,"--unroll-factor=4 --pass-order=inline,tail,unroll",19534,756,5,1,19.85061599407345,20.35507200344,20.552297501126304,9992080
+rt09-matrix-mix,unroll-4,unroll-inline-tail,"--unroll-factor=4 --pass-order=unroll,inline,tail",19534,756,5,1,19.704357509908732,19.801993999863043,20.390176003274973,9992080
+rt09-matrix-mix,unroll-4,unroll-tail-inline,"--unroll-factor=4 --pass-order=unroll,tail,inline",19534,756,5,1,19.587962997320574,19.742731004953384,21.81052450032439,9992080
+rt09-matrix-mix,unroll-4,tail-inline-unroll,"--unroll-factor=4 --pass-order=tail,inline,unroll",19534,756,5,1,19.56691850500647,19.64662899263203,21.301073000358883,9992080
+rt09-matrix-mix,unroll-4,tail-unroll-inline,"--unroll-factor=4 --pass-order=tail,unroll,inline",19534,756,5,1,19.541519999620505,19.94175800064113,20.32470599806402,9992080
+rt09-matrix-mix,unroll-8,inline-unroll-tail,"--unroll-factor=8 --pass-order=inline,unroll,tail",23154,812,5,1,19.41242999600945,19.87049399758689,20.6706969984225,9992080
+rt09-matrix-mix,unroll-8,inline-tail-unroll,"--unroll-factor=8 --pass-order=inline,tail,unroll",23154,812,5,1,19.862342996930238,20.022541997605003,20.576564500515815,9992080
+rt09-matrix-mix,unroll-8,unroll-inline-tail,"--unroll-factor=8 --pass-order=unroll,inline,tail",23154,812,5,1,19.562354005756788,19.813605002127588,20.04073149873875,9992080
+rt09-matrix-mix,unroll-8,unroll-tail-inline,"--unroll-factor=8 --pass-order=unroll,tail,inline",23154,812,5,1,19.70862199232215,19.76974199351389,20.507686997007113,9992080
+rt09-matrix-mix,unroll-8,tail-inline-unroll,"--unroll-factor=8 --pass-order=tail,inline,unroll",23154,812,5,1,19.468831502308603,19.688087995746173,19.933017494622618,9992080
+rt09-matrix-mix,unroll-8,tail-unroll-inline,"--unroll-factor=8 --pass-order=tail,unroll,inline",23154,812,5,1,19.68196599773364,20.174760997178964,20.453549499507062,9992080
+rt09-matrix-mix,tail-off,inline-unroll-tail,"--tail=off --pass-order=inline,unroll,tail",19534,756,5,1,19.275685503089335,19.862859000568278,20.317387003160547,9992080
+rt09-matrix-mix,tail-off,inline-tail-unroll,"--tail=off --pass-order=inline,tail,unroll",19534,756,5,1,19.550587494450156,20.064853990334086,20.557196497975383,9992080
+rt09-matrix-mix,tail-off,unroll-inline-tail,"--tail=off --pass-order=unroll,inline,tail",19534,756,5,1,19.574181496864185,20.76684699568432,21.405881503596902,9992080
+rt09-matrix-mix,tail-off,unroll-tail-inline,"--tail=off --pass-order=unroll,tail,inline",19534,756,5,1,20.093451494176406,20.32452500134241,20.64354049798567,9992080
+rt09-matrix-mix,tail-off,tail-inline-unroll,"--tail=off --pass-order=tail,inline,unroll",19534,756,5,1,19.401575002120808,19.822150992695242,20.351901497633662,9992080
+rt09-matrix-mix,tail-off,tail-unroll-inline,"--tail=off --pass-order=tail,unroll,inline",19534,756,5,1,19.430829997872934,20.199878999846987,20.33940800902201,9992080
+rt09-matrix-mix,combo-inline-unroll,inline-unroll-tail,"--unroll-factor=4 --no-inline --pass-order=inline,unroll,tail",19534,756,5,1,19.875778496498242,20.210369999404065,20.483811997110024,9992080
+rt09-matrix-mix,combo-inline-unroll,inline-tail-unroll,"--unroll-factor=4 --no-inline --pass-order=inline,tail,unroll",19534,756,5,1,19.23788349813549,19.804156996542588,21.436260001792107,9992080
+rt09-matrix-mix,combo-inline-unroll,unroll-inline-tail,"--unroll-factor=4 --no-inline --pass-order=unroll,inline,tail",19534,756,5,1,19.370280497241765,20.068090001586825,20.467852002184372,9992080
+rt09-matrix-mix,combo-inline-unroll,unroll-tail-inline,"--unroll-factor=4 --no-inline --pass-order=unroll,tail,inline",19534,756,5,1,19.6651244914392,20.043780998094007,20.46279799833428,9992080
+rt09-matrix-mix,combo-inline-unroll,tail-inline-unroll,"--unroll-factor=4 --no-inline --pass-order=tail,inline,unroll",19534,756,5,1,19.720438998774625,20.23995399940759,20.59893599653151,9992080
+rt09-matrix-mix,combo-inline-unroll,tail-unroll-inline,"--unroll-factor=4 --no-inline --pass-order=tail,unroll,inline",19534,756,5,1,19.695852999575436,20.35826799692586,21.414777998870704,9992080
+rt10-control-baseline,baseline,inline-unroll-tail,"--pass-order=inline,unroll,tail",29390,932,5,1,20.25073050026549,20.54840799246449,20.69871500134468,282763
+rt10-control-baseline,baseline,inline-tail-unroll,"--pass-order=inline,tail,unroll",29390,932,5,1,19.404645507165696,19.678871001815423,20.317571994382888,282763
+rt10-control-baseline,baseline,unroll-inline-tail,"--pass-order=unroll,inline,tail",29390,932,5,1,20.441870503418613,20.601810989319347,21.34621949517168,282763
+rt10-control-baseline,baseline,unroll-tail-inline,"--pass-order=unroll,tail,inline",29390,932,5,1,20.22287650470389,20.52193098643329,20.54070549638709,282763
+rt10-control-baseline,baseline,tail-inline-unroll,"--pass-order=tail,inline,unroll",29390,932,5,1,19.96284449705854,20.231428992701694,20.546646999719087,282763
+rt10-control-baseline,baseline,tail-unroll-inline,"--pass-order=tail,unroll,inline",29390,932,5,1,20.293747998948675,20.809585999813862,21.05893699626904,282763
+rt10-control-baseline,no-inline,inline-unroll-tail,"--no-inline --pass-order=inline,unroll,tail",29390,932,5,1,20.55436649970943,20.617079993826337,20.84517799812602,282763
+rt10-control-baseline,no-inline,inline-tail-unroll,"--no-inline --pass-order=inline,tail,unroll",29390,932,5,1,20.637426503526513,21.167423008591868,21.567128504102584,282763
+rt10-control-baseline,no-inline,unroll-inline-tail,"--no-inline --pass-order=unroll,inline,tail",29390,932,5,1,19.998373500129674,20.36845899419859,21.435105496493634,282763
+rt10-control-baseline,no-inline,unroll-tail-inline,"--no-inline --pass-order=unroll,tail,inline",29390,932,5,1,19.482244497339707,20.199742997647263,20.254908507922664,282763
+rt10-control-baseline,no-inline,tail-inline-unroll,"--no-inline --pass-order=tail,inline,unroll",29390,932,5,1,20.084171505004633,20.433751997188665,20.539438002742827,282763
+rt10-control-baseline,no-inline,tail-unroll-inline,"--no-inline --pass-order=tail,unroll,inline",29390,932,5,1,19.738442999369,20.154532001470216,20.287615996494424,282763
+rt10-control-baseline,unroll-4,inline-unroll-tail,"--unroll-factor=4 --pass-order=inline,unroll,tail",29390,932,5,1,19.748742000956554,19.955725001636893,20.72760799637763,282763
+rt10-control-baseline,unroll-4,inline-tail-unroll,"--unroll-factor=4 --pass-order=inline,tail,unroll",29390,932,5,1,19.980199496785644,20.270632987376302,20.639918999222573,282763
+rt10-control-baseline,unroll-4,unroll-inline-tail,"--unroll-factor=4 --pass-order=unroll,inline,tail",29390,932,5,1,20.309342500695493,20.78872600395698,21.476349007571116,282763
+rt10-control-baseline,unroll-4,unroll-tail-inline,"--unroll-factor=4 --pass-order=unroll,tail,inline",29390,932,5,1,19.530519501131494,19.97066001058556,20.68442799645709,282763
+rt10-control-baseline,unroll-4,tail-inline-unroll,"--unroll-factor=4 --pass-order=tail,inline,unroll",29390,932,5,1,19.826911491691135,19.96954200149048,20.86823650461156,282763
+rt10-control-baseline,unroll-4,tail-unroll-inline,"--unroll-factor=4 --pass-order=tail,unroll,inline",29390,932,5,1,19.641669998236466,20.134916994720697,20.648754994908813,282763
+rt10-control-baseline,unroll-8,inline-unroll-tail,"--unroll-factor=8 --pass-order=inline,unroll,tail",42038,1144,5,1,19.442647499090526,20.390810997923836,20.513023497187532,282763
+rt10-control-baseline,unroll-8,inline-tail-unroll,"--unroll-factor=8 --pass-order=inline,tail,unroll",42038,1144,5,1,19.793041996308602,20.411311008501798,21.160109507036395,282763
+rt10-control-baseline,unroll-8,unroll-inline-tail,"--unroll-factor=8 --pass-order=unroll,inline,tail",42038,1144,5,1,19.848898504278623,20.454094992601313,21.722695004427806,282763
+rt10-control-baseline,unroll-8,unroll-tail-inline,"--unroll-factor=8 --pass-order=unroll,tail,inline",42038,1144,5,1,19.771095001487993,20.090200006961823,20.25614799640607,282763
+rt10-control-baseline,unroll-8,tail-inline-unroll,"--unroll-factor=8 --pass-order=tail,inline,unroll",42038,1144,5,1,20.12164100597147,20.459862003917806,21.18464699742617,282763
+rt10-control-baseline,unroll-8,tail-unroll-inline,"--unroll-factor=8 --pass-order=tail,unroll,inline",42038,1144,5,1,20.215333002852276,20.476122997934,20.986235991586,282763
+rt10-control-baseline,tail-off,inline-unroll-tail,"--tail=off --pass-order=inline,unroll,tail",29390,932,5,1,19.596113997977227,20.06551399244927,20.360384005471133,282763
+rt10-control-baseline,tail-off,inline-tail-unroll,"--tail=off --pass-order=inline,tail,unroll",29390,932,5,1,19.41277150035603,19.958110991865396,20.430401498742867,282763
+rt10-control-baseline,tail-off,unroll-inline-tail,"--tail=off --pass-order=unroll,inline,tail",29390,932,5,1,19.781915994826704,20.32286200847011,21.162384502531495,282763
+rt10-control-baseline,tail-off,unroll-tail-inline,"--tail=off --pass-order=unroll,tail,inline",29390,932,5,1,19.914648997655604,20.29821499309037,20.704775502963457,282763
+rt10-control-baseline,tail-off,tail-inline-unroll,"--tail=off --pass-order=tail,inline,unroll",29390,932,5,1,19.631915994978044,20.213575000525452,20.722745000966825,282763
+rt10-control-baseline,tail-off,tail-unroll-inline,"--tail=off --pass-order=tail,unroll,inline",29390,932,5,1,19.636657496448606,19.870442993124016,20.810247006011195,282763
+rt10-control-baseline,combo-inline-unroll,inline-unroll-tail,"--unroll-factor=4 --no-inline --pass-order=inline,unroll,tail",29390,932,5,1,19.855414997437038,20.132270001340657,20.895028006634675,282763
+rt10-control-baseline,combo-inline-unroll,inline-tail-unroll,"--unroll-factor=4 --no-inline --pass-order=inline,tail,unroll",29390,932,5,1,19.673725502798334,20.205759996315464,20.631246996345,282763
+rt10-control-baseline,combo-inline-unroll,unroll-inline-tail,"--unroll-factor=4 --no-inline --pass-order=unroll,inline,tail",29390,932,5,1,20.032560503750574,20.38360199367162,20.64486850576941,282763
+rt10-control-baseline,combo-inline-unroll,unroll-tail-inline,"--unroll-factor=4 --no-inline --pass-order=unroll,tail,inline",29390,932,5,1,20.077281500562094,20.730877004098147,21.32773799530696,282763
+rt10-control-baseline,combo-inline-unroll,tail-inline-unroll,"--unroll-factor=4 --no-inline --pass-order=tail,inline,unroll",29390,932,5,1,19.996422495751176,20.154562997049652,21.087347500724718,282763
+rt10-control-baseline,combo-inline-unroll,tail-unroll-inline,"--unroll-factor=4 --no-inline --pass-order=tail,unroll,inline",29390,932,5,1,19.78498700191267,20.58120199944824,21.1966545030009,282763

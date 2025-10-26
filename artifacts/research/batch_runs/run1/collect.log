@@ -1,0 +1,1584 @@
+$ /home/j4ck1e/.pyenv/versions/3.11.13/bin/python3 /home/j4ck1e/projects/tubular-upgrade/scripts/collect_data.py --project-root /home/j4ck1e/projects/tubular-upgrade --config research_tests/config.json --results /home/j4ck1e/projects/tubular-upgrade/artifacts/research/batch_runs/run1/results.csv --summary /home/j4ck1e/projects/tubular-upgrade/artifacts/research/batch_runs/run1/summary.json --autotune-out-dir /home/j4ck1e/projects/tubular-upgrade/artifacts/research/batch_runs/run1/out
+
+Building Tubular via CMake...
+[100%] Built target Tubular
+Running tests via CMake...
+[ 66%] Built target Tubular
+[100%] Running complete test suite including loop unrolling and function inlining tests
+Running standard tests...
+NEW PROJECT 4 TESTS
+Compilation of test 01 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of test 02 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of test 03 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of test 04 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of test 05 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of test 06 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of test 07 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of test 08 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of test 09 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of test 10 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of test 11 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of test 12 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of test 13 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of test 14 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of test 15 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of test 16 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of test 17 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of test 18 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of test 19 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of test 20 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of test 21 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of test 22 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of test 23 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of test 24 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+---
+PROJECT 3 Testing
+Compilation of P3 test 01 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 02 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 03 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 04 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 05 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 06 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 07 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 08 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 09 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 10 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 11 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 12 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 13 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 14 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 15 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 16 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 17 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 18 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 19 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 20 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 21 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 22 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 23 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 24 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 25 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 26 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 27 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 28 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 29 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+Compilation of P3 test 30 to WAT format SUCCESSFUL.
+                   ... to WASM format SUCCESSFUL.
+---
+ERROR Testing
+ERROR (at 6:9): Unknown variable 'Add2'.
+Error test 01 ... Passed!
+ERROR (at 6:9): Function 'Add' expects 2 arguments but got 3.
+Error test 02 ... Passed!
+ERROR (at 6:9): Function 'Add' expects 2 arguments but got 0.
+Error test 03 ... Passed!
+ERROR (at 6:19): Argument 2 of function 'Add' has type mismatch.
+Error test 04 ... Passed!
+ERROR (at 6:7): Cannot use operator '=' on types char and int
+Error test 05 ... Passed!
+ERROR (at 3:11): Cannot use operator '+' on types int and string
+Error test 06 ... Passed!
+ERROR (at 3:9): Cannot index into type 'int'. Expected a string.
+Error test 07 ... Passed!
+ERROR (at 3:9): Index must be of type int, not 'string'.
+Error test 08 ... Passed!
+ERROR (at 3:9): size() expects a string argument, but got 'int'.
+Error test 09 ... Passed!
+ERROR (at 3:14): Unexpected token ')'
+Error test 10 ... Passed!
+ERROR (at 3:17): Expected token of type ')', but found type ','
+Error test 11 ... Passed!
+---
+ERROR Testing from Project 3
+Error test 01 ... Passed!
+Error test 02 ... Passed!
+Error test 03 ... Passed!
+Error test 04 ... Passed!
+Error test 05 ... Passed!
+Error test 06 ... Passed!
+Error test 07 ... Passed!
+Error test 08 ... Passed!
+Error test 09 ... Passed!
+Error test 10 ... Passed!
+Error test 11 ... Passed!
+Error test 12 ... Passed!
+Error test 13 ... Passed!
+Error test 14 ... Passed!
+Error test 15 ... Passed!
+Error test 16 ... Passed!
+Error test 17 ... Passed!
+Error test 18 ... Passed!
+Error test 19 ... Passed!
+---
+LOOP UNROLLING PERFORMANCE TESTS
+Running loop unrolling performance tests...
+=== LOOP UNROLLING PERFORMANCE TESTS ===
+
+Testing loop unrolling with factors: 1 4 8 16
+
+--- Testing ultra-01.tube ---
+  ✓ Generated ultra-01-unroll1.wasm
+  ✓ Generated ultra-01-unroll4.wasm
+  ✓ Generated ultra-01-unroll8.wasm
+  ✓ Generated ultra-01-unroll16.wasm
+  Compilation Time Analysis:
+    Unroll Factor 1: 3ms
+    Unroll Factor 4: 3ms
+    Unroll Factor 8: 3ms
+    Unroll Factor 16: 4ms
+  Performance vs baseline (factor=1):
+    Factor 4: No change
+    Factor 8: No change
+    Factor 16: +1ms (+33%)
+
+--- Testing ultra-02.tube ---
+  ✓ Generated ultra-02-unroll1.wasm
+  ✓ Generated ultra-02-unroll4.wasm
+  ✓ Generated ultra-02-unroll8.wasm
+  ✓ Generated ultra-02-unroll16.wasm
+  Compilation Time Analysis:
+    Unroll Factor 1: 11ms
+    Unroll Factor 4: 13ms
+    Unroll Factor 8: 14ms
+    Unroll Factor 16: 18ms
+  Performance vs baseline (factor=1):
+    Factor 4: +2ms (+18%)
+    Factor 8: +3ms (+27%)
+    Factor 16: +7ms (+63%)
+
+--- Testing ultra-03.tube ---
+  ✓ Generated ultra-03-unroll1.wasm
+  ✓ Generated ultra-03-unroll4.wasm
+  ✓ Generated ultra-03-unroll8.wasm
+  ✓ Generated ultra-03-unroll16.wasm
+  Compilation Time Analysis:
+    Unroll Factor 1: 5ms
+    Unroll Factor 4: 6ms
+    Unroll Factor 8: 7ms
+    Unroll Factor 16: 9ms
+  Performance vs baseline (factor=1):
+    Factor 4: +1ms (+20%)
+    Factor 8: +2ms (+40%)
+    Factor 16: +4ms (+80%)
+
+--- Testing ultra-04.tube ---
+  ✓ Generated ultra-04-unroll1.wasm
+  ✓ Generated ultra-04-unroll4.wasm
+  ✓ Generated ultra-04-unroll8.wasm
+  ✓ Generated ultra-04-unroll16.wasm
+  Compilation Time Analysis:
+    Unroll Factor 1: 3ms
+    Unroll Factor 4: 4ms
+    Unroll Factor 8: 6ms
+    Unroll Factor 16: 8ms
+  Performance vs baseline (factor=1):
+    Factor 4: +1ms (+33%)
+    Factor 8: +3ms (+100%)
+    Factor 16: +5ms (+166%)
+
+--- Testing ultra-05.tube ---
+  ✓ Generated ultra-05-unroll1.wasm
+  ✓ Generated ultra-05-unroll4.wasm
+  ✓ Generated ultra-05-unroll8.wasm
+  ✓ Generated ultra-05-unroll16.wasm
+  Compilation Time Analysis:
+    Unroll Factor 1: 4ms
+    Unroll Factor 4: 3ms
+    Unroll Factor 8: 4ms
+    Unroll Factor 16: 3ms
+  Performance vs baseline (factor=1):
+    Factor 4: -1ms (-25%)
+    Factor 8: No change
+    Factor 16: -1ms (-25%)
+
+=== SUMMARY ===
+Total compilation attempts: 20
+Successful compilations: 20
+Success rate: 100%
+
+Generated files for web testing:
+  ✓ ultra-01-unroll1.wasm (ready for performance testing)
+  ✓ ultra-01-unroll4.wasm (ready for performance testing)
+  ✓ ultra-01-unroll8.wasm (ready for performance testing)
+  ✓ ultra-01-unroll16.wasm (ready for performance testing)
+  ✓ ultra-02-unroll1.wasm (ready for performance testing)
+  ✓ ultra-02-unroll4.wasm (ready for performance testing)
+  ✓ ultra-02-unroll8.wasm (ready for performance testing)
+  ✓ ultra-02-unroll16.wasm (ready for performance testing)
+  ✓ ultra-03-unroll1.wasm (ready for performance testing)
+  ✓ ultra-03-unroll4.wasm (ready for performance testing)
+  ✓ ultra-03-unroll8.wasm (ready for performance testing)
+  ✓ ultra-03-unroll16.wasm (ready for performance testing)
+  ✓ ultra-04-unroll1.wasm (ready for performance testing)
+  ✓ ultra-04-unroll4.wasm (ready for performance testing)
+  ✓ ultra-04-unroll8.wasm (ready for performance testing)
+  ✓ ultra-04-unroll16.wasm (ready for performance testing)
+  ✓ ultra-05-unroll1.wasm (ready for performance testing)
+  ✓ ultra-05-unroll4.wasm (ready for performance testing)
+  ✓ ultra-05-unroll8.wasm (ready for performance testing)
+  ✓ ultra-05-unroll16.wasm (ready for performance testing)
+
+To test in browser, open loop-unrolling-tester.html
+---
+TAIL RECURSION TESTS
+Running tail recursion tests...
+=== TAIL RECURSION TESTS ===
+
+--- tail-test-01 ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Output off=235, loop=235, expected=235
+Median per-call: off=0.000ms, loop=0.000ms (-32.2%)
+[0;32m✓ Execution OK[0m
+
+--- tail-test-02 ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Output off=5050, loop=5050, expected=5050
+Median per-call: off=0.000ms, loop=0.000ms (-73.1%)
+[0;32m✓ Execution OK[0m
+
+--- tail-test-03 ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Output off=500500, loop=500500, expected=500500
+Median per-call: off=0.004ms, loop=0.001ms (-75.2%)
+[0;32m✓ Execution OK[0m
+
+--- tail-test-04 ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Output off=6, loop=6, expected=6
+Median per-call: off=0.000ms, loop=0.000ms (-28.4%)
+[0;32m✓ Execution OK[0m
+
+--- tail-test-05 ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Output off=1048576, loop=1048576, expected=1048576
+Median per-call: off=0.000ms, loop=0.000ms (-53.1%)
+[0;32m✓ Execution OK[0m
+
+--- tail-test-deep-01 ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Output off=50005000, loop=50005000, expected=50005000
+Median per-call: off=0.007ms, loop=0.002ms (-63.6%)
+[0;32m✓ Execution OK[0m
+
+--- tail-test-deep-02 ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Output off=102334155, loop=102334155, expected=102334155
+Median per-call: off=0.000ms, loop=0.000ms (-54.8%)
+[0;32m✓ Execution OK[0m
+
+--- tail-test-deep-03 ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Output off=50005000, loop=50005000, expected=50005000
+Median per-call: off=0.007ms, loop=0.002ms (-71.3%)
+[0;32m✓ Execution OK[0m
+
+--- tail-test-extreme ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Output off=1048576, loop=1048576, expected=1048576
+Median per-call: off=0.000ms, loop=0.000ms (-55.3%)
+[0;32m✓ Execution OK[0m
+
+--- tail-test-order ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Output off=8, loop=8, expected=8
+Median per-call: off=0.000ms, loop=0.000ms (-33.1%)
+[0;32m✓ Execution OK[0m
+
+=== STRESS TESTS ===
+--- tail-test-stress-01 ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Output off=-1335139135, loop=-1335139135 (baseline expected=-1335139135)
+Median per-call: off=0.031ms, loop=0.027ms (-13.6%)
+[0;32m✓ Execution OK[0m
+
+--- tail-test-stress-02 ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Baseline execution error: Maximum call stack size exceeded
+Output loop=-69463358 (baseline failed: Maximum call stack size exceeded)
+Median per-call: loop=0.041ms (baseline unavailable: Maximum call stack size exceeded)
+[0;32m✓ Execution OK[0m
+
+--- tail-test-stress-03 ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Output off=491873870, loop=491873870 (baseline expected=491873870)
+Median per-call: off=0.037ms, loop=0.034ms (-8.4%)
+[0;32m✓ Execution OK[0m
+
+--- tail-test-stress-04 ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Baseline execution error: Maximum call stack size exceeded
+Output loop=-1045543988 (baseline failed: Maximum call stack size exceeded)
+Median per-call: loop=0.017ms (baseline unavailable: Maximum call stack size exceeded)
+[0;32m✓ Execution OK[0m
+
+--- tail-test-stress-05 ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Baseline execution error: Maximum call stack size exceeded
+Output loop=2023917998 (baseline failed: Maximum call stack size exceeded)
+Median per-call: loop=0.109ms (baseline unavailable: Maximum call stack size exceeded)
+[0;32m✓ Execution OK[0m
+
+=== END TAIL RECURSION TESTS ===
+---
+FUNCTION INLINING ARTIFACTS
+Generating inlining comparison artifacts...
+=== FUNCTION INLINING WASM GENERATOR ===
+
+Generating WASM files for function inlining HTML test page...
+Project root: /home/j4ck1e/projects/tubular-upgrade/tests/function-inlining/../..
+Tubular executable: /home/j4ck1e/projects/tubular-upgrade/tests/function-inlining/../../build/Tubular
+
+Processing /home/j4ck1e/projects/tubular-upgrade/tests/function-inlining/inline-perf-01...
+  → Generating non-inlined version...
+    [0;32m✓ Non-inlined WASM generated successfully[0m
+  → Generating inlined version...
+    [0;32m✓ Inlined WASM generated successfully[0m
+
+Processing /home/j4ck1e/projects/tubular-upgrade/tests/function-inlining/inline-perf-02...
+  → Generating non-inlined version...
+    [0;32m✓ Non-inlined WASM generated successfully[0m
+  → Generating inlined version...
+    [0;32m✓ Inlined WASM generated successfully[0m
+
+Processing /home/j4ck1e/projects/tubular-upgrade/tests/function-inlining/inline-perf-03...
+  → Generating non-inlined version...
+    [0;32m✓ Non-inlined WASM generated successfully[0m
+  → Generating inlined version...
+    [0;32m✓ Inlined WASM generated successfully[0m
+
+Processing /home/j4ck1e/projects/tubular-upgrade/tests/function-inlining/inline-perf-04...
+  → Generating non-inlined version...
+    [0;32m✓ Non-inlined WASM generated successfully[0m
+  → Generating inlined version...
+    [0;32m✓ Inlined WASM generated successfully[0m
+
+Processing /home/j4ck1e/projects/tubular-upgrade/tests/function-inlining/inline-perf-05...
+  → Generating non-inlined version...
+    [0;32m✓ Non-inlined WASM generated successfully[0m
+  → Generating inlined version...
+    [0;32m✓ Inlined WASM generated successfully[0m
+
+Processing /home/j4ck1e/projects/tubular-upgrade/tests/function-inlining/inline-perf-06...
+  → Generating non-inlined version...
+    [0;32m✓ Non-inlined WASM generated successfully[0m
+  → Generating inlined version...
+    [0;32m✓ Inlined WASM generated successfully[0m
+
+Processing /home/j4ck1e/projects/tubular-upgrade/tests/function-inlining/inline-perf-07...
+  → Generating non-inlined version...
+    [0;32m✓ Non-inlined WASM generated successfully[0m
+  → Generating inlined version...
+    [0;32m✓ Inlined WASM generated successfully[0m
+
+Processing /home/j4ck1e/projects/tubular-upgrade/tests/function-inlining/inline-perf-08...
+  → Generating non-inlined version...
+    [0;32m✓ Non-inlined WASM generated successfully[0m
+  → Generating inlined version...
+    [0;32m✓ Inlined WASM generated successfully[0m
+
+Processing /home/j4ck1e/projects/tubular-upgrade/tests/function-inlining/inline-regression-01...
+  → Generating non-inlined version...
+    [0;32m✓ Non-inlined WASM generated successfully[0m
+  → Generating inlined version...
+    [0;32m✓ Inlined WASM generated successfully[0m
+
+Processing /home/j4ck1e/projects/tubular-upgrade/tests/function-inlining/inline-stress-01...
+  → Generating non-inlined version...
+    [0;32m✓ Non-inlined WASM generated successfully[0m
+  → Generating inlined version...
+    [0;32m✓ Inlined WASM generated successfully[0m
+
+Processing /home/j4ck1e/projects/tubular-upgrade/tests/function-inlining/inline-test-01...
+  → Generating non-inlined version...
+    [0;32m✓ Non-inlined WASM generated successfully[0m
+  → Generating inlined version...
+    [0;32m✓ Inlined WASM generated successfully[0m
+
+Processing /home/j4ck1e/projects/tubular-upgrade/tests/function-inlining/inline-test-02...
+  → Generating non-inlined version...
+    [0;32m✓ Non-inlined WASM generated successfully[0m
+  → Generating inlined version...
+    [0;32m✓ Inlined WASM generated successfully[0m
+
+Processing /home/j4ck1e/projects/tubular-upgrade/tests/function-inlining/inline-test-03...
+  → Generating non-inlined version...
+    [0;32m✓ Non-inlined WASM generated successfully[0m
+  → Generating inlined version...
+    [0;32m✓ Inlined WASM generated successfully[0m
+
+Processing /home/j4ck1e/projects/tubular-upgrade/tests/function-inlining/inline-test-04...
+  → Generating non-inlined version...
+    [0;32m✓ Non-inlined WASM generated successfully[0m
+  → Generating inlined version...
+    [0;32m✓ Inlined WASM generated successfully[0m
+
+Processing /home/j4ck1e/projects/tubular-upgrade/tests/function-inlining/inline-test-05...
+  → Generating non-inlined version...
+    [0;32m✓ Non-inlined WASM generated successfully[0m
+  → Generating inlined version...
+    [0;32m✓ Inlined WASM generated successfully[0m
+
+Processing /home/j4ck1e/projects/tubular-upgrade/tests/function-inlining/inline-test-06...
+  → Generating non-inlined version...
+    [0;32m✓ Non-inlined WASM generated successfully[0m
+  → Generating inlined version...
+    [0;32m✓ Inlined WASM generated successfully[0m
+
+Processing /home/j4ck1e/projects/tubular-upgrade/tests/function-inlining/inline-test-07...
+  → Generating non-inlined version...
+    [0;32m✓ Non-inlined WASM generated successfully[0m
+  → Generating inlined version...
+    [0;32m✓ Inlined WASM generated successfully[0m
+
+Processing /home/j4ck1e/projects/tubular-upgrade/tests/function-inlining/inline-test-08...
+  → Generating non-inlined version...
+    [0;32m✓ Non-inlined WASM generated successfully[0m
+  → Generating inlined version...
+    [0;32m✓ Inlined WASM generated successfully[0m
+
+=== SUMMARY ===
+Total tests processed: 18
+Successful: [0;32m18[0m
+Failed: [0;31m0[0m
+[0;32mAll WASM files generated successfully![0m
+
+You can now open tests/function-inlining/function-inlining-tester.html in a browser
+or run: cd tests && python -m http.server
+---
+CLI FLAG COMBINATION TESTS
+Valid combo 1 ... Passed
+Valid combo 2 (order) ... Passed
+Valid combo 3 (no-unroll + factor=1) ... Passed
+Invalid combo (no-unroll + factor>1) ... Passed
+Invalid combo (duplicate unroll-factor) ... Passed
+Invalid combo (conflicting tail) ... Passed
+---
+Of 24 regular test files...
+...generated 24 WAT files
+...converted 24 WAT files to wasm files for testing.
+Of 30 Project 3 tests (that need to still work)...
+...generated 30 WAT files
+...converted 30 WAT files to wasm files for testing.
+Passed 11 of 11 error tests (Failed 0)
+Passed 19 of 19 Project 3 error tests (Failed 0)
+Running loop unrolling tests...
+=== LOOP UNROLLING PERFORMANCE TESTS ===
+
+Testing loop unrolling with factors: 1 4 8 16
+
+--- Testing ultra-01.tube ---
+  ✓ Generated ultra-01-unroll1.wasm
+  ✓ Generated ultra-01-unroll4.wasm
+  ✓ Generated ultra-01-unroll8.wasm
+  ✓ Generated ultra-01-unroll16.wasm
+  Compilation Time Analysis:
+    Unroll Factor 1: 3ms
+    Unroll Factor 4: 3ms
+    Unroll Factor 8: 3ms
+    Unroll Factor 16: 4ms
+  Performance vs baseline (factor=1):
+    Factor 4: No change
+    Factor 8: No change
+    Factor 16: +1ms (+33%)
+
+--- Testing ultra-02.tube ---
+  ✓ Generated ultra-02-unroll1.wasm
+  ✓ Generated ultra-02-unroll4.wasm
+  ✓ Generated ultra-02-unroll8.wasm
+  ✓ Generated ultra-02-unroll16.wasm
+  Compilation Time Analysis:
+    Unroll Factor 1: 11ms
+    Unroll Factor 4: 13ms
+    Unroll Factor 8: 14ms
+    Unroll Factor 16: 17ms
+  Performance vs baseline (factor=1):
+    Factor 4: +2ms (+18%)
+    Factor 8: +3ms (+27%)
+    Factor 16: +6ms (+54%)
+
+--- Testing ultra-03.tube ---
+  ✓ Generated ultra-03-unroll1.wasm
+  ✓ Generated ultra-03-unroll4.wasm
+  ✓ Generated ultra-03-unroll8.wasm
+  ✓ Generated ultra-03-unroll16.wasm
+  Compilation Time Analysis:
+    Unroll Factor 1: 5ms
+    Unroll Factor 4: 6ms
+    Unroll Factor 8: 8ms
+    Unroll Factor 16: 10ms
+  Performance vs baseline (factor=1):
+    Factor 4: +1ms (+20%)
+    Factor 8: +3ms (+60%)
+    Factor 16: +5ms (+100%)
+
+--- Testing ultra-04.tube ---
+  ✓ Generated ultra-04-unroll1.wasm
+  ✓ Generated ultra-04-unroll4.wasm
+  ✓ Generated ultra-04-unroll8.wasm
+  ✓ Generated ultra-04-unroll16.wasm
+  Compilation Time Analysis:
+    Unroll Factor 1: 3ms
+    Unroll Factor 4: 5ms
+    Unroll Factor 8: 6ms
+    Unroll Factor 16: 8ms
+  Performance vs baseline (factor=1):
+    Factor 4: +2ms (+66%)
+    Factor 8: +3ms (+100%)
+    Factor 16: +5ms (+166%)
+
+--- Testing ultra-05.tube ---
+  ✓ Generated ultra-05-unroll1.wasm
+  ✓ Generated ultra-05-unroll4.wasm
+  ✓ Generated ultra-05-unroll8.wasm
+  ✓ Generated ultra-05-unroll16.wasm
+  Compilation Time Analysis:
+    Unroll Factor 1: 4ms
+    Unroll Factor 4: 4ms
+    Unroll Factor 8: 4ms
+    Unroll Factor 16: 3ms
+  Performance vs baseline (factor=1):
+    Factor 4: No change
+    Factor 8: No change
+    Factor 16: -1ms (-25%)
+
+=== SUMMARY ===
+Total compilation attempts: 20
+Successful compilations: 20
+Success rate: 100%
+
+Generated files for web testing:
+  ✓ ultra-01-unroll1.wasm (ready for performance testing)
+  ✓ ultra-01-unroll4.wasm (ready for performance testing)
+  ✓ ultra-01-unroll8.wasm (ready for performance testing)
+  ✓ ultra-01-unroll16.wasm (ready for performance testing)
+  ✓ ultra-02-unroll1.wasm (ready for performance testing)
+  ✓ ultra-02-unroll4.wasm (ready for performance testing)
+  ✓ ultra-02-unroll8.wasm (ready for performance testing)
+  ✓ ultra-02-unroll16.wasm (ready for performance testing)
+  ✓ ultra-03-unroll1.wasm (ready for performance testing)
+  ✓ ultra-03-unroll4.wasm (ready for performance testing)
+  ✓ ultra-03-unroll8.wasm (ready for performance testing)
+  ✓ ultra-03-unroll16.wasm (ready for performance testing)
+  ✓ ultra-04-unroll1.wasm (ready for performance testing)
+  ✓ ultra-04-unroll4.wasm (ready for performance testing)
+  ✓ ultra-04-unroll8.wasm (ready for performance testing)
+  ✓ ultra-04-unroll16.wasm (ready for performance testing)
+  ✓ ultra-05-unroll1.wasm (ready for performance testing)
+  ✓ ultra-05-unroll4.wasm (ready for performance testing)
+  ✓ ultra-05-unroll8.wasm (ready for performance testing)
+  ✓ ultra-05-unroll16.wasm (ready for performance testing)
+
+To test in browser, open loop-unrolling-tester.html
+Running function inlining tests...
+=== FUNCTION INLINING TESTS ===
+
+Running function inlining tests...
+Project root: /home/j4ck1e/projects/tubular-upgrade/tests/function-inlining/../..
+Tubular executable: /home/j4ck1e/projects/tubular-upgrade/tests/function-inlining/../../build/Tubular
+
+--- Testing inline-test-01 ---
+Expected: Simple function should be inlined
+[0;32m✓ Compilation successful[0m
+[0;32m✓ WAT to WASM conversion successful[0m
+Execution result: 10
+[0;32m✓ WebAssembly execution successful[0m
+
+  → Function call preserved (not inlined)
+--- Testing inline-test-02 ---
+Expected: Function calls should be inlined
+[0;32m✓ Compilation successful[0m
+[0;32m✓ WAT to WASM conversion successful[0m
+Execution result: 32
+[0;32m✓ WebAssembly execution successful[0m
+
+  → Function call preserved (not inlined)
+--- Testing inline-test-03 ---
+Expected: Complex function should NOT be inlined
+[0;32m✓ Compilation successful[0m
+[0;32m✓ WAT to WASM conversion successful[0m
+Execution result: 14
+[0;32m✓ WebAssembly execution successful[0m
+
+  → Function call preserved (not inlined)
+--- Testing inline-test-04 ---
+Expected: Simple_add inlined; complex_multiply preserved
+[0;32m✓ Compilation successful[0m
+[0;32m✓ WAT to WASM conversion successful[0m
+Execution result: 88
+[0;32m✓ WebAssembly execution successful[0m
+
+  → Function call preserved (not inlined)
+  → Function call preserved (not inlined)
+--- Testing inline-test-05 ---
+Expected: Parameterless function SHOULD be inlined
+[0;32m✓ Compilation successful[0m
+[0;32m✓ WAT to WASM conversion successful[0m
+Execution result: 42
+[0;32m✓ WebAssembly execution successful[0m
+
+  → Function call preserved (not inlined)
+--- Testing inline-test-06 ---
+Expected: Parameterless functions SHOULD be inlined
+[0;32m✓ Compilation successful[0m
+[0;32m✓ WAT to WASM conversion successful[0m
+Execution result: 15
+[0;32m✓ WebAssembly execution successful[0m
+
+  → Function call preserved (not inlined)
+  → Function call preserved (not inlined)
+--- Testing inline-test-07 ---
+Expected: Recursive functions should be detected and handled
+[0;32m✓ Compilation successful[0m
+[0;32m✓ WAT to WASM conversion successful[0m
+Execution result: 43
+[0;32m✓ WebAssembly execution successful[0m
+
+  → Function call preserved (not inlined)
+  → Function call preserved (not inlined)
+  → Function call preserved (not inlined)
+--- Testing inline-test-08 ---
+Expected: Single-use functions should be inlined aggressively
+[0;32m✓ Compilation successful[0m
+[0;32m✓ WAT to WASM conversion successful[0m
+Execution result: 85
+[0;32m✓ WebAssembly execution successful[0m
+
+  → Function call preserved (not inlined)
+  → Function call preserved (not inlined)
+  → Function call preserved (not inlined)
+=== SUMMARY ===
+Total tests: 8
+Passed: [0;32m8[0m
+Failed: [0;31m0[0m
+[0;32mAll function inlining tests passed![0m
+Running tail recursion tests...
+=== TAIL RECURSION TESTS ===
+
+--- tail-test-01 ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Output off=235, loop=235, expected=235
+Median per-call: off=0.000ms, loop=0.000ms (-54.8%)
+[0;32m✓ Execution OK[0m
+
+--- tail-test-02 ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Output off=5050, loop=5050, expected=5050
+Median per-call: off=0.000ms, loop=0.000ms (-66.2%)
+[0;32m✓ Execution OK[0m
+
+--- tail-test-03 ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Output off=500500, loop=500500, expected=500500
+Median per-call: off=0.005ms, loop=0.001ms (-75.9%)
+[0;32m✓ Execution OK[0m
+
+--- tail-test-04 ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Output off=6, loop=6, expected=6
+Median per-call: off=0.000ms, loop=0.000ms (-29.8%)
+[0;32m✓ Execution OK[0m
+
+--- tail-test-05 ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Output off=1048576, loop=1048576, expected=1048576
+Median per-call: off=0.000ms, loop=0.000ms (-53.6%)
+[0;32m✓ Execution OK[0m
+
+--- tail-test-deep-01 ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Output off=50005000, loop=50005000, expected=50005000
+Median per-call: off=0.007ms, loop=0.002ms (-70.1%)
+[0;32m✓ Execution OK[0m
+
+--- tail-test-deep-02 ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Output off=102334155, loop=102334155, expected=102334155
+Median per-call: off=0.000ms, loop=0.000ms (-52.9%)
+[0;32m✓ Execution OK[0m
+
+--- tail-test-deep-03 ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Output off=50005000, loop=50005000, expected=50005000
+Median per-call: off=0.007ms, loop=0.003ms (-63.3%)
+[0;32m✓ Execution OK[0m
+
+--- tail-test-extreme ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Output off=1048576, loop=1048576, expected=1048576
+Median per-call: off=0.000ms, loop=0.000ms (-53.7%)
+[0;32m✓ Execution OK[0m
+
+--- tail-test-order ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Output off=8, loop=8, expected=8
+Median per-call: off=0.000ms, loop=0.000ms (-33.2%)
+[0;32m✓ Execution OK[0m
+
+=== STRESS TESTS ===
+--- tail-test-stress-01 ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Output off=-1335139135, loop=-1335139135 (baseline expected=-1335139135)
+Median per-call: off=0.031ms, loop=0.027ms (-14.1%)
+[0;32m✓ Execution OK[0m
+
+--- tail-test-stress-02 ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Baseline execution error: Maximum call stack size exceeded
+Output loop=-69463358 (baseline failed: Maximum call stack size exceeded)
+Median per-call: loop=0.036ms (baseline unavailable: Maximum call stack size exceeded)
+[0;32m✓ Execution OK[0m
+
+--- tail-test-stress-03 ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Output off=491873870, loop=491873870 (baseline expected=491873870)
+Median per-call: off=0.035ms, loop=0.033ms (-5.7%)
+[0;32m✓ Execution OK[0m
+
+--- tail-test-stress-04 ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Baseline execution error: Maximum call stack size exceeded
+Output loop=-1045543988 (baseline failed: Maximum call stack size exceeded)
+Median per-call: loop=0.017ms (baseline unavailable: Maximum call stack size exceeded)
+[0;32m✓ Execution OK[0m
+
+--- tail-test-stress-05 ---
+[0;32m✓ Compilation successful (off/loop)[0m
+[0;32m✓ WAT→WASM conversion successful[0m
+Baseline execution error: Maximum call stack size exceeded
+Output loop=2023917998 (baseline failed: Maximum call stack size exceeded)
+Median per-call: loop=0.111ms (baseline unavailable: Maximum call stack size exceeded)
+[0;32m✓ Execution OK[0m
+
+=== END TAIL RECURSION TESTS ===
+All tests completed.
+[100%] Built target tests
+[RUN] rt01-fib-recursive / baseline [inline-unroll-tail]
+[OK] rt01-fib-recursive / baseline [inline-unroll-tail]: 20.810 ms (flags: --pass-order=inline,unroll,tail)
+[RUN] rt01-fib-recursive / baseline [inline-tail-unroll]
+[OK] rt01-fib-recursive / baseline [inline-tail-unroll]: 20.623 ms (flags: --pass-order=inline,tail,unroll)
+[RUN] rt01-fib-recursive / baseline [unroll-inline-tail]
+[OK] rt01-fib-recursive / baseline [unroll-inline-tail]: 20.708 ms (flags: --pass-order=unroll,inline,tail)
+[RUN] rt01-fib-recursive / baseline [unroll-tail-inline]
+[OK] rt01-fib-recursive / baseline [unroll-tail-inline]: 20.834 ms (flags: --pass-order=unroll,tail,inline)
+[RUN] rt01-fib-recursive / baseline [tail-inline-unroll]
+[OK] rt01-fib-recursive / baseline [tail-inline-unroll]: 20.529 ms (flags: --pass-order=tail,inline,unroll)
+[RUN] rt01-fib-recursive / baseline [tail-unroll-inline]
+[OK] rt01-fib-recursive / baseline [tail-unroll-inline]: 20.670 ms (flags: --pass-order=tail,unroll,inline)
+[RUN] rt01-fib-recursive / no-inline [inline-unroll-tail]
+[OK] rt01-fib-recursive / no-inline [inline-unroll-tail]: 20.644 ms (flags: --no-inline --pass-order=inline,unroll,tail)
+[RUN] rt01-fib-recursive / no-inline [inline-tail-unroll]
+[OK] rt01-fib-recursive / no-inline [inline-tail-unroll]: 20.623 ms (flags: --no-inline --pass-order=inline,tail,unroll)
+[RUN] rt01-fib-recursive / no-inline [unroll-inline-tail]
+[OK] rt01-fib-recursive / no-inline [unroll-inline-tail]: 20.523 ms (flags: --no-inline --pass-order=unroll,inline,tail)
+[RUN] rt01-fib-recursive / no-inline [unroll-tail-inline]
+[OK] rt01-fib-recursive / no-inline [unroll-tail-inline]: 20.436 ms (flags: --no-inline --pass-order=unroll,tail,inline)
+[RUN] rt01-fib-recursive / no-inline [tail-inline-unroll]
+[OK] rt01-fib-recursive / no-inline [tail-inline-unroll]: 20.580 ms (flags: --no-inline --pass-order=tail,inline,unroll)
+[RUN] rt01-fib-recursive / no-inline [tail-unroll-inline]
+[OK] rt01-fib-recursive / no-inline [tail-unroll-inline]: 20.728 ms (flags: --no-inline --pass-order=tail,unroll,inline)
+[RUN] rt01-fib-recursive / unroll-4 [inline-unroll-tail]
+[OK] rt01-fib-recursive / unroll-4 [inline-unroll-tail]: 20.512 ms (flags: --unroll-factor=4 --pass-order=inline,unroll,tail)
+[RUN] rt01-fib-recursive / unroll-4 [inline-tail-unroll]
+[OK] rt01-fib-recursive / unroll-4 [inline-tail-unroll]: 20.410 ms (flags: --unroll-factor=4 --pass-order=inline,tail,unroll)
+[RUN] rt01-fib-recursive / unroll-4 [unroll-inline-tail]
+[OK] rt01-fib-recursive / unroll-4 [unroll-inline-tail]: 20.620 ms (flags: --unroll-factor=4 --pass-order=unroll,inline,tail)
+[RUN] rt01-fib-recursive / unroll-4 [unroll-tail-inline]
+[OK] rt01-fib-recursive / unroll-4 [unroll-tail-inline]: 20.435 ms (flags: --unroll-factor=4 --pass-order=unroll,tail,inline)
+[RUN] rt01-fib-recursive / unroll-4 [tail-inline-unroll]
+[OK] rt01-fib-recursive / unroll-4 [tail-inline-unroll]: 20.293 ms (flags: --unroll-factor=4 --pass-order=tail,inline,unroll)
+[RUN] rt01-fib-recursive / unroll-4 [tail-unroll-inline]
+[OK] rt01-fib-recursive / unroll-4 [tail-unroll-inline]: 20.441 ms (flags: --unroll-factor=4 --pass-order=tail,unroll,inline)
+[RUN] rt01-fib-recursive / unroll-8 [inline-unroll-tail]
+[OK] rt01-fib-recursive / unroll-8 [inline-unroll-tail]: 20.481 ms (flags: --unroll-factor=8 --pass-order=inline,unroll,tail)
+[RUN] rt01-fib-recursive / unroll-8 [inline-tail-unroll]
+[OK] rt01-fib-recursive / unroll-8 [inline-tail-unroll]: 20.507 ms (flags: --unroll-factor=8 --pass-order=inline,tail,unroll)
+[RUN] rt01-fib-recursive / unroll-8 [unroll-inline-tail]
+[OK] rt01-fib-recursive / unroll-8 [unroll-inline-tail]: 20.564 ms (flags: --unroll-factor=8 --pass-order=unroll,inline,tail)
+[RUN] rt01-fib-recursive / unroll-8 [unroll-tail-inline]
+[OK] rt01-fib-recursive / unroll-8 [unroll-tail-inline]: 20.416 ms (flags: --unroll-factor=8 --pass-order=unroll,tail,inline)
+[RUN] rt01-fib-recursive / unroll-8 [tail-inline-unroll]
+[OK] rt01-fib-recursive / unroll-8 [tail-inline-unroll]: 20.697 ms (flags: --unroll-factor=8 --pass-order=tail,inline,unroll)
+[RUN] rt01-fib-recursive / unroll-8 [tail-unroll-inline]
+[OK] rt01-fib-recursive / unroll-8 [tail-unroll-inline]: 20.544 ms (flags: --unroll-factor=8 --pass-order=tail,unroll,inline)
+[RUN] rt01-fib-recursive / tail-off [inline-unroll-tail]
+[OK] rt01-fib-recursive / tail-off [inline-unroll-tail]: 20.608 ms (flags: --tail=off --pass-order=inline,unroll,tail)
+[RUN] rt01-fib-recursive / tail-off [inline-tail-unroll]
+[OK] rt01-fib-recursive / tail-off [inline-tail-unroll]: 20.583 ms (flags: --tail=off --pass-order=inline,tail,unroll)
+[RUN] rt01-fib-recursive / tail-off [unroll-inline-tail]
+[OK] rt01-fib-recursive / tail-off [unroll-inline-tail]: 20.738 ms (flags: --tail=off --pass-order=unroll,inline,tail)
+[RUN] rt01-fib-recursive / tail-off [unroll-tail-inline]
+[OK] rt01-fib-recursive / tail-off [unroll-tail-inline]: 20.805 ms (flags: --tail=off --pass-order=unroll,tail,inline)
+[RUN] rt01-fib-recursive / tail-off [tail-inline-unroll]
+[OK] rt01-fib-recursive / tail-off [tail-inline-unroll]: 20.724 ms (flags: --tail=off --pass-order=tail,inline,unroll)
+[RUN] rt01-fib-recursive / tail-off [tail-unroll-inline]
+[OK] rt01-fib-recursive / tail-off [tail-unroll-inline]: 20.515 ms (flags: --tail=off --pass-order=tail,unroll,inline)
+[RUN] rt01-fib-recursive / combo-inline-unroll [inline-unroll-tail]
+[OK] rt01-fib-recursive / combo-inline-unroll [inline-unroll-tail]: 20.465 ms (flags: --unroll-factor=4 --no-inline --pass-order=inline,unroll,tail)
+[RUN] rt01-fib-recursive / combo-inline-unroll [inline-tail-unroll]
+[OK] rt01-fib-recursive / combo-inline-unroll [inline-tail-unroll]: 20.525 ms (flags: --unroll-factor=4 --no-inline --pass-order=inline,tail,unroll)
+[RUN] rt01-fib-recursive / combo-inline-unroll [unroll-inline-tail]
+[OK] rt01-fib-recursive / combo-inline-unroll [unroll-inline-tail]: 20.523 ms (flags: --unroll-factor=4 --no-inline --pass-order=unroll,inline,tail)
+[RUN] rt01-fib-recursive / combo-inline-unroll [unroll-tail-inline]
+[OK] rt01-fib-recursive / combo-inline-unroll [unroll-tail-inline]: 20.382 ms (flags: --unroll-factor=4 --no-inline --pass-order=unroll,tail,inline)
+[RUN] rt01-fib-recursive / combo-inline-unroll [tail-inline-unroll]
+[OK] rt01-fib-recursive / combo-inline-unroll [tail-inline-unroll]: 20.601 ms (flags: --unroll-factor=4 --no-inline --pass-order=tail,inline,unroll)
+[RUN] rt01-fib-recursive / combo-inline-unroll [tail-unroll-inline]
+[OK] rt01-fib-recursive / combo-inline-unroll [tail-unroll-inline]: 20.405 ms (flags: --unroll-factor=4 --no-inline --pass-order=tail,unroll,inline)
+[RUN] rt02-tail-factorial / baseline [inline-unroll-tail]
+[OK] rt02-tail-factorial / baseline [inline-unroll-tail]: 19.893 ms (flags: --pass-order=inline,unroll,tail)
+[RUN] rt02-tail-factorial / baseline [inline-tail-unroll]
+[OK] rt02-tail-factorial / baseline [inline-tail-unroll]: 19.868 ms (flags: --pass-order=inline,tail,unroll)
+[RUN] rt02-tail-factorial / baseline [unroll-inline-tail]
+[OK] rt02-tail-factorial / baseline [unroll-inline-tail]: 20.006 ms (flags: --pass-order=unroll,inline,tail)
+[RUN] rt02-tail-factorial / baseline [unroll-tail-inline]
+[OK] rt02-tail-factorial / baseline [unroll-tail-inline]: 19.796 ms (flags: --pass-order=unroll,tail,inline)
+[RUN] rt02-tail-factorial / baseline [tail-inline-unroll]
+[OK] rt02-tail-factorial / baseline [tail-inline-unroll]: 19.812 ms (flags: --pass-order=tail,inline,unroll)
+[RUN] rt02-tail-factorial / baseline [tail-unroll-inline]
+[OK] rt02-tail-factorial / baseline [tail-unroll-inline]: 19.903 ms (flags: --pass-order=tail,unroll,inline)
+[RUN] rt02-tail-factorial / no-inline [inline-unroll-tail]
+[OK] rt02-tail-factorial / no-inline [inline-unroll-tail]: 19.978 ms (flags: --no-inline --pass-order=inline,unroll,tail)
+[RUN] rt02-tail-factorial / no-inline [inline-tail-unroll]
+[OK] rt02-tail-factorial / no-inline [inline-tail-unroll]: 19.969 ms (flags: --no-inline --pass-order=inline,tail,unroll)
+[RUN] rt02-tail-factorial / no-inline [unroll-inline-tail]
+[OK] rt02-tail-factorial / no-inline [unroll-inline-tail]: 19.861 ms (flags: --no-inline --pass-order=unroll,inline,tail)
+[RUN] rt02-tail-factorial / no-inline [unroll-tail-inline]
+[OK] rt02-tail-factorial / no-inline [unroll-tail-inline]: 19.951 ms (flags: --no-inline --pass-order=unroll,tail,inline)
+[RUN] rt02-tail-factorial / no-inline [tail-inline-unroll]
+[OK] rt02-tail-factorial / no-inline [tail-inline-unroll]: 19.947 ms (flags: --no-inline --pass-order=tail,inline,unroll)
+[RUN] rt02-tail-factorial / no-inline [tail-unroll-inline]
+[OK] rt02-tail-factorial / no-inline [tail-unroll-inline]: 19.825 ms (flags: --no-inline --pass-order=tail,unroll,inline)
+[RUN] rt02-tail-factorial / unroll-4 [inline-unroll-tail]
+[OK] rt02-tail-factorial / unroll-4 [inline-unroll-tail]: 19.940 ms (flags: --unroll-factor=4 --pass-order=inline,unroll,tail)
+[RUN] rt02-tail-factorial / unroll-4 [inline-tail-unroll]
+[OK] rt02-tail-factorial / unroll-4 [inline-tail-unroll]: 19.664 ms (flags: --unroll-factor=4 --pass-order=inline,tail,unroll)
+[RUN] rt02-tail-factorial / unroll-4 [unroll-inline-tail]
+[OK] rt02-tail-factorial / unroll-4 [unroll-inline-tail]: 19.649 ms (flags: --unroll-factor=4 --pass-order=unroll,inline,tail)
+[RUN] rt02-tail-factorial / unroll-4 [unroll-tail-inline]
+[OK] rt02-tail-factorial / unroll-4 [unroll-tail-inline]: 19.709 ms (flags: --unroll-factor=4 --pass-order=unroll,tail,inline)
+[RUN] rt02-tail-factorial / unroll-4 [tail-inline-unroll]
+[OK] rt02-tail-factorial / unroll-4 [tail-inline-unroll]: 20.185 ms (flags: --unroll-factor=4 --pass-order=tail,inline,unroll)
+[RUN] rt02-tail-factorial / unroll-4 [tail-unroll-inline]
+[OK] rt02-tail-factorial / unroll-4 [tail-unroll-inline]: 19.963 ms (flags: --unroll-factor=4 --pass-order=tail,unroll,inline)
+[RUN] rt02-tail-factorial / unroll-8 [inline-unroll-tail]
+[OK] rt02-tail-factorial / unroll-8 [inline-unroll-tail]: 19.909 ms (flags: --unroll-factor=8 --pass-order=inline,unroll,tail)
+[RUN] rt02-tail-factorial / unroll-8 [inline-tail-unroll]
+[OK] rt02-tail-factorial / unroll-8 [inline-tail-unroll]: 19.878 ms (flags: --unroll-factor=8 --pass-order=inline,tail,unroll)
+[RUN] rt02-tail-factorial / unroll-8 [unroll-inline-tail]
+[OK] rt02-tail-factorial / unroll-8 [unroll-inline-tail]: 19.990 ms (flags: --unroll-factor=8 --pass-order=unroll,inline,tail)
+[RUN] rt02-tail-factorial / unroll-8 [unroll-tail-inline]
+[OK] rt02-tail-factorial / unroll-8 [unroll-tail-inline]: 19.968 ms (flags: --unroll-factor=8 --pass-order=unroll,tail,inline)
+[RUN] rt02-tail-factorial / unroll-8 [tail-inline-unroll]
+[OK] rt02-tail-factorial / unroll-8 [tail-inline-unroll]: 19.886 ms (flags: --unroll-factor=8 --pass-order=tail,inline,unroll)
+[RUN] rt02-tail-factorial / unroll-8 [tail-unroll-inline]
+[OK] rt02-tail-factorial / unroll-8 [tail-unroll-inline]: 19.926 ms (flags: --unroll-factor=8 --pass-order=tail,unroll,inline)
+[RUN] rt02-tail-factorial / tail-off [inline-unroll-tail]
+[OK] rt02-tail-factorial / tail-off [inline-unroll-tail]: 19.878 ms (flags: --tail=off --pass-order=inline,unroll,tail)
+[RUN] rt02-tail-factorial / tail-off [inline-tail-unroll]
+[OK] rt02-tail-factorial / tail-off [inline-tail-unroll]: 20.174 ms (flags: --tail=off --pass-order=inline,tail,unroll)
+[RUN] rt02-tail-factorial / tail-off [unroll-inline-tail]
+[OK] rt02-tail-factorial / tail-off [unroll-inline-tail]: 19.795 ms (flags: --tail=off --pass-order=unroll,inline,tail)
+[RUN] rt02-tail-factorial / tail-off [unroll-tail-inline]
+[OK] rt02-tail-factorial / tail-off [unroll-tail-inline]: 19.756 ms (flags: --tail=off --pass-order=unroll,tail,inline)
+[RUN] rt02-tail-factorial / tail-off [tail-inline-unroll]
+[OK] rt02-tail-factorial / tail-off [tail-inline-unroll]: 19.674 ms (flags: --tail=off --pass-order=tail,inline,unroll)
+[RUN] rt02-tail-factorial / tail-off [tail-unroll-inline]
+[OK] rt02-tail-factorial / tail-off [tail-unroll-inline]: 19.825 ms (flags: --tail=off --pass-order=tail,unroll,inline)
+[RUN] rt02-tail-factorial / combo-inline-unroll [inline-unroll-tail]
+[OK] rt02-tail-factorial / combo-inline-unroll [inline-unroll-tail]: 19.977 ms (flags: --unroll-factor=4 --no-inline --pass-order=inline,unroll,tail)
+[RUN] rt02-tail-factorial / combo-inline-unroll [inline-tail-unroll]
+[OK] rt02-tail-factorial / combo-inline-unroll [inline-tail-unroll]: 19.753 ms (flags: --unroll-factor=4 --no-inline --pass-order=inline,tail,unroll)
+[RUN] rt02-tail-factorial / combo-inline-unroll [unroll-inline-tail]
+[OK] rt02-tail-factorial / combo-inline-unroll [unroll-inline-tail]: 19.581 ms (flags: --unroll-factor=4 --no-inline --pass-order=unroll,inline,tail)
+[RUN] rt02-tail-factorial / combo-inline-unroll [unroll-tail-inline]
+[OK] rt02-tail-factorial / combo-inline-unroll [unroll-tail-inline]: 19.793 ms (flags: --unroll-factor=4 --no-inline --pass-order=unroll,tail,inline)
+[RUN] rt02-tail-factorial / combo-inline-unroll [tail-inline-unroll]
+[OK] rt02-tail-factorial / combo-inline-unroll [tail-inline-unroll]: 19.702 ms (flags: --unroll-factor=4 --no-inline --pass-order=tail,inline,unroll)
+[RUN] rt02-tail-factorial / combo-inline-unroll [tail-unroll-inline]
+[OK] rt02-tail-factorial / combo-inline-unroll [tail-unroll-inline]: 19.808 ms (flags: --unroll-factor=4 --no-inline --pass-order=tail,unroll,inline)
+[RUN] rt03-loop-summation / baseline [inline-unroll-tail]
+[OK] rt03-loop-summation / baseline [inline-unroll-tail]: 19.779 ms (flags: --pass-order=inline,unroll,tail)
+[RUN] rt03-loop-summation / baseline [inline-tail-unroll]
+[OK] rt03-loop-summation / baseline [inline-tail-unroll]: 19.801 ms (flags: --pass-order=inline,tail,unroll)
+[RUN] rt03-loop-summation / baseline [unroll-inline-tail]
+[OK] rt03-loop-summation / baseline [unroll-inline-tail]: 19.534 ms (flags: --pass-order=unroll,inline,tail)
+[RUN] rt03-loop-summation / baseline [unroll-tail-inline]
+[OK] rt03-loop-summation / baseline [unroll-tail-inline]: 19.701 ms (flags: --pass-order=unroll,tail,inline)
+[RUN] rt03-loop-summation / baseline [tail-inline-unroll]
+[OK] rt03-loop-summation / baseline [tail-inline-unroll]: 19.549 ms (flags: --pass-order=tail,inline,unroll)
+[RUN] rt03-loop-summation / baseline [tail-unroll-inline]
+[OK] rt03-loop-summation / baseline [tail-unroll-inline]: 19.768 ms (flags: --pass-order=tail,unroll,inline)
+[RUN] rt03-loop-summation / no-inline [inline-unroll-tail]
+[OK] rt03-loop-summation / no-inline [inline-unroll-tail]: 19.655 ms (flags: --no-inline --pass-order=inline,unroll,tail)
+[RUN] rt03-loop-summation / no-inline [inline-tail-unroll]
+[OK] rt03-loop-summation / no-inline [inline-tail-unroll]: 19.306 ms (flags: --no-inline --pass-order=inline,tail,unroll)
+[RUN] rt03-loop-summation / no-inline [unroll-inline-tail]
+[OK] rt03-loop-summation / no-inline [unroll-inline-tail]: 19.284 ms (flags: --no-inline --pass-order=unroll,inline,tail)
+[RUN] rt03-loop-summation / no-inline [unroll-tail-inline]
+[OK] rt03-loop-summation / no-inline [unroll-tail-inline]: 19.380 ms (flags: --no-inline --pass-order=unroll,tail,inline)
+[RUN] rt03-loop-summation / no-inline [tail-inline-unroll]
+[OK] rt03-loop-summation / no-inline [tail-inline-unroll]: 19.716 ms (flags: --no-inline --pass-order=tail,inline,unroll)
+[RUN] rt03-loop-summation / no-inline [tail-unroll-inline]
+[OK] rt03-loop-summation / no-inline [tail-unroll-inline]: 19.668 ms (flags: --no-inline --pass-order=tail,unroll,inline)
+[RUN] rt03-loop-summation / unroll-4 [inline-unroll-tail]
+[OK] rt03-loop-summation / unroll-4 [inline-unroll-tail]: 19.801 ms (flags: --unroll-factor=4 --pass-order=inline,unroll,tail)
+[RUN] rt03-loop-summation / unroll-4 [inline-tail-unroll]
+[OK] rt03-loop-summation / unroll-4 [inline-tail-unroll]: 19.492 ms (flags: --unroll-factor=4 --pass-order=inline,tail,unroll)
+[RUN] rt03-loop-summation / unroll-4 [unroll-inline-tail]
+[OK] rt03-loop-summation / unroll-4 [unroll-inline-tail]: 19.777 ms (flags: --unroll-factor=4 --pass-order=unroll,inline,tail)
+[RUN] rt03-loop-summation / unroll-4 [unroll-tail-inline]
+[OK] rt03-loop-summation / unroll-4 [unroll-tail-inline]: 19.694 ms (flags: --unroll-factor=4 --pass-order=unroll,tail,inline)
+[RUN] rt03-loop-summation / unroll-4 [tail-inline-unroll]
+[OK] rt03-loop-summation / unroll-4 [tail-inline-unroll]: 19.662 ms (flags: --unroll-factor=4 --pass-order=tail,inline,unroll)
+[RUN] rt03-loop-summation / unroll-4 [tail-unroll-inline]
+[OK] rt03-loop-summation / unroll-4 [tail-unroll-inline]: 19.548 ms (flags: --unroll-factor=4 --pass-order=tail,unroll,inline)
+[RUN] rt03-loop-summation / unroll-8 [inline-unroll-tail]
+[OK] rt03-loop-summation / unroll-8 [inline-unroll-tail]: 19.563 ms (flags: --unroll-factor=8 --pass-order=inline,unroll,tail)
+[RUN] rt03-loop-summation / unroll-8 [inline-tail-unroll]
+[OK] rt03-loop-summation / unroll-8 [inline-tail-unroll]: 19.400 ms (flags: --unroll-factor=8 --pass-order=inline,tail,unroll)
+[RUN] rt03-loop-summation / unroll-8 [unroll-inline-tail]
+[OK] rt03-loop-summation / unroll-8 [unroll-inline-tail]: 19.683 ms (flags: --unroll-factor=8 --pass-order=unroll,inline,tail)
+[RUN] rt03-loop-summation / unroll-8 [unroll-tail-inline]
+[OK] rt03-loop-summation / unroll-8 [unroll-tail-inline]: 19.503 ms (flags: --unroll-factor=8 --pass-order=unroll,tail,inline)
+[RUN] rt03-loop-summation / unroll-8 [tail-inline-unroll]
+[OK] rt03-loop-summation / unroll-8 [tail-inline-unroll]: 19.465 ms (flags: --unroll-factor=8 --pass-order=tail,inline,unroll)
+[RUN] rt03-loop-summation / unroll-8 [tail-unroll-inline]
+[OK] rt03-loop-summation / unroll-8 [tail-unroll-inline]: 19.692 ms (flags: --unroll-factor=8 --pass-order=tail,unroll,inline)
+[RUN] rt03-loop-summation / tail-off [inline-unroll-tail]
+[OK] rt03-loop-summation / tail-off [inline-unroll-tail]: 19.620 ms (flags: --tail=off --pass-order=inline,unroll,tail)
+[RUN] rt03-loop-summation / tail-off [inline-tail-unroll]
+[OK] rt03-loop-summation / tail-off [inline-tail-unroll]: 19.815 ms (flags: --tail=off --pass-order=inline,tail,unroll)
+[RUN] rt03-loop-summation / tail-off [unroll-inline-tail]
+[OK] rt03-loop-summation / tail-off [unroll-inline-tail]: 19.666 ms (flags: --tail=off --pass-order=unroll,inline,tail)
+[RUN] rt03-loop-summation / tail-off [unroll-tail-inline]
+[OK] rt03-loop-summation / tail-off [unroll-tail-inline]: 19.656 ms (flags: --tail=off --pass-order=unroll,tail,inline)
+[RUN] rt03-loop-summation / tail-off [tail-inline-unroll]
+[OK] rt03-loop-summation / tail-off [tail-inline-unroll]: 19.776 ms (flags: --tail=off --pass-order=tail,inline,unroll)
+[RUN] rt03-loop-summation / tail-off [tail-unroll-inline]
+[OK] rt03-loop-summation / tail-off [tail-unroll-inline]: 19.655 ms (flags: --tail=off --pass-order=tail,unroll,inline)
+[RUN] rt03-loop-summation / combo-inline-unroll [inline-unroll-tail]
+[OK] rt03-loop-summation / combo-inline-unroll [inline-unroll-tail]: 19.900 ms (flags: --unroll-factor=4 --no-inline --pass-order=inline,unroll,tail)
+[RUN] rt03-loop-summation / combo-inline-unroll [inline-tail-unroll]
+[OK] rt03-loop-summation / combo-inline-unroll [inline-tail-unroll]: 19.568 ms (flags: --unroll-factor=4 --no-inline --pass-order=inline,tail,unroll)
+[RUN] rt03-loop-summation / combo-inline-unroll [unroll-inline-tail]
+[OK] rt03-loop-summation / combo-inline-unroll [unroll-inline-tail]: 20.082 ms (flags: --unroll-factor=4 --no-inline --pass-order=unroll,inline,tail)
+[RUN] rt03-loop-summation / combo-inline-unroll [unroll-tail-inline]
+[OK] rt03-loop-summation / combo-inline-unroll [unroll-tail-inline]: 19.606 ms (flags: --unroll-factor=4 --no-inline --pass-order=unroll,tail,inline)
+[RUN] rt03-loop-summation / combo-inline-unroll [tail-inline-unroll]
+[OK] rt03-loop-summation / combo-inline-unroll [tail-inline-unroll]: 19.970 ms (flags: --unroll-factor=4 --no-inline --pass-order=tail,inline,unroll)
+[RUN] rt03-loop-summation / combo-inline-unroll [tail-unroll-inline]
+[OK] rt03-loop-summation / combo-inline-unroll [tail-unroll-inline]: 19.819 ms (flags: --unroll-factor=4 --no-inline --pass-order=tail,unroll,inline)
+[RUN] rt04-stride-heavy-loop / baseline [inline-unroll-tail]
+[OK] rt04-stride-heavy-loop / baseline [inline-unroll-tail]: 20.092 ms (flags: --pass-order=inline,unroll,tail)
+[RUN] rt04-stride-heavy-loop / baseline [inline-tail-unroll]
+[OK] rt04-stride-heavy-loop / baseline [inline-tail-unroll]: 19.978 ms (flags: --pass-order=inline,tail,unroll)
+[RUN] rt04-stride-heavy-loop / baseline [unroll-inline-tail]
+[OK] rt04-stride-heavy-loop / baseline [unroll-inline-tail]: 19.834 ms (flags: --pass-order=unroll,inline,tail)
+[RUN] rt04-stride-heavy-loop / baseline [unroll-tail-inline]
+[OK] rt04-stride-heavy-loop / baseline [unroll-tail-inline]: 20.049 ms (flags: --pass-order=unroll,tail,inline)
+[RUN] rt04-stride-heavy-loop / baseline [tail-inline-unroll]
+[OK] rt04-stride-heavy-loop / baseline [tail-inline-unroll]: 19.925 ms (flags: --pass-order=tail,inline,unroll)
+[RUN] rt04-stride-heavy-loop / baseline [tail-unroll-inline]
+[OK] rt04-stride-heavy-loop / baseline [tail-unroll-inline]: 20.000 ms (flags: --pass-order=tail,unroll,inline)
+[RUN] rt04-stride-heavy-loop / no-inline [inline-unroll-tail]
+[OK] rt04-stride-heavy-loop / no-inline [inline-unroll-tail]: 19.935 ms (flags: --no-inline --pass-order=inline,unroll,tail)
+[RUN] rt04-stride-heavy-loop / no-inline [inline-tail-unroll]
+[OK] rt04-stride-heavy-loop / no-inline [inline-tail-unroll]: 19.966 ms (flags: --no-inline --pass-order=inline,tail,unroll)
+[RUN] rt04-stride-heavy-loop / no-inline [unroll-inline-tail]
+[OK] rt04-stride-heavy-loop / no-inline [unroll-inline-tail]: 19.953 ms (flags: --no-inline --pass-order=unroll,inline,tail)
+[RUN] rt04-stride-heavy-loop / no-inline [unroll-tail-inline]
+[OK] rt04-stride-heavy-loop / no-inline [unroll-tail-inline]: 19.761 ms (flags: --no-inline --pass-order=unroll,tail,inline)
+[RUN] rt04-stride-heavy-loop / no-inline [tail-inline-unroll]
+[OK] rt04-stride-heavy-loop / no-inline [tail-inline-unroll]: 19.828 ms (flags: --no-inline --pass-order=tail,inline,unroll)
+[RUN] rt04-stride-heavy-loop / no-inline [tail-unroll-inline]
+[OK] rt04-stride-heavy-loop / no-inline [tail-unroll-inline]: 19.735 ms (flags: --no-inline --pass-order=tail,unroll,inline)
+[RUN] rt04-stride-heavy-loop / unroll-4 [inline-unroll-tail]
+[OK] rt04-stride-heavy-loop / unroll-4 [inline-unroll-tail]: 19.832 ms (flags: --unroll-factor=4 --pass-order=inline,unroll,tail)
+[RUN] rt04-stride-heavy-loop / unroll-4 [inline-tail-unroll]
+[OK] rt04-stride-heavy-loop / unroll-4 [inline-tail-unroll]: 19.690 ms (flags: --unroll-factor=4 --pass-order=inline,tail,unroll)
+[RUN] rt04-stride-heavy-loop / unroll-4 [unroll-inline-tail]
+[OK] rt04-stride-heavy-loop / unroll-4 [unroll-inline-tail]: 19.854 ms (flags: --unroll-factor=4 --pass-order=unroll,inline,tail)
+[RUN] rt04-stride-heavy-loop / unroll-4 [unroll-tail-inline]
+[OK] rt04-stride-heavy-loop / unroll-4 [unroll-tail-inline]: 19.800 ms (flags: --unroll-factor=4 --pass-order=unroll,tail,inline)
+[RUN] rt04-stride-heavy-loop / unroll-4 [tail-inline-unroll]
+[OK] rt04-stride-heavy-loop / unroll-4 [tail-inline-unroll]: 19.881 ms (flags: --unroll-factor=4 --pass-order=tail,inline,unroll)
+[RUN] rt04-stride-heavy-loop / unroll-4 [tail-unroll-inline]
+[OK] rt04-stride-heavy-loop / unroll-4 [tail-unroll-inline]: 19.634 ms (flags: --unroll-factor=4 --pass-order=tail,unroll,inline)
+[RUN] rt04-stride-heavy-loop / unroll-8 [inline-unroll-tail]
+[OK] rt04-stride-heavy-loop / unroll-8 [inline-unroll-tail]: 19.613 ms (flags: --unroll-factor=8 --pass-order=inline,unroll,tail)
+[RUN] rt04-stride-heavy-loop / unroll-8 [inline-tail-unroll]
+[OK] rt04-stride-heavy-loop / unroll-8 [inline-tail-unroll]: 19.437 ms (flags: --unroll-factor=8 --pass-order=inline,tail,unroll)
+[RUN] rt04-stride-heavy-loop / unroll-8 [unroll-inline-tail]
+[OK] rt04-stride-heavy-loop / unroll-8 [unroll-inline-tail]: 19.515 ms (flags: --unroll-factor=8 --pass-order=unroll,inline,tail)
+[RUN] rt04-stride-heavy-loop / unroll-8 [unroll-tail-inline]
+[OK] rt04-stride-heavy-loop / unroll-8 [unroll-tail-inline]: 19.453 ms (flags: --unroll-factor=8 --pass-order=unroll,tail,inline)
+[RUN] rt04-stride-heavy-loop / unroll-8 [tail-inline-unroll]
+[OK] rt04-stride-heavy-loop / unroll-8 [tail-inline-unroll]: 19.918 ms (flags: --unroll-factor=8 --pass-order=tail,inline,unroll)
+[RUN] rt04-stride-heavy-loop / unroll-8 [tail-unroll-inline]
+[OK] rt04-stride-heavy-loop / unroll-8 [tail-unroll-inline]: 19.639 ms (flags: --unroll-factor=8 --pass-order=tail,unroll,inline)
+[RUN] rt04-stride-heavy-loop / tail-off [inline-unroll-tail]
+[OK] rt04-stride-heavy-loop / tail-off [inline-unroll-tail]: 19.789 ms (flags: --tail=off --pass-order=inline,unroll,tail)
+[RUN] rt04-stride-heavy-loop / tail-off [inline-tail-unroll]
+[OK] rt04-stride-heavy-loop / tail-off [inline-tail-unroll]: 19.750 ms (flags: --tail=off --pass-order=inline,tail,unroll)
+[RUN] rt04-stride-heavy-loop / tail-off [unroll-inline-tail]
+[OK] rt04-stride-heavy-loop / tail-off [unroll-inline-tail]: 19.633 ms (flags: --tail=off --pass-order=unroll,inline,tail)
+[RUN] rt04-stride-heavy-loop / tail-off [unroll-tail-inline]
+[OK] rt04-stride-heavy-loop / tail-off [unroll-tail-inline]: 19.737 ms (flags: --tail=off --pass-order=unroll,tail,inline)
+[RUN] rt04-stride-heavy-loop / tail-off [tail-inline-unroll]
+[OK] rt04-stride-heavy-loop / tail-off [tail-inline-unroll]: 19.760 ms (flags: --tail=off --pass-order=tail,inline,unroll)
+[RUN] rt04-stride-heavy-loop / tail-off [tail-unroll-inline]
+[OK] rt04-stride-heavy-loop / tail-off [tail-unroll-inline]: 19.559 ms (flags: --tail=off --pass-order=tail,unroll,inline)
+[RUN] rt04-stride-heavy-loop / combo-inline-unroll [inline-unroll-tail]
+[OK] rt04-stride-heavy-loop / combo-inline-unroll [inline-unroll-tail]: 19.650 ms (flags: --unroll-factor=4 --no-inline --pass-order=inline,unroll,tail)
+[RUN] rt04-stride-heavy-loop / combo-inline-unroll [inline-tail-unroll]
+[OK] rt04-stride-heavy-loop / combo-inline-unroll [inline-tail-unroll]: 19.868 ms (flags: --unroll-factor=4 --no-inline --pass-order=inline,tail,unroll)
+[RUN] rt04-stride-heavy-loop / combo-inline-unroll [unroll-inline-tail]
+[OK] rt04-stride-heavy-loop / combo-inline-unroll [unroll-inline-tail]: 19.650 ms (flags: --unroll-factor=4 --no-inline --pass-order=unroll,inline,tail)
+[RUN] rt04-stride-heavy-loop / combo-inline-unroll [unroll-tail-inline]
+[OK] rt04-stride-heavy-loop / combo-inline-unroll [unroll-tail-inline]: 19.866 ms (flags: --unroll-factor=4 --no-inline --pass-order=unroll,tail,inline)
+[RUN] rt04-stride-heavy-loop / combo-inline-unroll [tail-inline-unroll]
+[OK] rt04-stride-heavy-loop / combo-inline-unroll [tail-inline-unroll]: 19.643 ms (flags: --unroll-factor=4 --no-inline --pass-order=tail,inline,unroll)
+[RUN] rt04-stride-heavy-loop / combo-inline-unroll [tail-unroll-inline]
+[OK] rt04-stride-heavy-loop / combo-inline-unroll [tail-unroll-inline]: 19.346 ms (flags: --unroll-factor=4 --no-inline --pass-order=tail,unroll,inline)
+[RUN] rt05-nested-mix / baseline [inline-unroll-tail]
+[OK] rt05-nested-mix / baseline [inline-unroll-tail]: 19.467 ms (flags: --pass-order=inline,unroll,tail)
+[RUN] rt05-nested-mix / baseline [inline-tail-unroll]
+[OK] rt05-nested-mix / baseline [inline-tail-unroll]: 19.674 ms (flags: --pass-order=inline,tail,unroll)
+[RUN] rt05-nested-mix / baseline [unroll-inline-tail]
+[OK] rt05-nested-mix / baseline [unroll-inline-tail]: 19.372 ms (flags: --pass-order=unroll,inline,tail)
+[RUN] rt05-nested-mix / baseline [unroll-tail-inline]
+[OK] rt05-nested-mix / baseline [unroll-tail-inline]: 19.453 ms (flags: --pass-order=unroll,tail,inline)
+[RUN] rt05-nested-mix / baseline [tail-inline-unroll]
+[OK] rt05-nested-mix / baseline [tail-inline-unroll]: 19.541 ms (flags: --pass-order=tail,inline,unroll)
+[RUN] rt05-nested-mix / baseline [tail-unroll-inline]
+[OK] rt05-nested-mix / baseline [tail-unroll-inline]: 19.408 ms (flags: --pass-order=tail,unroll,inline)
+[RUN] rt05-nested-mix / no-inline [inline-unroll-tail]
+[OK] rt05-nested-mix / no-inline [inline-unroll-tail]: 19.469 ms (flags: --no-inline --pass-order=inline,unroll,tail)
+[RUN] rt05-nested-mix / no-inline [inline-tail-unroll]
+[OK] rt05-nested-mix / no-inline [inline-tail-unroll]: 19.571 ms (flags: --no-inline --pass-order=inline,tail,unroll)
+[RUN] rt05-nested-mix / no-inline [unroll-inline-tail]
+[OK] rt05-nested-mix / no-inline [unroll-inline-tail]: 19.697 ms (flags: --no-inline --pass-order=unroll,inline,tail)
+[RUN] rt05-nested-mix / no-inline [unroll-tail-inline]
+[OK] rt05-nested-mix / no-inline [unroll-tail-inline]: 19.784 ms (flags: --no-inline --pass-order=unroll,tail,inline)
+[RUN] rt05-nested-mix / no-inline [tail-inline-unroll]
+[OK] rt05-nested-mix / no-inline [tail-inline-unroll]: 19.596 ms (flags: --no-inline --pass-order=tail,inline,unroll)
+[RUN] rt05-nested-mix / no-inline [tail-unroll-inline]
+[OK] rt05-nested-mix / no-inline [tail-unroll-inline]: 19.514 ms (flags: --no-inline --pass-order=tail,unroll,inline)
+[RUN] rt05-nested-mix / unroll-4 [inline-unroll-tail]
+[OK] rt05-nested-mix / unroll-4 [inline-unroll-tail]: 19.690 ms (flags: --unroll-factor=4 --pass-order=inline,unroll,tail)
+[RUN] rt05-nested-mix / unroll-4 [inline-tail-unroll]
+[OK] rt05-nested-mix / unroll-4 [inline-tail-unroll]: 19.832 ms (flags: --unroll-factor=4 --pass-order=inline,tail,unroll)
+[RUN] rt05-nested-mix / unroll-4 [unroll-inline-tail]
+[OK] rt05-nested-mix / unroll-4 [unroll-inline-tail]: 19.917 ms (flags: --unroll-factor=4 --pass-order=unroll,inline,tail)
+[RUN] rt05-nested-mix / unroll-4 [unroll-tail-inline]
+[OK] rt05-nested-mix / unroll-4 [unroll-tail-inline]: 19.571 ms (flags: --unroll-factor=4 --pass-order=unroll,tail,inline)
+[RUN] rt05-nested-mix / unroll-4 [tail-inline-unroll]
+[OK] rt05-nested-mix / unroll-4 [tail-inline-unroll]: 19.713 ms (flags: --unroll-factor=4 --pass-order=tail,inline,unroll)
+[RUN] rt05-nested-mix / unroll-4 [tail-unroll-inline]
+[OK] rt05-nested-mix / unroll-4 [tail-unroll-inline]: 19.710 ms (flags: --unroll-factor=4 --pass-order=tail,unroll,inline)
+[RUN] rt05-nested-mix / unroll-8 [inline-unroll-tail]
+[OK] rt05-nested-mix / unroll-8 [inline-unroll-tail]: 19.807 ms (flags: --unroll-factor=8 --pass-order=inline,unroll,tail)
+[RUN] rt05-nested-mix / unroll-8 [inline-tail-unroll]
+[OK] rt05-nested-mix / unroll-8 [inline-tail-unroll]: 19.754 ms (flags: --unroll-factor=8 --pass-order=inline,tail,unroll)
+[RUN] rt05-nested-mix / unroll-8 [unroll-inline-tail]
+[OK] rt05-nested-mix / unroll-8 [unroll-inline-tail]: 19.903 ms (flags: --unroll-factor=8 --pass-order=unroll,inline,tail)
+[RUN] rt05-nested-mix / unroll-8 [unroll-tail-inline]
+[OK] rt05-nested-mix / unroll-8 [unroll-tail-inline]: 19.588 ms (flags: --unroll-factor=8 --pass-order=unroll,tail,inline)
+[RUN] rt05-nested-mix / unroll-8 [tail-inline-unroll]
+[OK] rt05-nested-mix / unroll-8 [tail-inline-unroll]: 19.675 ms (flags: --unroll-factor=8 --pass-order=tail,inline,unroll)
+[RUN] rt05-nested-mix / unroll-8 [tail-unroll-inline]
+[OK] rt05-nested-mix / unroll-8 [tail-unroll-inline]: 19.890 ms (flags: --unroll-factor=8 --pass-order=tail,unroll,inline)
+[RUN] rt05-nested-mix / tail-off [inline-unroll-tail]
+[OK] rt05-nested-mix / tail-off [inline-unroll-tail]: 19.609 ms (flags: --tail=off --pass-order=inline,unroll,tail)
+[RUN] rt05-nested-mix / tail-off [inline-tail-unroll]
+[OK] rt05-nested-mix / tail-off [inline-tail-unroll]: 19.700 ms (flags: --tail=off --pass-order=inline,tail,unroll)
+[RUN] rt05-nested-mix / tail-off [unroll-inline-tail]
+[OK] rt05-nested-mix / tail-off [unroll-inline-tail]: 19.858 ms (flags: --tail=off --pass-order=unroll,inline,tail)
+[RUN] rt05-nested-mix / tail-off [unroll-tail-inline]
+[OK] rt05-nested-mix / tail-off [unroll-tail-inline]: 19.926 ms (flags: --tail=off --pass-order=unroll,tail,inline)
+[RUN] rt05-nested-mix / tail-off [tail-inline-unroll]
+[OK] rt05-nested-mix / tail-off [tail-inline-unroll]: 19.861 ms (flags: --tail=off --pass-order=tail,inline,unroll)
+[RUN] rt05-nested-mix / tail-off [tail-unroll-inline]
+[OK] rt05-nested-mix / tail-off [tail-unroll-inline]: 19.941 ms (flags: --tail=off --pass-order=tail,unroll,inline)
+[RUN] rt05-nested-mix / combo-inline-unroll [inline-unroll-tail]
+[OK] rt05-nested-mix / combo-inline-unroll [inline-unroll-tail]: 19.624 ms (flags: --unroll-factor=4 --no-inline --pass-order=inline,unroll,tail)
+[RUN] rt05-nested-mix / combo-inline-unroll [inline-tail-unroll]
+[OK] rt05-nested-mix / combo-inline-unroll [inline-tail-unroll]: 19.852 ms (flags: --unroll-factor=4 --no-inline --pass-order=inline,tail,unroll)
+[RUN] rt05-nested-mix / combo-inline-unroll [unroll-inline-tail]
+[OK] rt05-nested-mix / combo-inline-unroll [unroll-inline-tail]: 19.654 ms (flags: --unroll-factor=4 --no-inline --pass-order=unroll,inline,tail)
+[RUN] rt05-nested-mix / combo-inline-unroll [unroll-tail-inline]
+[OK] rt05-nested-mix / combo-inline-unroll [unroll-tail-inline]: 19.728 ms (flags: --unroll-factor=4 --no-inline --pass-order=unroll,tail,inline)
+[RUN] rt05-nested-mix / combo-inline-unroll [tail-inline-unroll]
+[OK] rt05-nested-mix / combo-inline-unroll [tail-inline-unroll]: 19.755 ms (flags: --unroll-factor=4 --no-inline --pass-order=tail,inline,unroll)
+[RUN] rt05-nested-mix / combo-inline-unroll [tail-unroll-inline]
+[OK] rt05-nested-mix / combo-inline-unroll [tail-unroll-inline]: 19.849 ms (flags: --unroll-factor=4 --no-inline --pass-order=tail,unroll,inline)
+[RUN] rt06-string-wrapping / baseline [inline-unroll-tail]
+[OK] rt06-string-wrapping / baseline [inline-unroll-tail]: 19.958 ms (flags: --pass-order=inline,unroll,tail)
+[RUN] rt06-string-wrapping / baseline [inline-tail-unroll]
+[OK] rt06-string-wrapping / baseline [inline-tail-unroll]: 19.666 ms (flags: --pass-order=inline,tail,unroll)
+[RUN] rt06-string-wrapping / baseline [unroll-inline-tail]
+[OK] rt06-string-wrapping / baseline [unroll-inline-tail]: 19.750 ms (flags: --pass-order=unroll,inline,tail)
+[RUN] rt06-string-wrapping / baseline [unroll-tail-inline]
+[OK] rt06-string-wrapping / baseline [unroll-tail-inline]: 19.866 ms (flags: --pass-order=unroll,tail,inline)
+[RUN] rt06-string-wrapping / baseline [tail-inline-unroll]
+[OK] rt06-string-wrapping / baseline [tail-inline-unroll]: 19.692 ms (flags: --pass-order=tail,inline,unroll)
+[RUN] rt06-string-wrapping / baseline [tail-unroll-inline]
+[OK] rt06-string-wrapping / baseline [tail-unroll-inline]: 19.773 ms (flags: --pass-order=tail,unroll,inline)
+[RUN] rt06-string-wrapping / no-inline [inline-unroll-tail]
+[OK] rt06-string-wrapping / no-inline [inline-unroll-tail]: 19.898 ms (flags: --no-inline --pass-order=inline,unroll,tail)
+[RUN] rt06-string-wrapping / no-inline [inline-tail-unroll]
+[OK] rt06-string-wrapping / no-inline [inline-tail-unroll]: 19.731 ms (flags: --no-inline --pass-order=inline,tail,unroll)
+[RUN] rt06-string-wrapping / no-inline [unroll-inline-tail]
+[OK] rt06-string-wrapping / no-inline [unroll-inline-tail]: 20.008 ms (flags: --no-inline --pass-order=unroll,inline,tail)
+[RUN] rt06-string-wrapping / no-inline [unroll-tail-inline]
+[OK] rt06-string-wrapping / no-inline [unroll-tail-inline]: 20.248 ms (flags: --no-inline --pass-order=unroll,tail,inline)
+[RUN] rt06-string-wrapping / no-inline [tail-inline-unroll]
+[OK] rt06-string-wrapping / no-inline [tail-inline-unroll]: 19.994 ms (flags: --no-inline --pass-order=tail,inline,unroll)
+[RUN] rt06-string-wrapping / no-inline [tail-unroll-inline]
+[OK] rt06-string-wrapping / no-inline [tail-unroll-inline]: 19.942 ms (flags: --no-inline --pass-order=tail,unroll,inline)
+[RUN] rt06-string-wrapping / unroll-4 [inline-unroll-tail]
+[OK] rt06-string-wrapping / unroll-4 [inline-unroll-tail]: 20.128 ms (flags: --unroll-factor=4 --pass-order=inline,unroll,tail)
+[RUN] rt06-string-wrapping / unroll-4 [inline-tail-unroll]
+[OK] rt06-string-wrapping / unroll-4 [inline-tail-unroll]: 19.828 ms (flags: --unroll-factor=4 --pass-order=inline,tail,unroll)
+[RUN] rt06-string-wrapping / unroll-4 [unroll-inline-tail]
+[OK] rt06-string-wrapping / unroll-4 [unroll-inline-tail]: 20.025 ms (flags: --unroll-factor=4 --pass-order=unroll,inline,tail)
+[RUN] rt06-string-wrapping / unroll-4 [unroll-tail-inline]
+[OK] rt06-string-wrapping / unroll-4 [unroll-tail-inline]: 19.774 ms (flags: --unroll-factor=4 --pass-order=unroll,tail,inline)
+[RUN] rt06-string-wrapping / unroll-4 [tail-inline-unroll]
+[OK] rt06-string-wrapping / unroll-4 [tail-inline-unroll]: 19.691 ms (flags: --unroll-factor=4 --pass-order=tail,inline,unroll)
+[RUN] rt06-string-wrapping / unroll-4 [tail-unroll-inline]
+[OK] rt06-string-wrapping / unroll-4 [tail-unroll-inline]: 19.837 ms (flags: --unroll-factor=4 --pass-order=tail,unroll,inline)
+[RUN] rt06-string-wrapping / unroll-8 [inline-unroll-tail]
+[OK] rt06-string-wrapping / unroll-8 [inline-unroll-tail]: 19.731 ms (flags: --unroll-factor=8 --pass-order=inline,unroll,tail)
+[RUN] rt06-string-wrapping / unroll-8 [inline-tail-unroll]
+[OK] rt06-string-wrapping / unroll-8 [inline-tail-unroll]: 19.745 ms (flags: --unroll-factor=8 --pass-order=inline,tail,unroll)
+[RUN] rt06-string-wrapping / unroll-8 [unroll-inline-tail]
+[OK] rt06-string-wrapping / unroll-8 [unroll-inline-tail]: 19.735 ms (flags: --unroll-factor=8 --pass-order=unroll,inline,tail)
+[RUN] rt06-string-wrapping / unroll-8 [unroll-tail-inline]
+[OK] rt06-string-wrapping / unroll-8 [unroll-tail-inline]: 19.638 ms (flags: --unroll-factor=8 --pass-order=unroll,tail,inline)
+[RUN] rt06-string-wrapping / unroll-8 [tail-inline-unroll]
+[OK] rt06-string-wrapping / unroll-8 [tail-inline-unroll]: 19.652 ms (flags: --unroll-factor=8 --pass-order=tail,inline,unroll)
+[RUN] rt06-string-wrapping / unroll-8 [tail-unroll-inline]
+[OK] rt06-string-wrapping / unroll-8 [tail-unroll-inline]: 19.709 ms (flags: --unroll-factor=8 --pass-order=tail,unroll,inline)
+[RUN] rt06-string-wrapping / tail-off [inline-unroll-tail]
+[OK] rt06-string-wrapping / tail-off [inline-unroll-tail]: 19.552 ms (flags: --tail=off --pass-order=inline,unroll,tail)
+[RUN] rt06-string-wrapping / tail-off [inline-tail-unroll]
+[OK] rt06-string-wrapping / tail-off [inline-tail-unroll]: 19.682 ms (flags: --tail=off --pass-order=inline,tail,unroll)
+[RUN] rt06-string-wrapping / tail-off [unroll-inline-tail]
+[OK] rt06-string-wrapping / tail-off [unroll-inline-tail]: 19.569 ms (flags: --tail=off --pass-order=unroll,inline,tail)
+[RUN] rt06-string-wrapping / tail-off [unroll-tail-inline]
+[OK] rt06-string-wrapping / tail-off [unroll-tail-inline]: 19.773 ms (flags: --tail=off --pass-order=unroll,tail,inline)
+[RUN] rt06-string-wrapping / tail-off [tail-inline-unroll]
+[OK] rt06-string-wrapping / tail-off [tail-inline-unroll]: 19.709 ms (flags: --tail=off --pass-order=tail,inline,unroll)
+[RUN] rt06-string-wrapping / tail-off [tail-unroll-inline]
+[OK] rt06-string-wrapping / tail-off [tail-unroll-inline]: 19.744 ms (flags: --tail=off --pass-order=tail,unroll,inline)
+[RUN] rt06-string-wrapping / combo-inline-unroll [inline-unroll-tail]
+[OK] rt06-string-wrapping / combo-inline-unroll [inline-unroll-tail]: 19.650 ms (flags: --unroll-factor=4 --no-inline --pass-order=inline,unroll,tail)
+[RUN] rt06-string-wrapping / combo-inline-unroll [inline-tail-unroll]
+[OK] rt06-string-wrapping / combo-inline-unroll [inline-tail-unroll]: 19.682 ms (flags: --unroll-factor=4 --no-inline --pass-order=inline,tail,unroll)
+[RUN] rt06-string-wrapping / combo-inline-unroll [unroll-inline-tail]
+[OK] rt06-string-wrapping / combo-inline-unroll [unroll-inline-tail]: 19.964 ms (flags: --unroll-factor=4 --no-inline --pass-order=unroll,inline,tail)
+[RUN] rt06-string-wrapping / combo-inline-unroll [unroll-tail-inline]
+[OK] rt06-string-wrapping / combo-inline-unroll [unroll-tail-inline]: 19.822 ms (flags: --unroll-factor=4 --no-inline --pass-order=unroll,tail,inline)
+[RUN] rt06-string-wrapping / combo-inline-unroll [tail-inline-unroll]
+[OK] rt06-string-wrapping / combo-inline-unroll [tail-inline-unroll]: 19.894 ms (flags: --unroll-factor=4 --no-inline --pass-order=tail,inline,unroll)
+[RUN] rt06-string-wrapping / combo-inline-unroll [tail-unroll-inline]
+[OK] rt06-string-wrapping / combo-inline-unroll [tail-unroll-inline]: 19.565 ms (flags: --unroll-factor=4 --no-inline --pass-order=tail,unroll,inline)
+[RUN] rt07-helper-inline / baseline [inline-unroll-tail]
+[OK] rt07-helper-inline / baseline [inline-unroll-tail]: 19.887 ms (flags: --pass-order=inline,unroll,tail)
+[RUN] rt07-helper-inline / baseline [inline-tail-unroll]
+[OK] rt07-helper-inline / baseline [inline-tail-unroll]: 19.770 ms (flags: --pass-order=inline,tail,unroll)
+[RUN] rt07-helper-inline / baseline [unroll-inline-tail]
+[OK] rt07-helper-inline / baseline [unroll-inline-tail]: 19.730 ms (flags: --pass-order=unroll,inline,tail)
+[RUN] rt07-helper-inline / baseline [unroll-tail-inline]
+[OK] rt07-helper-inline / baseline [unroll-tail-inline]: 19.585 ms (flags: --pass-order=unroll,tail,inline)
+[RUN] rt07-helper-inline / baseline [tail-inline-unroll]
+[OK] rt07-helper-inline / baseline [tail-inline-unroll]: 19.607 ms (flags: --pass-order=tail,inline,unroll)
+[RUN] rt07-helper-inline / baseline [tail-unroll-inline]
+[OK] rt07-helper-inline / baseline [tail-unroll-inline]: 19.851 ms (flags: --pass-order=tail,unroll,inline)
+[RUN] rt07-helper-inline / no-inline [inline-unroll-tail]
+[OK] rt07-helper-inline / no-inline [inline-unroll-tail]: 19.813 ms (flags: --no-inline --pass-order=inline,unroll,tail)
+[RUN] rt07-helper-inline / no-inline [inline-tail-unroll]
+[OK] rt07-helper-inline / no-inline [inline-tail-unroll]: 19.797 ms (flags: --no-inline --pass-order=inline,tail,unroll)
+[RUN] rt07-helper-inline / no-inline [unroll-inline-tail]
+[OK] rt07-helper-inline / no-inline [unroll-inline-tail]: 19.993 ms (flags: --no-inline --pass-order=unroll,inline,tail)
+[RUN] rt07-helper-inline / no-inline [unroll-tail-inline]
+[OK] rt07-helper-inline / no-inline [unroll-tail-inline]: 19.872 ms (flags: --no-inline --pass-order=unroll,tail,inline)
+[RUN] rt07-helper-inline / no-inline [tail-inline-unroll]
+[OK] rt07-helper-inline / no-inline [tail-inline-unroll]: 19.753 ms (flags: --no-inline --pass-order=tail,inline,unroll)
+[RUN] rt07-helper-inline / no-inline [tail-unroll-inline]
+[OK] rt07-helper-inline / no-inline [tail-unroll-inline]: 20.017 ms (flags: --no-inline --pass-order=tail,unroll,inline)
+[RUN] rt07-helper-inline / unroll-4 [inline-unroll-tail]
+[OK] rt07-helper-inline / unroll-4 [inline-unroll-tail]: 19.585 ms (flags: --unroll-factor=4 --pass-order=inline,unroll,tail)
+[RUN] rt07-helper-inline / unroll-4 [inline-tail-unroll]
+[OK] rt07-helper-inline / unroll-4 [inline-tail-unroll]: 19.827 ms (flags: --unroll-factor=4 --pass-order=inline,tail,unroll)
+[RUN] rt07-helper-inline / unroll-4 [unroll-inline-tail]
+[OK] rt07-helper-inline / unroll-4 [unroll-inline-tail]: 19.972 ms (flags: --unroll-factor=4 --pass-order=unroll,inline,tail)
+[RUN] rt07-helper-inline / unroll-4 [unroll-tail-inline]
+[OK] rt07-helper-inline / unroll-4 [unroll-tail-inline]: 20.243 ms (flags: --unroll-factor=4 --pass-order=unroll,tail,inline)
+[RUN] rt07-helper-inline / unroll-4 [tail-inline-unroll]
+[OK] rt07-helper-inline / unroll-4 [tail-inline-unroll]: 19.996 ms (flags: --unroll-factor=4 --pass-order=tail,inline,unroll)
+[RUN] rt07-helper-inline / unroll-4 [tail-unroll-inline]
+[OK] rt07-helper-inline / unroll-4 [tail-unroll-inline]: 20.004 ms (flags: --unroll-factor=4 --pass-order=tail,unroll,inline)
+[RUN] rt07-helper-inline / unroll-8 [inline-unroll-tail]
+[OK] rt07-helper-inline / unroll-8 [inline-unroll-tail]: 19.955 ms (flags: --unroll-factor=8 --pass-order=inline,unroll,tail)
+[RUN] rt07-helper-inline / unroll-8 [inline-tail-unroll]
+[OK] rt07-helper-inline / unroll-8 [inline-tail-unroll]: 19.990 ms (flags: --unroll-factor=8 --pass-order=inline,tail,unroll)
+[RUN] rt07-helper-inline / unroll-8 [unroll-inline-tail]
+[OK] rt07-helper-inline / unroll-8 [unroll-inline-tail]: 20.017 ms (flags: --unroll-factor=8 --pass-order=unroll,inline,tail)
+[RUN] rt07-helper-inline / unroll-8 [unroll-tail-inline]
+[OK] rt07-helper-inline / unroll-8 [unroll-tail-inline]: 20.192 ms (flags: --unroll-factor=8 --pass-order=unroll,tail,inline)
+[RUN] rt07-helper-inline / unroll-8 [tail-inline-unroll]
+[OK] rt07-helper-inline / unroll-8 [tail-inline-unroll]: 19.737 ms (flags: --unroll-factor=8 --pass-order=tail,inline,unroll)
+[RUN] rt07-helper-inline / unroll-8 [tail-unroll-inline]
+[OK] rt07-helper-inline / unroll-8 [tail-unroll-inline]: 19.697 ms (flags: --unroll-factor=8 --pass-order=tail,unroll,inline)
+[RUN] rt07-helper-inline / tail-off [inline-unroll-tail]
+[OK] rt07-helper-inline / tail-off [inline-unroll-tail]: 19.784 ms (flags: --tail=off --pass-order=inline,unroll,tail)
+[RUN] rt07-helper-inline / tail-off [inline-tail-unroll]
+[OK] rt07-helper-inline / tail-off [inline-tail-unroll]: 19.841 ms (flags: --tail=off --pass-order=inline,tail,unroll)
+[RUN] rt07-helper-inline / tail-off [unroll-inline-tail]
+[OK] rt07-helper-inline / tail-off [unroll-inline-tail]: 19.950 ms (flags: --tail=off --pass-order=unroll,inline,tail)
+[RUN] rt07-helper-inline / tail-off [unroll-tail-inline]
+[OK] rt07-helper-inline / tail-off [unroll-tail-inline]: 19.732 ms (flags: --tail=off --pass-order=unroll,tail,inline)
+[RUN] rt07-helper-inline / tail-off [tail-inline-unroll]
+[OK] rt07-helper-inline / tail-off [tail-inline-unroll]: 19.580 ms (flags: --tail=off --pass-order=tail,inline,unroll)
+[RUN] rt07-helper-inline / tail-off [tail-unroll-inline]
+[OK] rt07-helper-inline / tail-off [tail-unroll-inline]: 19.555 ms (flags: --tail=off --pass-order=tail,unroll,inline)
+[RUN] rt07-helper-inline / combo-inline-unroll [inline-unroll-tail]
+[OK] rt07-helper-inline / combo-inline-unroll [inline-unroll-tail]: 19.717 ms (flags: --unroll-factor=4 --no-inline --pass-order=inline,unroll,tail)
+[RUN] rt07-helper-inline / combo-inline-unroll [inline-tail-unroll]
+[OK] rt07-helper-inline / combo-inline-unroll [inline-tail-unroll]: 19.614 ms (flags: --unroll-factor=4 --no-inline --pass-order=inline,tail,unroll)
+[RUN] rt07-helper-inline / combo-inline-unroll [unroll-inline-tail]
+[OK] rt07-helper-inline / combo-inline-unroll [unroll-inline-tail]: 19.596 ms (flags: --unroll-factor=4 --no-inline --pass-order=unroll,inline,tail)
+[RUN] rt07-helper-inline / combo-inline-unroll [unroll-tail-inline]
+[OK] rt07-helper-inline / combo-inline-unroll [unroll-tail-inline]: 19.653 ms (flags: --unroll-factor=4 --no-inline --pass-order=unroll,tail,inline)
+[RUN] rt07-helper-inline / combo-inline-unroll [tail-inline-unroll]
+[OK] rt07-helper-inline / combo-inline-unroll [tail-inline-unroll]: 19.435 ms (flags: --unroll-factor=4 --no-inline --pass-order=tail,inline,unroll)
+[RUN] rt07-helper-inline / combo-inline-unroll [tail-unroll-inline]
+[OK] rt07-helper-inline / combo-inline-unroll [tail-unroll-inline]: 19.652 ms (flags: --unroll-factor=4 --no-inline --pass-order=tail,unroll,inline)
+[RUN] rt08-branchy-loop / baseline [inline-unroll-tail]
+[OK] rt08-branchy-loop / baseline [inline-unroll-tail]: 19.719 ms (flags: --pass-order=inline,unroll,tail)
+[RUN] rt08-branchy-loop / baseline [inline-tail-unroll]
+[OK] rt08-branchy-loop / baseline [inline-tail-unroll]: 19.647 ms (flags: --pass-order=inline,tail,unroll)
+[RUN] rt08-branchy-loop / baseline [unroll-inline-tail]
+[OK] rt08-branchy-loop / baseline [unroll-inline-tail]: 19.690 ms (flags: --pass-order=unroll,inline,tail)
+[RUN] rt08-branchy-loop / baseline [unroll-tail-inline]
+[OK] rt08-branchy-loop / baseline [unroll-tail-inline]: 19.625 ms (flags: --pass-order=unroll,tail,inline)
+[RUN] rt08-branchy-loop / baseline [tail-inline-unroll]
+[OK] rt08-branchy-loop / baseline [tail-inline-unroll]: 19.641 ms (flags: --pass-order=tail,inline,unroll)
+[RUN] rt08-branchy-loop / baseline [tail-unroll-inline]
+[OK] rt08-branchy-loop / baseline [tail-unroll-inline]: 19.853 ms (flags: --pass-order=tail,unroll,inline)
+[RUN] rt08-branchy-loop / no-inline [inline-unroll-tail]
+[OK] rt08-branchy-loop / no-inline [inline-unroll-tail]: 19.759 ms (flags: --no-inline --pass-order=inline,unroll,tail)
+[RUN] rt08-branchy-loop / no-inline [inline-tail-unroll]
+[OK] rt08-branchy-loop / no-inline [inline-tail-unroll]: 20.061 ms (flags: --no-inline --pass-order=inline,tail,unroll)
+[RUN] rt08-branchy-loop / no-inline [unroll-inline-tail]
+[OK] rt08-branchy-loop / no-inline [unroll-inline-tail]: 19.939 ms (flags: --no-inline --pass-order=unroll,inline,tail)
+[RUN] rt08-branchy-loop / no-inline [unroll-tail-inline]
+[OK] rt08-branchy-loop / no-inline [unroll-tail-inline]: 19.896 ms (flags: --no-inline --pass-order=unroll,tail,inline)
+[RUN] rt08-branchy-loop / no-inline [tail-inline-unroll]
+[OK] rt08-branchy-loop / no-inline [tail-inline-unroll]: 20.077 ms (flags: --no-inline --pass-order=tail,inline,unroll)
+[RUN] rt08-branchy-loop / no-inline [tail-unroll-inline]
+[OK] rt08-branchy-loop / no-inline [tail-unroll-inline]: 19.838 ms (flags: --no-inline --pass-order=tail,unroll,inline)
+[RUN] rt08-branchy-loop / unroll-4 [inline-unroll-tail]
+[OK] rt08-branchy-loop / unroll-4 [inline-unroll-tail]: 19.767 ms (flags: --unroll-factor=4 --pass-order=inline,unroll,tail)
+[RUN] rt08-branchy-loop / unroll-4 [inline-tail-unroll]
+[OK] rt08-branchy-loop / unroll-4 [inline-tail-unroll]: 19.863 ms (flags: --unroll-factor=4 --pass-order=inline,tail,unroll)
+[RUN] rt08-branchy-loop / unroll-4 [unroll-inline-tail]
+[OK] rt08-branchy-loop / unroll-4 [unroll-inline-tail]: 19.805 ms (flags: --unroll-factor=4 --pass-order=unroll,inline,tail)
+[RUN] rt08-branchy-loop / unroll-4 [unroll-tail-inline]
+[OK] rt08-branchy-loop / unroll-4 [unroll-tail-inline]: 19.709 ms (flags: --unroll-factor=4 --pass-order=unroll,tail,inline)
+[RUN] rt08-branchy-loop / unroll-4 [tail-inline-unroll]
+[OK] rt08-branchy-loop / unroll-4 [tail-inline-unroll]: 19.794 ms (flags: --unroll-factor=4 --pass-order=tail,inline,unroll)
+[RUN] rt08-branchy-loop / unroll-4 [tail-unroll-inline]
+[OK] rt08-branchy-loop / unroll-4 [tail-unroll-inline]: 19.621 ms (flags: --unroll-factor=4 --pass-order=tail,unroll,inline)
+[RUN] rt08-branchy-loop / unroll-8 [inline-unroll-tail]
+[OK] rt08-branchy-loop / unroll-8 [inline-unroll-tail]: 19.603 ms (flags: --unroll-factor=8 --pass-order=inline,unroll,tail)
+[RUN] rt08-branchy-loop / unroll-8 [inline-tail-unroll]
+[OK] rt08-branchy-loop / unroll-8 [inline-tail-unroll]: 19.672 ms (flags: --unroll-factor=8 --pass-order=inline,tail,unroll)
+[RUN] rt08-branchy-loop / unroll-8 [unroll-inline-tail]
+[OK] rt08-branchy-loop / unroll-8 [unroll-inline-tail]: 19.726 ms (flags: --unroll-factor=8 --pass-order=unroll,inline,tail)
+[RUN] rt08-branchy-loop / unroll-8 [unroll-tail-inline]
+[OK] rt08-branchy-loop / unroll-8 [unroll-tail-inline]: 19.832 ms (flags: --unroll-factor=8 --pass-order=unroll,tail,inline)
+[RUN] rt08-branchy-loop / unroll-8 [tail-inline-unroll]
+[OK] rt08-branchy-loop / unroll-8 [tail-inline-unroll]: 19.881 ms (flags: --unroll-factor=8 --pass-order=tail,inline,unroll)
+[RUN] rt08-branchy-loop / unroll-8 [tail-unroll-inline]
+[OK] rt08-branchy-loop / unroll-8 [tail-unroll-inline]: 19.951 ms (flags: --unroll-factor=8 --pass-order=tail,unroll,inline)
+[RUN] rt08-branchy-loop / tail-off [inline-unroll-tail]
+[OK] rt08-branchy-loop / tail-off [inline-unroll-tail]: 19.997 ms (flags: --tail=off --pass-order=inline,unroll,tail)
+[RUN] rt08-branchy-loop / tail-off [inline-tail-unroll]
+[OK] rt08-branchy-loop / tail-off [inline-tail-unroll]: 19.818 ms (flags: --tail=off --pass-order=inline,tail,unroll)
+[RUN] rt08-branchy-loop / tail-off [unroll-inline-tail]
+[OK] rt08-branchy-loop / tail-off [unroll-inline-tail]: 20.122 ms (flags: --tail=off --pass-order=unroll,inline,tail)
+[RUN] rt08-branchy-loop / tail-off [unroll-tail-inline]
+[OK] rt08-branchy-loop / tail-off [unroll-tail-inline]: 20.070 ms (flags: --tail=off --pass-order=unroll,tail,inline)
+[RUN] rt08-branchy-loop / tail-off [tail-inline-unroll]
+[OK] rt08-branchy-loop / tail-off [tail-inline-unroll]: 20.017 ms (flags: --tail=off --pass-order=tail,inline,unroll)
+[RUN] rt08-branchy-loop / tail-off [tail-unroll-inline]
+[OK] rt08-branchy-loop / tail-off [tail-unroll-inline]: 20.151 ms (flags: --tail=off --pass-order=tail,unroll,inline)
+[RUN] rt08-branchy-loop / combo-inline-unroll [inline-unroll-tail]
+[OK] rt08-branchy-loop / combo-inline-unroll [inline-unroll-tail]: 19.900 ms (flags: --unroll-factor=4 --no-inline --pass-order=inline,unroll,tail)
+[RUN] rt08-branchy-loop / combo-inline-unroll [inline-tail-unroll]
+[OK] rt08-branchy-loop / combo-inline-unroll [inline-tail-unroll]: 19.835 ms (flags: --unroll-factor=4 --no-inline --pass-order=inline,tail,unroll)
+[RUN] rt08-branchy-loop / combo-inline-unroll [unroll-inline-tail]
+[OK] rt08-branchy-loop / combo-inline-unroll [unroll-inline-tail]: 20.007 ms (flags: --unroll-factor=4 --no-inline --pass-order=unroll,inline,tail)
+[RUN] rt08-branchy-loop / combo-inline-unroll [unroll-tail-inline]
+[OK] rt08-branchy-loop / combo-inline-unroll [unroll-tail-inline]: 19.871 ms (flags: --unroll-factor=4 --no-inline --pass-order=unroll,tail,inline)
+[RUN] rt08-branchy-loop / combo-inline-unroll [tail-inline-unroll]
+[OK] rt08-branchy-loop / combo-inline-unroll [tail-inline-unroll]: 20.255 ms (flags: --unroll-factor=4 --no-inline --pass-order=tail,inline,unroll)
+[RUN] rt08-branchy-loop / combo-inline-unroll [tail-unroll-inline]
+[OK] rt08-branchy-loop / combo-inline-unroll [tail-unroll-inline]: 20.084 ms (flags: --unroll-factor=4 --no-inline --pass-order=tail,unroll,inline)
+[RUN] rt09-matrix-mix / baseline [inline-unroll-tail]
+[OK] rt09-matrix-mix / baseline [inline-unroll-tail]: 20.121 ms (flags: --pass-order=inline,unroll,tail)
+[RUN] rt09-matrix-mix / baseline [inline-tail-unroll]
+[OK] rt09-matrix-mix / baseline [inline-tail-unroll]: 19.978 ms (flags: --pass-order=inline,tail,unroll)
+[RUN] rt09-matrix-mix / baseline [unroll-inline-tail]
+[OK] rt09-matrix-mix / baseline [unroll-inline-tail]: 20.098 ms (flags: --pass-order=unroll,inline,tail)
+[RUN] rt09-matrix-mix / baseline [unroll-tail-inline]
+[OK] rt09-matrix-mix / baseline [unroll-tail-inline]: 19.899 ms (flags: --pass-order=unroll,tail,inline)
+[RUN] rt09-matrix-mix / baseline [tail-inline-unroll]
+[OK] rt09-matrix-mix / baseline [tail-inline-unroll]: 19.566 ms (flags: --pass-order=tail,inline,unroll)
+[RUN] rt09-matrix-mix / baseline [tail-unroll-inline]
+[OK] rt09-matrix-mix / baseline [tail-unroll-inline]: 19.934 ms (flags: --pass-order=tail,unroll,inline)
+[RUN] rt09-matrix-mix / no-inline [inline-unroll-tail]
+[OK] rt09-matrix-mix / no-inline [inline-unroll-tail]: 20.014 ms (flags: --no-inline --pass-order=inline,unroll,tail)
+[RUN] rt09-matrix-mix / no-inline [inline-tail-unroll]
+[OK] rt09-matrix-mix / no-inline [inline-tail-unroll]: 19.795 ms (flags: --no-inline --pass-order=inline,tail,unroll)
+[RUN] rt09-matrix-mix / no-inline [unroll-inline-tail]
+[OK] rt09-matrix-mix / no-inline [unroll-inline-tail]: 19.769 ms (flags: --no-inline --pass-order=unroll,inline,tail)
+[RUN] rt09-matrix-mix / no-inline [unroll-tail-inline]
+[OK] rt09-matrix-mix / no-inline [unroll-tail-inline]: 19.903 ms (flags: --no-inline --pass-order=unroll,tail,inline)
+[RUN] rt09-matrix-mix / no-inline [tail-inline-unroll]
+[OK] rt09-matrix-mix / no-inline [tail-inline-unroll]: 19.739 ms (flags: --no-inline --pass-order=tail,inline,unroll)
+[RUN] rt09-matrix-mix / no-inline [tail-unroll-inline]
+[OK] rt09-matrix-mix / no-inline [tail-unroll-inline]: 19.907 ms (flags: --no-inline --pass-order=tail,unroll,inline)
+[RUN] rt09-matrix-mix / unroll-4 [inline-unroll-tail]
+[OK] rt09-matrix-mix / unroll-4 [inline-unroll-tail]: 19.675 ms (flags: --unroll-factor=4 --pass-order=inline,unroll,tail)
+[RUN] rt09-matrix-mix / unroll-4 [inline-tail-unroll]
+[OK] rt09-matrix-mix / unroll-4 [inline-tail-unroll]: 19.631 ms (flags: --unroll-factor=4 --pass-order=inline,tail,unroll)
+[RUN] rt09-matrix-mix / unroll-4 [unroll-inline-tail]
+[OK] rt09-matrix-mix / unroll-4 [unroll-inline-tail]: 20.007 ms (flags: --unroll-factor=4 --pass-order=unroll,inline,tail)
+[RUN] rt09-matrix-mix / unroll-4 [unroll-tail-inline]
+[OK] rt09-matrix-mix / unroll-4 [unroll-tail-inline]: 19.737 ms (flags: --unroll-factor=4 --pass-order=unroll,tail,inline)
+[RUN] rt09-matrix-mix / unroll-4 [tail-inline-unroll]
+[OK] rt09-matrix-mix / unroll-4 [tail-inline-unroll]: 19.608 ms (flags: --unroll-factor=4 --pass-order=tail,inline,unroll)
+[RUN] rt09-matrix-mix / unroll-4 [tail-unroll-inline]
+[OK] rt09-matrix-mix / unroll-4 [tail-unroll-inline]: 19.857 ms (flags: --unroll-factor=4 --pass-order=tail,unroll,inline)
+[RUN] rt09-matrix-mix / unroll-8 [inline-unroll-tail]
+[OK] rt09-matrix-mix / unroll-8 [inline-unroll-tail]: 19.683 ms (flags: --unroll-factor=8 --pass-order=inline,unroll,tail)
+[RUN] rt09-matrix-mix / unroll-8 [inline-tail-unroll]
+[OK] rt09-matrix-mix / unroll-8 [inline-tail-unroll]: 19.892 ms (flags: --unroll-factor=8 --pass-order=inline,tail,unroll)
+[RUN] rt09-matrix-mix / unroll-8 [unroll-inline-tail]
+[OK] rt09-matrix-mix / unroll-8 [unroll-inline-tail]: 20.012 ms (flags: --unroll-factor=8 --pass-order=unroll,inline,tail)
+[RUN] rt09-matrix-mix / unroll-8 [unroll-tail-inline]
+[OK] rt09-matrix-mix / unroll-8 [unroll-tail-inline]: 19.689 ms (flags: --unroll-factor=8 --pass-order=unroll,tail,inline)
+[RUN] rt09-matrix-mix / unroll-8 [tail-inline-unroll]
+[OK] rt09-matrix-mix / unroll-8 [tail-inline-unroll]: 19.949 ms (flags: --unroll-factor=8 --pass-order=tail,inline,unroll)
+[RUN] rt09-matrix-mix / unroll-8 [tail-unroll-inline]
+[OK] rt09-matrix-mix / unroll-8 [tail-unroll-inline]: 19.711 ms (flags: --unroll-factor=8 --pass-order=tail,unroll,inline)
+[RUN] rt09-matrix-mix / tail-off [inline-unroll-tail]
+[OK] rt09-matrix-mix / tail-off [inline-unroll-tail]: 19.933 ms (flags: --tail=off --pass-order=inline,unroll,tail)
+[RUN] rt09-matrix-mix / tail-off [inline-tail-unroll]
+[OK] rt09-matrix-mix / tail-off [inline-tail-unroll]: 19.817 ms (flags: --tail=off --pass-order=inline,tail,unroll)
+[RUN] rt09-matrix-mix / tail-off [unroll-inline-tail]
+[OK] rt09-matrix-mix / tail-off [unroll-inline-tail]: 19.700 ms (flags: --tail=off --pass-order=unroll,inline,tail)
+[RUN] rt09-matrix-mix / tail-off [unroll-tail-inline]
+[OK] rt09-matrix-mix / tail-off [unroll-tail-inline]: 19.940 ms (flags: --tail=off --pass-order=unroll,tail,inline)
+[RUN] rt09-matrix-mix / tail-off [tail-inline-unroll]
+[OK] rt09-matrix-mix / tail-off [tail-inline-unroll]: 20.023 ms (flags: --tail=off --pass-order=tail,inline,unroll)
+[RUN] rt09-matrix-mix / tail-off [tail-unroll-inline]
+[OK] rt09-matrix-mix / tail-off [tail-unroll-inline]: 19.690 ms (flags: --tail=off --pass-order=tail,unroll,inline)
+[RUN] rt09-matrix-mix / combo-inline-unroll [inline-unroll-tail]
+[OK] rt09-matrix-mix / combo-inline-unroll [inline-unroll-tail]: 19.982 ms (flags: --unroll-factor=4 --no-inline --pass-order=inline,unroll,tail)
+[RUN] rt09-matrix-mix / combo-inline-unroll [inline-tail-unroll]
+[OK] rt09-matrix-mix / combo-inline-unroll [inline-tail-unroll]: 19.902 ms (flags: --unroll-factor=4 --no-inline --pass-order=inline,tail,unroll)
+[RUN] rt09-matrix-mix / combo-inline-unroll [unroll-inline-tail]
+[OK] rt09-matrix-mix / combo-inline-unroll [unroll-inline-tail]: 19.658 ms (flags: --unroll-factor=4 --no-inline --pass-order=unroll,inline,tail)
+[RUN] rt09-matrix-mix / combo-inline-unroll [unroll-tail-inline]
+[OK] rt09-matrix-mix / combo-inline-unroll [unroll-tail-inline]: 19.729 ms (flags: --unroll-factor=4 --no-inline --pass-order=unroll,tail,inline)
+[RUN] rt09-matrix-mix / combo-inline-unroll [tail-inline-unroll]
+[OK] rt09-matrix-mix / combo-inline-unroll [tail-inline-unroll]: 19.707 ms (flags: --unroll-factor=4 --no-inline --pass-order=tail,inline,unroll)
+[RUN] rt09-matrix-mix / combo-inline-unroll [tail-unroll-inline]
+[OK] rt09-matrix-mix / combo-inline-unroll [tail-unroll-inline]: 20.145 ms (flags: --unroll-factor=4 --no-inline --pass-order=tail,unroll,inline)
+[RUN] rt10-control-baseline / baseline [inline-unroll-tail]
+[OK] rt10-control-baseline / baseline [inline-unroll-tail]: 20.354 ms (flags: --pass-order=inline,unroll,tail)
+[RUN] rt10-control-baseline / baseline [inline-tail-unroll]
+[OK] rt10-control-baseline / baseline [inline-tail-unroll]: 20.028 ms (flags: --pass-order=inline,tail,unroll)
+[RUN] rt10-control-baseline / baseline [unroll-inline-tail]
+[OK] rt10-control-baseline / baseline [unroll-inline-tail]: 20.408 ms (flags: --pass-order=unroll,inline,tail)
+[RUN] rt10-control-baseline / baseline [unroll-tail-inline]
+[OK] rt10-control-baseline / baseline [unroll-tail-inline]: 19.902 ms (flags: --pass-order=unroll,tail,inline)
+[RUN] rt10-control-baseline / baseline [tail-inline-unroll]
+[OK] rt10-control-baseline / baseline [tail-inline-unroll]: 19.985 ms (flags: --pass-order=tail,inline,unroll)
+[RUN] rt10-control-baseline / baseline [tail-unroll-inline]
+[OK] rt10-control-baseline / baseline [tail-unroll-inline]: 19.852 ms (flags: --pass-order=tail,unroll,inline)
+[RUN] rt10-control-baseline / no-inline [inline-unroll-tail]
+[OK] rt10-control-baseline / no-inline [inline-unroll-tail]: 20.081 ms (flags: --no-inline --pass-order=inline,unroll,tail)
+[RUN] rt10-control-baseline / no-inline [inline-tail-unroll]
+[OK] rt10-control-baseline / no-inline [inline-tail-unroll]: 19.859 ms (flags: --no-inline --pass-order=inline,tail,unroll)
+[RUN] rt10-control-baseline / no-inline [unroll-inline-tail]
+[OK] rt10-control-baseline / no-inline [unroll-inline-tail]: 20.078 ms (flags: --no-inline --pass-order=unroll,inline,tail)
+[RUN] rt10-control-baseline / no-inline [unroll-tail-inline]
+[OK] rt10-control-baseline / no-inline [unroll-tail-inline]: 20.095 ms (flags: --no-inline --pass-order=unroll,tail,inline)
+[RUN] rt10-control-baseline / no-inline [tail-inline-unroll]
+[OK] rt10-control-baseline / no-inline [tail-inline-unroll]: 19.964 ms (flags: --no-inline --pass-order=tail,inline,unroll)
+[RUN] rt10-control-baseline / no-inline [tail-unroll-inline]
+[OK] rt10-control-baseline / no-inline [tail-unroll-inline]: 19.777 ms (flags: --no-inline --pass-order=tail,unroll,inline)
+[RUN] rt10-control-baseline / unroll-4 [inline-unroll-tail]
+[OK] rt10-control-baseline / unroll-4 [inline-unroll-tail]: 20.064 ms (flags: --unroll-factor=4 --pass-order=inline,unroll,tail)
+[RUN] rt10-control-baseline / unroll-4 [inline-tail-unroll]
+[OK] rt10-control-baseline / unroll-4 [inline-tail-unroll]: 19.951 ms (flags: --unroll-factor=4 --pass-order=inline,tail,unroll)
+[RUN] rt10-control-baseline / unroll-4 [unroll-inline-tail]
+[OK] rt10-control-baseline / unroll-4 [unroll-inline-tail]: 20.080 ms (flags: --unroll-factor=4 --pass-order=unroll,inline,tail)
+[RUN] rt10-control-baseline / unroll-4 [unroll-tail-inline]
+[OK] rt10-control-baseline / unroll-4 [unroll-tail-inline]: 20.143 ms (flags: --unroll-factor=4 --pass-order=unroll,tail,inline)
+[RUN] rt10-control-baseline / unroll-4 [tail-inline-unroll]
+[OK] rt10-control-baseline / unroll-4 [tail-inline-unroll]: 20.067 ms (flags: --unroll-factor=4 --pass-order=tail,inline,unroll)
+[RUN] rt10-control-baseline / unroll-4 [tail-unroll-inline]
+[OK] rt10-control-baseline / unroll-4 [tail-unroll-inline]: 19.846 ms (flags: --unroll-factor=4 --pass-order=tail,unroll,inline)
+[RUN] rt10-control-baseline / unroll-8 [inline-unroll-tail]
+[OK] rt10-control-baseline / unroll-8 [inline-unroll-tail]: 20.017 ms (flags: --unroll-factor=8 --pass-order=inline,unroll,tail)
+[RUN] rt10-control-baseline / unroll-8 [inline-tail-unroll]
+[OK] rt10-control-baseline / unroll-8 [inline-tail-unroll]: 20.105 ms (flags: --unroll-factor=8 --pass-order=inline,tail,unroll)
+[RUN] rt10-control-baseline / unroll-8 [unroll-inline-tail]
+[OK] rt10-control-baseline / unroll-8 [unroll-inline-tail]: 20.168 ms (flags: --unroll-factor=8 --pass-order=unroll,inline,tail)
+[RUN] rt10-control-baseline / unroll-8 [unroll-tail-inline]
+[OK] rt10-control-baseline / unroll-8 [unroll-tail-inline]: 19.802 ms (flags: --unroll-factor=8 --pass-order=unroll,tail,inline)
+[RUN] rt10-control-baseline / unroll-8 [tail-inline-unroll]
+[OK] rt10-control-baseline / unroll-8 [tail-inline-unroll]: 19.635 ms (flags: --unroll-factor=8 --pass-order=tail,inline,unroll)
+[RUN] rt10-control-baseline / unroll-8 [tail-unroll-inline]
+[OK] rt10-control-baseline / unroll-8 [tail-unroll-inline]: 19.798 ms (flags: --unroll-factor=8 --pass-order=tail,unroll,inline)
+[RUN] rt10-control-baseline / tail-off [inline-unroll-tail]
+[OK] rt10-control-baseline / tail-off [inline-unroll-tail]: 19.849 ms (flags: --tail=off --pass-order=inline,unroll,tail)
+[RUN] rt10-control-baseline / tail-off [inline-tail-unroll]
+[OK] rt10-control-baseline / tail-off [inline-tail-unroll]: 20.019 ms (flags: --tail=off --pass-order=inline,tail,unroll)
+[RUN] rt10-control-baseline / tail-off [unroll-inline-tail]
+[OK] rt10-control-baseline / tail-off [unroll-inline-tail]: 20.246 ms (flags: --tail=off --pass-order=unroll,inline,tail)
+[RUN] rt10-control-baseline / tail-off [unroll-tail-inline]
+[OK] rt10-control-baseline / tail-off [unroll-tail-inline]: 20.127 ms (flags: --tail=off --pass-order=unroll,tail,inline)
+[RUN] rt10-control-baseline / tail-off [tail-inline-unroll]
+[OK] rt10-control-baseline / tail-off [tail-inline-unroll]: 20.144 ms (flags: --tail=off --pass-order=tail,inline,unroll)
+[RUN] rt10-control-baseline / tail-off [tail-unroll-inline]
+[OK] rt10-control-baseline / tail-off [tail-unroll-inline]: 19.895 ms (flags: --tail=off --pass-order=tail,unroll,inline)
+[RUN] rt10-control-baseline / combo-inline-unroll [inline-unroll-tail]
+[OK] rt10-control-baseline / combo-inline-unroll [inline-unroll-tail]: 19.934 ms (flags: --unroll-factor=4 --no-inline --pass-order=inline,unroll,tail)
+[RUN] rt10-control-baseline / combo-inline-unroll [inline-tail-unroll]
+[OK] rt10-control-baseline / combo-inline-unroll [inline-tail-unroll]: 19.855 ms (flags: --unroll-factor=4 --no-inline --pass-order=inline,tail,unroll)
+[RUN] rt10-control-baseline / combo-inline-unroll [unroll-inline-tail]
+[OK] rt10-control-baseline / combo-inline-unroll [unroll-inline-tail]: 19.970 ms (flags: --unroll-factor=4 --no-inline --pass-order=unroll,inline,tail)
+[RUN] rt10-control-baseline / combo-inline-unroll [unroll-tail-inline]
+[OK] rt10-control-baseline / combo-inline-unroll [unroll-tail-inline]: 19.871 ms (flags: --unroll-factor=4 --no-inline --pass-order=unroll,tail,inline)
+[RUN] rt10-control-baseline / combo-inline-unroll [tail-inline-unroll]
+[OK] rt10-control-baseline / combo-inline-unroll [tail-inline-unroll]: 19.951 ms (flags: --unroll-factor=4 --no-inline --pass-order=tail,inline,unroll)
+[RUN] rt10-control-baseline / combo-inline-unroll [tail-unroll-inline]
+[OK] rt10-control-baseline / combo-inline-unroll [tail-unroll-inline]: 19.926 ms (flags: --unroll-factor=4 --no-inline --pass-order=tail,unroll,inline)
+
+Wrote 360 rows to /home/j4ck1e/projects/tubular-upgrade/artifacts/research/batch_runs/run1/results.csv
+[collect] running: ./make
+[collect] running: ./make test
+[collect] running: /home/j4ck1e/.pyenv/versions/3.11.13/bin/python3 /home/j4ck1e/projects/tubular-upgrade/autotuning/run_autotune.py --config research_tests/config.json --output /home/j4ck1e/projects/tubular-upgrade/artifacts/research/batch_runs/run1/results.csv --out-dir /home/j4ck1e/projects/tubular-upgrade/artifacts/research/batch_runs/run1/out
+[collect] wrote summary to /home/j4ck1e/projects/tubular-upgrade/artifacts/research/batch_runs/run1/summary.json
+
+=== Top variant deltas (best vs worst pass order) ===
+rt07-helper-inline/unroll-4: inline-unroll-tail (19.585 ms) vs unroll-tail-inline (20.243 ms) → Δ 0.658 ms (3.3 %)
+rt09-matrix-mix/baseline: tail-inline-unroll (19.566 ms) vs inline-unroll-tail (20.121 ms) → Δ 0.555 ms (2.8 %)
+rt10-control-baseline/baseline: tail-unroll-inline (19.852 ms) vs unroll-inline-tail (20.408 ms) → Δ 0.556 ms (2.7 %)
+rt02-tail-factorial/unroll-4: unroll-inline-tail (19.649 ms) vs tail-inline-unroll (20.185 ms) → Δ 0.536 ms (2.7 %)
+rt10-control-baseline/unroll-8: tail-inline-unroll (19.635 ms) vs unroll-inline-tail (20.168 ms) → Δ 0.533 ms (2.6 %)
+rt04-stride-heavy-loop/combo-inline-unroll: tail-unroll-inline (19.346 ms) vs inline-tail-unroll (19.868 ms) → Δ 0.523 ms (2.6 %)
+rt03-loop-summation/combo-inline-unroll: inline-tail-unroll (19.568 ms) vs unroll-inline-tail (20.082 ms) → Δ 0.514 ms (2.6 %)
+rt06-string-wrapping/no-inline: inline-tail-unroll (19.731 ms) vs unroll-tail-inline (20.248 ms) → Δ 0.516 ms (2.5 %)
+rt02-tail-factorial/tail-off: tail-inline-unroll (19.674 ms) vs inline-tail-unroll (20.174 ms) → Δ 0.500 ms (2.5 %)
+rt07-helper-inline/unroll-8: tail-unroll-inline (19.697 ms) vs unroll-tail-inline (20.192 ms) → Δ 0.495 ms (2.5 %)
+
+=== Pass order aggregates (lower is better) ===
+inline-tail-unroll: mean=19.866 ms (min=19.306, max=20.623, samples=60)
+tail-unroll-inline: mean=19.869 ms (min=19.346, max=20.728, samples=60)
+tail-inline-unroll: mean=19.877 ms (min=19.435, max=20.724, samples=60)
+unroll-tail-inline: mean=19.880 ms (min=19.380, max=20.834, samples=60)
+inline-unroll-tail: mean=19.902 ms (min=19.467, max=20.810, samples=60)
+unroll-inline-tail: mean=19.920 ms (min=19.284, max=20.738, samples=60)
+
+[exit 0]

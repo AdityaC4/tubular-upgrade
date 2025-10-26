@@ -1,0 +1,22 @@
+// Stress Test 4: Multiple Tail Recursive Calls
+// Goal: Test tail recursion optimization with multiple recursive calls per level
+// This should demonstrate the cumulative effect of tail recursion optimization
+
+function multi_tail(int n, int acc1, int acc2, int acc3) : int {
+  if (n == 0) return acc1 + acc2 + acc3;
+  
+  // Multiple computational paths per recursive call
+  int temp1 = n * n + acc1;
+  int temp2 = n * n * n + acc2;
+  int temp3 = n * n * n * n + acc3;
+  
+  int new_acc1 = temp1 * 2 + n;
+  int new_acc2 = temp2 * 3 + n;
+  int new_acc3 = temp3 * 4 + n;
+  
+  return multi_tail(n - 1, new_acc1, new_acc2, new_acc3);
+}
+
+function main() : int {
+  return multi_tail(15000, 0, 0, 0); // 15K levels with multiple accumulators
+}

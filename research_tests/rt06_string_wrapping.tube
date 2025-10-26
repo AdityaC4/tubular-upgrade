@@ -1,0 +1,14 @@
+// String growth via helper calls to explore inline vs unroll ordering.
+function Wrap(string s, string pad) : string {
+  return pad + s + pad;
+}
+
+function main() : int {
+  string word = "core";
+  int i = 0;
+  while (i < 12) {
+    word = Wrap(word, "*");
+    i = i + 1;
+  }
+  return size(word); // 28
+}

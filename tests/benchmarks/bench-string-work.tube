@@ -1,0 +1,17 @@
+// String concatenation benchmark
+function BuildString(int count) : int {
+  string out = "";
+  int i = 0;
+  while (i < count) {
+    out = out + "x";
+    if (i % 3 == 0) {
+      out = out + "y";
+    }
+    i = i + 1;
+  }
+  return size(out);
+}
+
+function main() : int {
+  return BuildString(48);
+}

@@ -1,0 +1,24 @@
+// Edge case: Loop with complex increment pattern
+// This should test the new aggressive unrolling features
+
+function main() : int {
+    int sum = 0;
+    int i = 0;
+    
+    // Test step-by-2 increment
+    while (i < 8) {
+        sum = sum + i;
+        i = i + 2;
+    }
+    
+    // Test decrement loop
+    int j = 10;
+    while (j > 0) {
+        sum = sum + j;
+        j = j - 1;
+    }
+    
+    return sum;
+}
+
+

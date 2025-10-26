@@ -1,0 +1,47 @@
+{
+  "runs": 5,
+  "warmup_runs": 1,
+  "benchmarks": [
+    {
+      "name": "fib",
+      "path": "tests/benchmarks/bench-fib.tube",
+      "expected": 6765
+    },
+    {
+      "name": "factorial",
+      "path": "tests/benchmarks/bench-factorial.tube",
+      "expected": 479001600
+    },
+    {
+      "name": "loop-sum",
+      "path": "tests/benchmarks/bench-loop-sum.tube",
+      "expected": 2999000
+    },
+    {
+      "name": "string-work",
+      "path": "tests/benchmarks/bench-string-work.tube",
+      "expected": 64
+    },
+    {
+      "name": "nested-loop",
+      "path": "tests/benchmarks/bench-nested-loop.tube",
+      "expected": 104448
+    }
+  ],
+  "variants": [
+    { "name": "baseline", "flags": [] },
+    { "name": "no-inline", "flags": ["--no-inline"] },
+    { "name": "unroll-4", "flags": ["--unroll-factor=4"] },
+    { "name": "unroll-8", "flags": ["--unroll-factor=8"] },
+    { "name": "tail-off", "flags": ["--tail=off"] },
+    { "name": "combo-inline-unroll", "flags": ["--unroll-factor=4", "--no-inline"] }
+  ],
+  "pass_orders": [
+    { "name": "inline-unroll-tail", "order": ["inline", "unroll", "tail"] },
+    { "name": "inline-tail-unroll", "order": ["inline", "tail", "unroll"] },
+    { "name": "unroll-inline-tail", "order": ["unroll", "inline", "tail"] },
+    { "name": "unroll-tail-inline", "order": ["unroll", "tail", "inline"] },
+    { "name": "tail-inline-unroll", "order": ["tail", "inline", "unroll"] },
+    { "name": "tail-unroll-inline", "order": ["tail", "unroll", "inline"] }
+  ]
+}

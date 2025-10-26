@@ -1,0 +1,15 @@
+// Nested loops to highlight pass ordering in multi-level iteration.
+function main() : int {
+  int outer = 0;
+  int total = 0;
+  while (outer < 120) {
+    int inner = 0;
+    while (inner < 120) {
+      int contrib = (outer * inner) % 7;
+      total = total + contrib;
+      inner = inner + 1;
+    }
+    outer = outer + 1;
+  }
+  return total; // 36,414
+}

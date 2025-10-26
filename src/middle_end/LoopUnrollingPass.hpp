@@ -3,289 +3,37 @@
 #include "ASTNode.hpp"
 #include "Pass.hpp"
 #include "../core/ASTCloner.hpp"
-#include <cassert>
-#include <iostream>
-#include <cstdlib>
+#include <cmath>
 #include <memory>
-#include <string>
+#include <optional>
+#include <unordered_set>
 #include <vector>
-
-struct LoopPattern {
-  std::string loopVar;    // Variable being incremented/decremented
-  std::string comparison; // "<=", ">=", "<", ">", "!=", "=="
-  std::string boundVar;   // Variable or constant being compared to
-  int increment;          // +1, -1, etc.
-  bool isConstantBound;   // true if RHS is constant or simple variable
-  bool isUnrollable;      // can this loop be unrolled?
-  ASTNode *incrementNode; // Points to the increment statement
-
-  LoopPattern() : increment(0), isConstantBound(false), isUnrollable(false), incrementNode(nullptr) {}
-};
 
 class LoopUnrollingPass : public Pass {
 private:
-  int unrollFactor;
-
-  class LoopAnalyzer {
-  public:
-    static LoopPattern analyzeLoop(ASTNode_While &loop) {
-      LoopPattern pattern;
-
-      if (loop.NumChildren() < 2) {
-        return pattern;
-      }
-
-      // Analyze the condition (child 0)
-      ASTNode &condition = loop.GetChild(0);
-      std::string leftVar, op, rightVar;
-
-      if (!isSimpleComparison(condition, leftVar, op, rightVar)) {
-        return pattern;
-      }
-
-      // Analyze the body (child 1)
-      if (auto *body = dynamic_cast<ASTNode_Block *>(&loop.GetChild(1))) {
-        if (hasUnsuitableControlFlow(*body)) {
-          return pattern; // Contains break/continue/complex control flow, can't unroll
-        }
-
-        ASTNode *incrementNode = findIncrementStatement(*body, leftVar);
-        if (!incrementNode) {
-          return pattern; // No simple increment found
-        }
-
-        int increment;
-        std::string incVar;
-        if (!isSimpleIncrement(*incrementNode, incVar, increment)) {
-          return pattern; // Complex increment, can't unroll
-        }
-
-        if (incVar != leftVar) {
-          return pattern; // Increment variable doesn't match condition variable
-        }
-
-        if (hasMultipleAssignments(*body, leftVar)) {
-          return pattern; // Multiple assignments to loop variable, can't unroll safely
-        }
-
-        if (op == "<=" || op == "<" || op == ">" || op == ">=") {
-          pattern.loopVar = leftVar;
-          pattern.comparison = op;
-          pattern.boundVar = rightVar;
-          pattern.increment = increment;
-          pattern.isConstantBound = true;
-          pattern.isUnrollable = true;
-          pattern.incrementNode = incrementNode;
-        }
-      }
-
-      return pattern;
-    }
-
-  private:
-    static bool isSimpleIncrement(ASTNode &node, std::string &varName, int &increment) {
-      // Match: var = var (+|-) k, and var = k + var (k int or unary -int)
-      if (auto *assign = dynamic_cast<ASTNode_Math2 *>(&node)) {
-        if (assign->GetOp() == "=" && assign->NumChildren() >= 2) {
-          if (auto *lhsVar = dynamic_cast<ASTNode_Var *>(&assign->GetChild(0))) {
-            varName = std::to_string(lhsVar->GetVarId());
-            if (auto *rhsBin = dynamic_cast<ASTNode_Math2 *>(&assign->GetChild(1))) {
-              const std::string op = rhsBin->GetOp();
-              if ((op == "+" || op == "-") && rhsBin->NumChildren() >= 2) {
-                // var = var (+|-) k
-                if (auto *aVar = dynamic_cast<ASTNode_Var *>(&rhsBin->GetChild(0))) {
-                  if (std::to_string(aVar->GetVarId()) == varName) {
-                    if (parseIntLike(rhsBin->GetChild(1), increment)) {
-                      if (op == "-") increment = -increment;
-                      return true;
-                    }
-                  }
-                }
-                // var = k + var (commutative plus only)
-                if (op == "+") {
-                  if (auto *bVar = dynamic_cast<ASTNode_Var *>(&rhsBin->GetChild(1))) {
-                    if (std::to_string(bVar->GetVarId()) == varName) {
-                      if (parseIntLike(rhsBin->GetChild(0), increment)) {
-                        return true;
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-      return false;
-    }
-
-    // Accept INT_LIT or unary '-' INT_LIT
-    static bool parseIntLike(ASTNode &node, int &out) {
-      if (auto *lit = dynamic_cast<ASTNode_IntLit *>(&node)) {
-        out = lit->GetValue();
-        return true;
-      }
-      if (auto *un = dynamic_cast<ASTNode_Math1 *>(&node)) {
-        if (un->GetOp() == "-") {
-          if (auto *inner = dynamic_cast<ASTNode_IntLit *>(&un->GetChild(0))) {
-            out = -inner->GetValue();
-            return true;
-          }
-        }
-      }
-      return false;
-    }
-
-    static bool isSimpleComparison(ASTNode &node, std::string &leftVar, std::string &op, std::string &rightVar) {
-      if (auto *intLit = dynamic_cast<ASTNode_IntLit*>(&node)) {
-        if (intLit->GetValue() == 1) {
-          return false; // while (1) infinite loop, not suitable for unrolling
-        }
-      }
-      
-      if (auto *math2 = dynamic_cast<ASTNode_Math2 *>(&node)) {
-        op = math2->GetOp();
-
-          if (op == "<=" || op == "<" || op == ">=" || op == ">") {
-
-            if (math2->NumChildren() >= 2) {
-              if (auto *leftVarNode = dynamic_cast<ASTNode_Var *>(&math2->GetChild(0))) {
-                leftVar = std::to_string(leftVarNode->GetVarId());
-
-                if (auto *rightVarNode = dynamic_cast<ASTNode_Var *>(&math2->GetChild(1))) {
-                  rightVar = std::to_string(rightVarNode->GetVarId());
-                  return true;
-                } else if (auto *rightIntNode = dynamic_cast<ASTNode_IntLit *>(&math2->GetChild(1))) {
-                  rightVar = std::to_string(rightIntNode->GetValue());
-                  return true;
-                }
-              }
-            }
-          }
-
-          // Explicitly reject equality-based loop conditions as unsafe
-          if (op == "==" || op == "!=") {
-            return false;
-          }
-      }
-      return false;
-    }
-
-    static ASTNode *findIncrementStatement(ASTNode_Block &body, const std::string &varName) {
-      for (size_t i = 0; i < body.NumChildren(); ++i) {
-        if (body.HasChild(i)) {
-          ASTNode &child = body.GetChild(i);
-          std::string incVar;
-          int increment;
-          if (isSimpleIncrement(child, incVar, increment) && incVar == varName) {
-            return &child;
-          }
-        }
-      }
-      return nullptr;
-    }
-
-    static std::string getOperator(ASTNode_Math2 &math2) {
-      std::string typeName = math2.GetTypeName();
-      if (typeName.find("MATH2: ") == 0) {
-        return typeName.substr(7);
-      }
-      return "";
-    }
-
-    static std::string getVarId(ASTNode_Var &var) {
-      std::string typeName = var.GetTypeName();
-      if (typeName.find("VAR: ") == 0) {
-        return typeName.substr(5); // Extract var_id after "VAR: "
-      }
-      return "";
-    }
-
-    static int getIntValue(ASTNode_IntLit &intLit) {
-      std::string typeName = intLit.GetTypeName();
-      if (typeName.find("INT_LIT:") == 0) {
-        return std::stoi(typeName.substr(8)); // Extract value after "INT_LIT:"
-      }
-      return 0;
-    }
-
-    // Check for control flow statements that make loops unsuitable for unrolling
-    static bool hasUnsuitableControlFlow(ASTNode &node) {
-      std::string typeName = node.GetTypeName();
-      
-      // Check for break, continue, return statements
-      if (typeName == "BREAK" || typeName == "CONTINUE" || typeName == "RETURN") {
-        return true;
-      }
-
-      // Note: Function calls are now supported by the unroller's cloner,
-      // so they are not considered unsuitable on their own.
-      
-      // Check for nested loops (while, for)
-      if (typeName == "WHILE" || typeName == "FOR") {
-        return true;
-      }
-      
-      // Check for infinite loops (condition is constant 1)
-      if (typeName == "WHILE") {
-        if (auto *whileNode = dynamic_cast<ASTNode_While*>(&node)) {
-          if (whileNode->NumChildren() > 0) {
-            ASTNode &condition = whileNode->GetChild(0);
-            if (auto *intLit = dynamic_cast<ASTNode_IntLit*>(&condition)) {
-              if (getIntValue(*intLit) == 1) {
-                return true; // while (1) infinite loop
-              }
-            }
-          }
-        }
-      }
-      
-      // Recursively check children
-      if (auto *parent = dynamic_cast<ASTNode_Parent*>(&node)) {
-        for (size_t i = 0; i < parent->NumChildren(); ++i) {
-          if (parent->HasChild(i)) {
-            if (hasUnsuitableControlFlow(parent->GetChild(i))) {
-              return true;
-            }
-          }
-        }
-      }
-      
-      return false;
-    }
-
-    // Check if there are multiple assignments to the loop variable
-    static bool hasMultipleAssignments(ASTNode_Block &body, const std::string &varName) {
-      int assignmentCount = 0;
-      countAssignmentsRecursive(body, varName, assignmentCount);
-      return assignmentCount > 1;
-    }
-
-    static void countAssignmentsRecursive(ASTNode &node, const std::string &varName, int &count) {
-      if (isAssignmentTo(node, varName)) ++count;
-      if (auto *parent = dynamic_cast<ASTNode_Parent *>(&node)) {
-        for (size_t i = 0; i < parent->NumChildren(); ++i) {
-          if (parent->HasChild(i)) countAssignmentsRecursive(parent->GetChild(i), varName, count);
-        }
-      }
-    }
-
-    // Check if a node is an assignment to a specific variable
-    static bool isAssignmentTo(ASTNode &node, const std::string &varName) {
-      if (auto *math2 = dynamic_cast<ASTNode_Math2*>(&node)) {
-        std::string typeName = math2->GetTypeName();
-        if (typeName == "MATH2: =" && math2->NumChildren() >= 1) {
-          if (auto *leftVar = dynamic_cast<ASTNode_Var*>(&math2->GetChild(0))) {
-            return std::to_string(leftVar->GetVarId()) == varName;
-          }
-        }
-      }
-      return false;
-    }
+  struct LoopInfo {
+    size_t varId = 0;
+    int step = 0;
+    bool increasing = true;
+    bool inclusive = false;
+    bool hasLiteralBound = false;
+    int boundValue = 0;
+    ASTNode_Math2 *incrementNode = nullptr;
+    ASTNode_Block *body = nullptr;
   };
 
+  int unrollFactor;
+  bool aggressiveUnrolling;
+  bool unrollNestedLoops;
+  size_t maxUnrollIterations;
+  bool enablePeeling;
+
 public:
-  LoopUnrollingPass(int factor) : unrollFactor(factor) {}
+  LoopUnrollingPass(int factor, bool aggressive = false, bool nested = false,
+                    size_t maxIter = 100, bool peeling = false)
+      : unrollFactor(factor), aggressiveUnrolling(aggressive),
+        unrollNestedLoops(nested), maxUnrollIterations(maxIter),
+        enablePeeling(peeling) {}
 
   std::string getName() const override { return "LoopUnrolling"; }
 
@@ -293,390 +41,535 @@ public:
     if (unrollFactor <= 1) {
       return;
     }
-
-    // Check if this is a function node and process it
-    if (auto *function = dynamic_cast<ASTNode_Function *>(&node)) {
-      processFunction(*function);
-    }
-    // Check if this is a block node and process it
-    else if (auto *block = dynamic_cast<ASTNode_Block *>(&node)) {
-      processBlock(*block);
-    }
-    // For other node types, traverse children if it's a parent node
-    else if (auto *parent = dynamic_cast<ASTNode_Parent *>(&node)) {
-      for (size_t i = 0; i < parent->NumChildren(); ++i) {
-        if (parent->HasChild(i)) {
-          run(parent->GetChild(i));
-        }
-      }
-    }
+    processNode(node);
   }
 
 private:
-  void processFunction(ASTNode_Function &function) {
-    // Process the function body (should be child 0)
-    if (function.NumChildren() > 0 && function.HasChild(0)) {
-      run(function.GetChild(0));
+  void processNode(ASTNode &node) {
+    if (auto *function = dynamic_cast<ASTNode_Function *>(&node)) {
+      if (function->NumChildren() > 0 && function->HasChild(0)) {
+        processNode(function->GetChild(0));
+      }
+      return;
+    }
+
+    if (auto *block = dynamic_cast<ASTNode_Block *>(&node)) {
+      processBlock(*block);
+      return;
+    }
+
+    if (auto *parent = dynamic_cast<ASTNode_Parent *>(&node)) {
+      for (size_t i = 0; i < parent->NumChildren(); ++i) {
+        if (parent->HasChild(i)) {
+          processNode(parent->GetChild(i));
+        }
+      }
     }
   }
 
   void processBlock(ASTNode_Block &block) {
-    // Process each statement in the block
-    // We need to be careful about modifying the block while iterating
     std::vector<std::pair<size_t, std::unique_ptr<ASTNode_Block>>> replacements;
 
-    // First pass: identify while loops and create replacements
     for (size_t i = 0; i < block.NumChildren(); ++i) {
-      if (block.HasChild(i)) {
-        if (auto *whileLoop = dynamic_cast<ASTNode_While *>(&block.GetChild(i))) {
-          LoopPattern pattern;
-          if (isUnrollableLoop(*whileLoop, pattern)) {
-            // Create unrolled block containing both main and remainder loops
-            auto unrolledBlock = createUnrolledBlock(*whileLoop, pattern);
-            if (unrolledBlock) {
-              // Store the replacement for later
-              replacements.emplace_back(i, std::move(unrolledBlock));
-            }
+      if (!block.HasChild(i))
+        continue;
+
+      ASTNode &child = block.GetChild(i);
+      if (auto *loop = dynamic_cast<ASTNode_While *>(&child)) {
+        auto info = analyseLoop(*loop);
+        if (info && loopEligible(*loop, *info)) {
+          auto replacement = buildReplacement(*loop, *info);
+          if (replacement) {
+            replacements.emplace_back(i, std::move(replacement));
+            continue;
           }
-        } else {
-          // Recursively process other nodes
-          run(block.GetChild(i));
         }
+        // Either not eligible or failed to build replacement; recurse into loop body
+        if (loop->NumChildren() > 1 && loop->HasChild(1)) {
+          processNode(loop->GetChild(1));
+        }
+      } else {
+        processNode(child);
       }
     }
 
-    // Second pass: actually replace the loops (in reverse order to maintain indices)
     for (auto it = replacements.rbegin(); it != replacements.rend(); ++it) {
-      size_t index = it->first;
-      auto &replacement = it->second;
-
-      // Use the new ReplaceChild method
-      block.ReplaceChild(index, std::move(replacement));
-    }
-
-    // Third pass: process any remaining loops that weren't unrolled
-    for (size_t i = 0; i < block.NumChildren(); ++i) {
-      if (block.HasChild(i)) {
-        // Check if this child was just replaced (skip processing to avoid infinite recursion)
-        bool wasReplaced = false;
-        for (const auto &replacement : replacements) {
-          if (replacement.first == i) {
-            wasReplaced = true;
-            break;
-          }
-        }
-
-        if (!wasReplaced) {
-          if (auto *whileLoop = dynamic_cast<ASTNode_While *>(&block.GetChild(i))) {
-            // Process the loop body recursively
-            if (whileLoop->NumChildren() > 1 && whileLoop->HasChild(1)) {
-              run(whileLoop->GetChild(1));
-            }
-          } else if (auto *subBlock = dynamic_cast<ASTNode_Block *>(&block.GetChild(i))) {
-            // Process sub-blocks recursively (but not our unrolled blocks)
-            run(*subBlock);
-          }
-        }
-      }
+      block.ReplaceChild(it->first, std::move(it->second));
     }
   }
 
-  // Helper method to replace a child in a block using the new ReplaceChild method
-  bool replaceChildInBlock(ASTNode_Block &block, size_t index, std::unique_ptr<ASTNode_Block> replacement) {
-    if (index >= block.NumChildren()) {
+  bool loopEligible(ASTNode_While &loop, const LoopInfo &info) const {
+    if (!aggressiveUnrolling && !info.hasLiteralBound) {
+      return false;
+    }
+    if (!info.increasing && !unrollNestedLoops) {
+      // For now, treat decreasing loops as allowed only when nested unrolling enabled
+      // to guard against unexpected patterns
+      return false;
+    }
+    if (std::abs(info.step) != 1) {
+      return false;
+    }
+    if (!info.hasLiteralBound) {
+      return false;
+    }
+    (void)loop;
+    return true;
+  }
+
+  std::optional<LoopInfo> analyseLoop(ASTNode_While &loop) {
+    if (loop.NumChildren() < 2 || !loop.HasChild(0) || !loop.HasChild(1)) {
+      return std::nullopt;
+    }
+
+    auto *condition = dynamic_cast<ASTNode_Math2 *>(&loop.GetChild(0));
+    if (!condition) {
+      return std::nullopt;
+    }
+
+    auto *body = dynamic_cast<ASTNode_Block *>(&loop.GetChild(1));
+    if (!body) {
+      return std::nullopt;
+    }
+
+    LoopInfo info;
+    info.body = body;
+
+    if (!extractCondition(*condition, info)) {
+      return std::nullopt;
+    }
+
+    if (!unrollNestedLoops && containsNestedLoop(*body)) {
+      return std::nullopt;
+    }
+    if (containsControlTransfer(*body)) {
+      return std::nullopt;
+    }
+
+    if (!findIncrement(*body, info.varId, info.step, info.incrementNode)) {
+      return std::nullopt;
+    }
+
+    if (info.increasing && info.step <= 0) {
+      return std::nullopt;
+    }
+    if (!info.increasing && info.step >= 0) {
+      return std::nullopt;
+    }
+
+    if (countAssignments(*body, info.varId) > 1) {
+      return std::nullopt;
+    }
+
+    return info;
+  }
+
+  bool extractCondition(ASTNode_Math2 &cond, LoopInfo &info) {
+    const std::string op = const_cast<ASTNode_Math2 &>(cond).GetOp();
+    bool inclusive = false;
+    bool increasing = true;
+
+    if (op == "<") {
+      inclusive = false;
+      increasing = true;
+    } else if (op == "<=") {
+      inclusive = true;
+      increasing = true;
+    } else if (op == ">") {
+      inclusive = false;
+      increasing = false;
+    } else if (op == ">=") {
+      inclusive = true;
+      increasing = false;
+    } else {
       return false;
     }
 
-    block.ReplaceChild(index, std::move(replacement));
+    auto *leftVar = dynamic_cast<ASTNode_Var *>(&cond.GetChild(0));
+    if (!leftVar) {
+      return false;
+    }
+
+    info.varId = leftVar->GetVarId();
+    info.inclusive = inclusive;
+    info.increasing = increasing;
+    info.hasLiteralBound = false;
+    info.boundValue = 0;
+
+    if (auto *lit = dynamic_cast<ASTNode_IntLit *>(&cond.GetChild(1))) {
+      info.hasLiteralBound = true;
+      info.boundValue = lit->GetValue();
+    }
+
     return true;
   }
 
-  bool isUnrollableLoop(ASTNode_While &loop, LoopPattern &pattern) {
-    pattern = LoopAnalyzer::analyzeLoop(loop);
-    if (!pattern.isUnrollable) return false;
-    // Monotonicity: ensure direction matches comparison
-    if ((pattern.comparison == "<" || pattern.comparison == "<=") && pattern.increment <= 0) return false;
-    if ((pattern.comparison == ">" || pattern.comparison == ">=") && pattern.increment >= 0) return false;
-    return true;
+  bool findIncrement(ASTNode_Block &body, size_t varId, int &step,
+                     ASTNode_Math2 *&incrementNode) {
+    step = 0;
+    incrementNode = nullptr;
+
+    for (size_t i = 0; i < body.NumChildren(); ++i) {
+      if (!body.HasChild(i))
+        continue;
+      auto *assign = dynamic_cast<ASTNode_Math2 *>(&body.GetChild(i));
+      if (!assign)
+        continue;
+      if (const_cast<ASTNode_Math2 &>(*assign).GetOp() != "=")
+        continue;
+      auto *lhs = dynamic_cast<ASTNode_Var *>(&assign->GetChild(0));
+      if (!lhs || lhs->GetVarId() != varId)
+        continue;
+
+      int parsedStep = 0;
+      if (parseIncrement(assign->GetChild(1), varId, parsedStep)) {
+        step = parsedStep;
+        incrementNode = assign;
+        return true;
+      }
+    }
+    return false;
   }
 
-  // Create a block containing both unrolled and remainder loops  
-  std::unique_ptr<ASTNode_Block> createUnrolledBlock(ASTNode_While &original, const LoopPattern &pattern) {
-    auto block = std::make_unique<ASTNode_Block>(original.GetFilePos());
-
-    // Create the main unrolled loop (handles multiples of unrollFactor)
-    auto unrolledLoop = createMainUnrolledLoop(original, pattern);
-    if (unrolledLoop) {
-      block->AddChild(std::move(unrolledLoop));
+  bool parseIncrement(ASTNode &expr, size_t varId, int &stepOut) {
+    auto *math2 = dynamic_cast<ASTNode_Math2 *>(&expr);
+    if (!math2 || math2->NumChildren() < 2) {
+      return false;
     }
 
-    // Create the remainder loop (handles the leftover iterations)
-    auto remainderLoop = createRemainderLoop(original, pattern);
-    if (remainderLoop) {
-      block->AddChild(std::move(remainderLoop));
+    const std::string op = const_cast<ASTNode_Math2 &>(*math2).GetOp();
+    if (op != "+" && op != "-") {
+      return false;
     }
 
-    return block;
+    auto *lhsVar = dynamic_cast<ASTNode_Var *>(&math2->GetChild(0));
+    auto *rhsLit = dynamic_cast<ASTNode_IntLit *>(&math2->GetChild(1));
+    if (lhsVar && lhsVar->GetVarId() == varId && rhsLit) {
+      int value = rhsLit->GetValue();
+      stepOut = (op == "+") ? value : -value;
+      return true;
+    }
+
+    if (op == "+") {
+      auto *rhsVar = dynamic_cast<ASTNode_Var *>(&math2->GetChild(1));
+      auto *lhsLit = dynamic_cast<ASTNode_IntLit *>(&math2->GetChild(0));
+      if (rhsVar && rhsVar->GetVarId() == varId && lhsLit) {
+        stepOut = lhsLit->GetValue();
+        return true;
+      }
+    }
+
+    return false;
   }
 
-  std::unique_ptr<ASTNode_While> createMainUnrolledLoop(ASTNode_While &original, const LoopPattern &pattern) {
-    if (original.NumChildren() < 2) {
+  bool containsNestedLoop(ASTNode &node) const {
+    if (dynamic_cast<ASTNode_While *>(&node)) {
+      return true;
+    }
+    if (auto *parent = dynamic_cast<ASTNode_Parent *>(&node)) {
+      for (size_t i = 0; i < parent->NumChildren(); ++i) {
+        if (parent->HasChild(i) && containsNestedLoop(parent->GetChild(i))) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  bool containsControlTransfer(ASTNode &node) const {
+    if (dynamic_cast<ASTNode_Break *>(&node) || dynamic_cast<ASTNode_Continue *>(&node) ||
+        dynamic_cast<ASTNode_Return *>(&node)) {
+      return true;
+    }
+    if (auto *parent = dynamic_cast<ASTNode_Parent *>(&node)) {
+      for (size_t i = 0; i < parent->NumChildren(); ++i) {
+        if (parent->HasChild(i) && containsControlTransfer(parent->GetChild(i))) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  int countAssignments(ASTNode &node, size_t varId) const {
+    int count = 0;
+    if (auto *assign = dynamic_cast<ASTNode_Math2 *>(&node)) {
+      if (const_cast<ASTNode_Math2 &>(*assign).GetOp() == "=" &&
+          assign->NumChildren() >= 1) {
+        if (auto *lhs = dynamic_cast<ASTNode_Var *>(&assign->GetChild(0))) {
+          if (lhs->GetVarId() == varId) {
+            ++count;
+          }
+        }
+      }
+    }
+    if (auto *parent = dynamic_cast<ASTNode_Parent *>(&node)) {
+      for (size_t i = 0; i < parent->NumChildren(); ++i) {
+        if (parent->HasChild(i)) {
+          count += countAssignments(parent->GetChild(i), varId);
+        }
+      }
+    }
+    return count;
+  }
+
+  std::unique_ptr<ASTNode_Block> buildReplacement(ASTNode_While &loop,
+                                                  const LoopInfo &info) {
+    auto replacement = std::make_unique<ASTNode_Block>(loop.GetFilePos());
+    auto mainLoop = buildMainLoop(loop, info);
+    if (mainLoop) {
+      replacement->AddChild(std::move(mainLoop));
+    }
+    auto remainder = ASTCloner::clone(loop);
+    if (remainder) {
+      replacement->AddChild(std::move(remainder));
+    }
+    return replacement;
+  }
+
+  std::unique_ptr<ASTNode_While> buildMainLoop(ASTNode_While &loop,
+                                               const LoopInfo &info) {
+    if (!info.hasLiteralBound) {
       return nullptr;
     }
 
-    // Get the original condition and body
-    auto *originalBody = dynamic_cast<ASTNode_Block *>(&original.GetChild(1));
-    if (!originalBody) {
+    auto adjustedCond = buildAdjustedCondition(loop.GetChild(0), info);
+    if (!adjustedCond) {
       return nullptr;
     }
 
-    // Create the fully unrolled body (handles unrollFactor iterations at once)
-    auto unrolledBody = createFullyUnrolledBody(*originalBody, pattern);
+    auto unrolledBody = buildUnrolledBody(*info.body, info);
     if (!unrolledBody) {
       return nullptr;
     }
 
-    // Create adjusted condition for the main loop
-    auto adjustedCondition = adjustConditionForUnrolling(original.GetChild(0), pattern);
-    if (!adjustedCondition) {
-      return nullptr;
-    }
-
-    // Create the new while loop with fully unrolled body
-    return std::make_unique<ASTNode_While>(original.GetFilePos(), std::move(adjustedCondition),
+    return std::make_unique<ASTNode_While>(loop.GetFilePos(), std::move(adjustedCond),
                                            std::move(unrolledBody));
   }
 
-  std::unique_ptr<ASTNode_While> createRemainderLoop(ASTNode_While &original, const LoopPattern &pattern) {
-    // The remainder loop uses the original condition but starts where the main loop left off
-    // Since we're modifying the same loop variable, the remainder loop should just be the original loop
-    if (original.NumChildren() < 2) {
+  std::unique_ptr<ASTNode> buildAdjustedCondition(ASTNode &originalCond,
+                                                  const LoopInfo &info) {
+    if (!info.hasLiteralBound) {
       return nullptr;
     }
 
-    auto conditionClone = ASTCloner::clone(original.GetChild(0));
-    auto bodyClone = ASTCloner::clone(original.GetChild(1));
+    const int stepAbs = std::abs(info.step);
+    int adjustment = 0;
+    std::string op;
 
-    if (conditionClone && bodyClone) {
-      return std::make_unique<ASTNode_While>(original.GetFilePos(), std::move(conditionClone), std::move(bodyClone));
-    }
-
-    return nullptr;
-  }
-
-  std::unique_ptr<ASTNode> adjustConditionForUnrolling(const ASTNode &originalCondition, const LoopPattern &pattern) {
-    // For loops like "i < N", we need to adjust the condition to "i < N - (unrollFactor - 1)"
-    // This ensures the unrolled loop doesn't exceed the original bounds
-    
-    if (auto *math2 = dynamic_cast<const ASTNode_Math2 *>(&originalCondition)) {
-      if (math2->NumChildren() >= 2) {
-        std::string op = const_cast<ASTNode_Math2*>(math2)->GetOp();
-        const int step = std::abs(pattern.increment);
-        const int adjStrict = (unrollFactor - 1) * step;
-        const int adjLoose  = (unrollFactor) * step;
-
-        if (op == "<" && pattern.increment > 0) {
-          // Clone the left side (loop variable)
-          auto leftClone = ASTCloner::clone(math2->GetChild(0));
-          
-          // Clone the bound and subtract (unrollFactor - 1)
-          auto boundClone = ASTCloner::clone(math2->GetChild(1));
-          auto adjustment = std::make_unique<ASTNode_IntLit>(originalCondition.GetFilePos(), adjStrict);
-          
-          // Create: bound - (unrollFactor - 1)
-          auto adjustedBound = std::make_unique<ASTNode_Math2>(originalCondition.GetFilePos(), "-",
-                                                               std::move(boundClone), std::move(adjustment));
-          
-          // Create: left < adjustedBound
-          if (leftClone) {
-            return std::make_unique<ASTNode_Math2>(originalCondition.GetFilePos(), "<", std::move(leftClone),
-                                                   std::move(adjustedBound));
-          }
-        }
-        else if (op == "<=" && pattern.increment > 0) {
-          // For <=, adjust to <= bound - unrollFactor
-          auto leftClone = ASTCloner::clone(math2->GetChild(0));
-          auto boundClone = ASTCloner::clone(math2->GetChild(1));
-          auto adjustment = std::make_unique<ASTNode_IntLit>(originalCondition.GetFilePos(), adjLoose);
-          
-          auto adjustedBound = std::make_unique<ASTNode_Math2>(originalCondition.GetFilePos(), "-",
-                                                               std::move(boundClone), std::move(adjustment));
-          
-          if (leftClone) {
-            return std::make_unique<ASTNode_Math2>(originalCondition.GetFilePos(), "<=", std::move(leftClone),
-                                                   std::move(adjustedBound));
-          }
-        }
-        else if (op == ">" && pattern.increment < 0) {
-          // Decrement loop: i > N becomes i > N + (unrollFactor - 1)
-          auto leftClone = ASTCloner::clone(math2->GetChild(0));
-          auto boundClone = ASTCloner::clone(math2->GetChild(1));
-          auto adjustment = std::make_unique<ASTNode_IntLit>(originalCondition.GetFilePos(), adjStrict);
-          
-          auto adjustedBound = std::make_unique<ASTNode_Math2>(originalCondition.GetFilePos(), "+",
-                                                               std::move(boundClone), std::move(adjustment));
-          
-          if (leftClone) {
-            return std::make_unique<ASTNode_Math2>(originalCondition.GetFilePos(), ">", std::move(leftClone),
-                                                   std::move(adjustedBound));
-          }
-        }
-        else if (op == ">=" && pattern.increment < 0) {
-          // Decrement loop: i >= N becomes i >= N + unrollFactor
-          auto leftClone = ASTCloner::clone(math2->GetChild(0));
-          auto boundClone = ASTCloner::clone(math2->GetChild(1));
-          auto adjustment = std::make_unique<ASTNode_IntLit>(originalCondition.GetFilePos(), adjLoose);
-      
-          auto adjustedBound = std::make_unique<ASTNode_Math2>(originalCondition.GetFilePos(), "+",
-                                                               std::move(boundClone), std::move(adjustment));
-          
-          if (leftClone) {
-            return std::make_unique<ASTNode_Math2>(originalCondition.GetFilePos(), ">=", std::move(leftClone),
-                                                   std::move(adjustedBound));
-          }
-        }
-      }
-    }
-    
-    // If we can't adjust, use the original condition (may not be optimal but safe)
-    return ASTCloner::clone(originalCondition);
-  }
-
-  std::unique_ptr<ASTNode_Block> createFullyUnrolledBody(const ASTNode_Block &originalBody, const LoopPattern &pattern) {
-    auto unrolledBlock = std::make_unique<ASTNode_Block>(originalBody.GetFilePos());
-
-    // For each unroll iteration, clone the body but skip the increment statement
-    for (int i = 0; i < unrollFactor; ++i) {
-      for (size_t j = 0; j < originalBody.NumChildren(); ++j) {
-        if (originalBody.HasChild(j)) {
-          const ASTNode &child = originalBody.GetChild(j);
-          
-          // Skip the increment statement - we'll handle it separately
-          if (&child == pattern.incrementNode) {
-            continue;
-          }
-          
-          // Clone and substitute induction variables for this iteration
-          auto clonedChild = cloneWithInductionVariableSubstitution(child, pattern.loopVar, i * pattern.increment);
-          if (clonedChild) {
-            unrolledBlock->AddChild(std::move(clonedChild));
-          }
-        }
-      }
-    }
-
-    // Add a single increment by the unroll factor at the end
-    auto finalIncrement = createFinalIncrement(pattern);
-    if (finalIncrement) {
-      unrolledBlock->AddChild(std::move(finalIncrement));
-    }
-
-    return unrolledBlock;
-  }
-
-  static std::string getOperator(ASTNode_Math2 &math2) {
-    std::string typeName = math2.GetTypeName();
-    if (typeName.find("MATH2: ") == 0) {
-      return typeName.substr(7);
-    }
-    return "";
-  }
-
-private:
-  // Clone a node while substituting loop variable references with loop_var + offset
-  std::unique_ptr<ASTNode> cloneWithInductionVariableSubstitution(const ASTNode &node, const std::string &loopVar, int offset) {
-    // Handle variable nodes - substitute if it's the loop variable
-    if (auto *var = dynamic_cast<const ASTNode_Var *>(&node)) {
-      std::string varId = std::to_string(const_cast<ASTNode_Var*>(var)->GetVarId());
-      if (varId == loopVar && offset != 0) {
-        // Create (loop_var + offset) instead of just loop_var
-        auto originalVar = ASTCloner::cloneVar(*var);
-        auto offsetLit = std::make_unique<ASTNode_IntLit>(node.GetFilePos(), offset);
-        
-        // Choose the correct operation based on sign of offset
-        std::string op = (offset >= 0) ? "+" : "-";
-        if (offset < 0) {
-          // For negative offsets, use subtraction with positive value
-          offsetLit = std::make_unique<ASTNode_IntLit>(node.GetFilePos(), -offset);
-        }
-        
-        return std::make_unique<ASTNode_Math2>(node.GetFilePos(), op, std::move(originalVar), std::move(offsetLit));
+    if (info.increasing) {
+      if (info.inclusive) {
+        adjustment = stepAbs * (unrollFactor - 1);
+        op = "<=";
       } else {
-        // Regular variable or offset is 0, just clone normally
-        return ASTCloner::cloneVar(*var);
+        adjustment = stepAbs * unrollFactor;
+        op = "<=";
       }
+      int newBound = info.boundValue - adjustment;
+      return makeComparison(originalCond.GetFilePos(), info.varId, op, newBound);
+    } else {
+      if (info.inclusive) {
+        adjustment = stepAbs * (unrollFactor - 1);
+        op = ">=";
+      } else {
+        adjustment = stepAbs * unrollFactor;
+        op = ">";
+      }
+      int newBound = info.boundValue + adjustment;
+      return makeComparison(originalCond.GetFilePos(), info.varId, op, newBound);
     }
+  }
 
-    // Handle Math2 nodes recursively
-    if (auto *math2 = dynamic_cast<const ASTNode_Math2 *>(&node)) {
-      if (math2->NumChildren() >= 2) {
-        auto leftClone = cloneWithInductionVariableSubstitution(math2->GetChild(0), loopVar, offset);
-        auto rightClone = cloneWithInductionVariableSubstitution(math2->GetChild(1), loopVar, offset);
-        
-        if (leftClone && rightClone) {
-          std::string op = const_cast<ASTNode_Math2*>(math2)->GetOp();
-          return std::make_unique<ASTNode_Math2>(math2->GetFilePos(), op, std::move(leftClone), std::move(rightClone));
+  std::unique_ptr<ASTNode_Block> buildUnrolledBody(const ASTNode_Block &body,
+                                                   const LoopInfo &info) {
+    auto unrolled = std::make_unique<ASTNode_Block>(body.GetFilePos());
+
+    for (int iteration = 0; iteration < unrollFactor; ++iteration) {
+      const int offset = iteration * info.step;
+      for (size_t i = 0; i < body.NumChildren(); ++i) {
+        if (!body.HasChild(i))
+          continue;
+        const ASTNode &child = body.GetChild(i);
+        if (&child == info.incrementNode) {
+          continue;
         }
-      }
-    }
-
-    // Handle Function call nodes recursively (substitute within arguments)
-    if (auto *fn = dynamic_cast<const ASTNode_FunctionCall *>(&node)) {
-      std::vector<std::unique_ptr<ASTNode>> newArgs;
-      newArgs.reserve(fn->NumChildren());
-      for (size_t i = 0; i < fn->NumChildren(); ++i) {
-        if (fn->HasChild(i)) {
-          auto arg = cloneWithInductionVariableSubstitution(fn->GetChild(i), loopVar, offset);
-          if (arg) newArgs.push_back(std::move(arg));
+        auto cloned = cloneWithOffset(child, info.varId, offset);
+        if (!cloned) {
+          return nullptr;
         }
+        unrolled->AddChild(std::move(cloned));
       }
-      return std::make_unique<ASTNode_FunctionCall>(fn->GetFilePos(), fn->GetFunId(), std::move(newArgs));
     }
 
-    // Handle other node types with regular cloning
+    int totalStep = info.step * unrollFactor;
+    auto finalIncrement =
+        makeIncrement(info.incrementNode->GetFilePos(), info.varId, totalStep);
+    if (!finalIncrement) {
+      return nullptr;
+    }
+    unrolled->AddChild(std::move(finalIncrement));
+    return unrolled;
+  }
+
+  std::unique_ptr<ASTNode> cloneWithOffset(const ASTNode &node, size_t varId,
+                                           int offset) {
+    if (auto *var = dynamic_cast<const ASTNode_Var *>(&node)) {
+      if (offset == 0 || var->GetVarId() != varId) {
+        return std::make_unique<ASTNode_Var>(node.GetFilePos(), var->GetVarId());
+      }
+      auto base = std::make_unique<ASTNode_Var>(node.GetFilePos(), var->GetVarId());
+      auto absValue = std::make_unique<ASTNode_IntLit>(node.GetFilePos(), std::abs(offset));
+      std::string op = offset > 0 ? "+" : "-";
+      if (offset < 0) {
+        absValue = std::make_unique<ASTNode_IntLit>(node.GetFilePos(), std::abs(offset));
+      }
+      return std::make_unique<ASTNode_Math2>(node.GetFilePos(), op, std::move(base),
+                                             std::move(absValue));
+    }
+
+    if (auto *lit = dynamic_cast<const ASTNode_IntLit *>(&node)) {
+      return std::make_unique<ASTNode_IntLit>(node.GetFilePos(), lit->GetValue());
+    }
+    if (auto *lit = dynamic_cast<const ASTNode_FloatLit *>(&node)) {
+      return std::make_unique<ASTNode_FloatLit>(node.GetFilePos(), lit->GetValue());
+    }
+    if (auto *lit = dynamic_cast<const ASTNode_StringLit *>(&node)) {
+      return std::make_unique<ASTNode_StringLit>(node.GetFilePos(), lit->GetValue());
+    }
+
+    if (auto *m1 = dynamic_cast<const ASTNode_Math1 *>(&node)) {
+      auto child = cloneWithOffset(m1->GetChild(0), varId, offset);
+      if (!child)
+        return nullptr;
+      return std::make_unique<ASTNode_Math1>(node.GetFilePos(),
+                                             const_cast<ASTNode_Math1 *>(m1)->GetOp(),
+                                             std::move(child));
+    }
+
+    if (auto *m2 = dynamic_cast<const ASTNode_Math2 *>(&node)) {
+      auto left = cloneWithOffset(m2->GetChild(0), varId, offset);
+      auto right = cloneWithOffset(m2->GetChild(1), varId, offset);
+      if (!left || !right)
+        return nullptr;
+      return std::make_unique<ASTNode_Math2>(node.GetFilePos(),
+                                             const_cast<ASTNode_Math2 *>(m2)->GetOp(),
+                                             std::move(left), std::move(right));
+    }
+
+    if (auto *ret = dynamic_cast<const ASTNode_Return *>(&node)) {
+      if (!ret->NumChildren() || !ret->HasChild(0))
+        return ASTCloner::clone(node);
+      auto child = cloneWithOffset(ret->GetChild(0), varId, offset);
+      if (!child)
+        return nullptr;
+      return std::make_unique<ASTNode_Return>(node.GetFilePos(), std::move(child));
+    }
+
+    if (auto *block = dynamic_cast<const ASTNode_Block *>(&node)) {
+      auto clone = std::make_unique<ASTNode_Block>(node.GetFilePos());
+      for (size_t i = 0; i < block->NumChildren(); ++i) {
+        if (!block->HasChild(i))
+          continue;
+        auto child = cloneWithOffset(block->GetChild(i), varId, offset);
+        if (!child)
+          return nullptr;
+        clone->AddChild(std::move(child));
+      }
+      return clone;
+    }
+
+    if (auto *call = dynamic_cast<const ASTNode_FunctionCall *>(&node)) {
+      std::vector<std::unique_ptr<ASTNode>> args;
+      args.reserve(call->NumChildren());
+      for (size_t i = 0; i < call->NumChildren(); ++i) {
+        if (!call->HasChild(i))
+          continue;
+        auto arg = cloneWithOffset(call->GetChild(i), varId, offset);
+        if (!arg)
+          return nullptr;
+        args.push_back(std::move(arg));
+      }
+      return std::make_unique<ASTNode_FunctionCall>(node.GetFilePos(), call->GetFunId(),
+                                                    std::move(args));
+    }
+
+    if (auto *idx = dynamic_cast<const ASTNode_Indexing *>(&node)) {
+      auto base = cloneWithOffset(idx->GetChild(0), varId, offset);
+      auto sub = cloneWithOffset(idx->GetChild(1), varId, offset);
+      if (!base || !sub)
+        return nullptr;
+      return std::make_unique<ASTNode_Indexing>(node.GetFilePos(), std::move(base),
+                                                std::move(sub));
+    }
+
+    if (auto *sz = dynamic_cast<const ASTNode_Size *>(&node)) {
+      auto arg = cloneWithOffset(sz->GetChild(0), varId, offset);
+      if (!arg)
+        return nullptr;
+      return std::make_unique<ASTNode_Size>(node.GetFilePos(), std::move(arg));
+    }
+
+    if (auto *conv = dynamic_cast<const ASTNode_ToDouble *>(&node)) {
+      auto child = cloneWithOffset(conv->GetChild(0), varId, offset);
+      if (!child)
+        return nullptr;
+      return std::make_unique<ASTNode_ToDouble>(std::move(child));
+    }
+
+    if (auto *conv = dynamic_cast<const ASTNode_ToInt *>(&node)) {
+      auto child = cloneWithOffset(conv->GetChild(0), varId, offset);
+      if (!child)
+        return nullptr;
+      return std::make_unique<ASTNode_ToInt>(std::move(child));
+    }
+
+    if (auto *conv = dynamic_cast<const ASTNode_ToString *>(&node)) {
+      auto child = cloneWithOffset(conv->GetChild(0), varId, offset);
+      if (!child)
+        return nullptr;
+      return std::make_unique<ASTNode_ToString>(std::move(child));
+    }
+
+    if (auto *iff = dynamic_cast<const ASTNode_If *>(&node)) {
+      auto cond = cloneWithOffset(iff->GetChild(0), varId, offset);
+      if (!cond)
+        return nullptr;
+      if (iff->NumChildren() == 2) {
+        auto thenBranch = cloneWithOffset(iff->GetChild(1), varId, offset);
+        if (!thenBranch)
+          return nullptr;
+        return std::make_unique<ASTNode_If>(node.GetFilePos(), std::move(cond),
+                                            std::move(thenBranch));
+      } else if (iff->NumChildren() == 3) {
+        auto thenBranch = cloneWithOffset(iff->GetChild(1), varId, offset);
+        auto elseBranch = cloneWithOffset(iff->GetChild(2), varId, offset);
+        if (!thenBranch || !elseBranch)
+          return nullptr;
+        return std::make_unique<ASTNode_If>(node.GetFilePos(), std::move(cond),
+                                            std::move(thenBranch), std::move(elseBranch));
+      }
+    }
+
     return ASTCloner::clone(node);
   }
 
-  // Create the final increment statement: loop_var = loop_var + (unrollFactor * original_increment)
-  std::unique_ptr<ASTNode> createFinalIncrement(const LoopPattern &pattern) {
-    // Create a variable reference for the loop variable
-    if (!pattern.incrementNode) {
-      return nullptr;
-    }
-
-    // Extract the variable ID from the increment node
-    if (auto *math2 = dynamic_cast<const ASTNode_Math2 *>(pattern.incrementNode)) {
-      if (math2->NumChildren() >= 1) {
-        if (auto *varNode = dynamic_cast<const ASTNode_Var *>(&math2->GetChild(0))) {
-          // Clone the variable for left side of assignment
-          auto leftVar = ASTCloner::cloneVar(*varNode);
-          
-          // Clone the variable for right side of addition
-          auto rightVarForAdd = ASTCloner::cloneVar(*varNode);
-          
-          // Create the total increment: unrollFactor * pattern.increment
-          int totalIncrement = unrollFactor * pattern.increment;
-          auto totalIncrementLit = std::make_unique<ASTNode_IntLit>(pattern.incrementNode->GetFilePos(), totalIncrement);
-          
-          // Create: loop_var + totalIncrement
-          auto addition = std::make_unique<ASTNode_Math2>(pattern.incrementNode->GetFilePos(), "+", 
-                                                         std::move(rightVarForAdd), std::move(totalIncrementLit));
-          
-          // Create: loop_var = (loop_var + totalIncrement)
-          return std::make_unique<ASTNode_Math2>(pattern.incrementNode->GetFilePos(), "=", 
-                                               std::move(leftVar), std::move(addition));
-        }
-      }
-    }
-    
-    return nullptr;
+  std::unique_ptr<ASTNode> makeComparison(FilePos pos, size_t varId,
+                                          const std::string &op, int bound) {
+    auto lhs = std::make_unique<ASTNode_Var>(pos, varId);
+    auto rhs = std::make_unique<ASTNode_IntLit>(pos, bound);
+    return std::make_unique<ASTNode_Math2>(pos, op, std::move(lhs), std::move(rhs));
   }
 
-  static std::string getVarId(ASTNode_Var &var) {
-    std::string typeName = var.GetTypeName();
-    if (typeName.find("VAR: ") == 0) {
-      return typeName.substr(5); // Extract var_id after "VAR: "
+  std::unique_ptr<ASTNode> makeIncrement(FilePos pos, size_t varId, int delta) {
+    auto lhs = std::make_unique<ASTNode_Var>(pos, varId);
+    auto base = std::make_unique<ASTNode_Var>(pos, varId);
+    auto stepLit = std::make_unique<ASTNode_IntLit>(pos, std::abs(delta));
+    std::string op = delta >= 0 ? "+" : "-";
+    if (delta < 0) {
+      stepLit = std::make_unique<ASTNode_IntLit>(pos, std::abs(delta));
     }
-    return "";
+    auto rhs =
+        std::make_unique<ASTNode_Math2>(pos, op, std::move(base), std::move(stepLit));
+    return std::make_unique<ASTNode_Math2>(pos, "=", std::move(lhs), std::move(rhs));
   }
 };

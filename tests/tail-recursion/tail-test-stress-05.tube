@@ -1,0 +1,23 @@
+// Stress Test 5: Extreme Depth Tail Recursion
+// Goal: Test tail recursion optimization with maximum practical recursion depth
+// This should show the most dramatic performance difference between recursive and iterative versions
+
+function extreme_tail(int n, int acc) : int {
+  if (n == 0) return acc;
+  
+  // Maximum computational work per recursive call
+  int temp1 = n * n * n + acc;
+  int temp2 = temp1 * temp1 + n;
+  int temp3 = temp2 / 3 + acc;
+  int temp4 = temp3 * temp3 * 2;
+  int temp5 = temp4 + n * n;
+  int temp6 = temp5 / 5 + acc;
+  int temp7 = temp6 * temp6 + n;
+  int new_acc = temp7 + acc;
+  
+  return extreme_tail(n - 1, new_acc);
+}
+
+function main() : int {
+  return extreme_tail(20000, 0); // 20K levels with maximum computation per call
+}

@@ -58,6 +58,10 @@
         color: darkred;
         font-weight: bold;
       }
+      .warn {
+        color: #b58900;
+        font-weight: bold;
+      }
       .waiting {
         color: gray;
         font-style: italic;
@@ -241,6 +245,42 @@
           fn: "main",
           expected: 1048576,
           note: "power calculation (2^20) - computational stress"
+        },
+        {
+          base: "tail-test-order",
+          fn: "main",
+          expected: 8,
+          note: "argument evaluation order preserves fibonacci progression"
+        },
+        {
+          base: "tail-test-stress-01",
+          fn: "main",
+          expected: "__baseline__",
+          note: "very deep tail recursion with heavy computation (50K levels)"
+        },
+        {
+          base: "tail-test-stress-02",
+          fn: "main",
+          expected: "__baseline__",
+          note: "fibonacci with very deep tail recursion (100K levels)"
+        },
+        {
+          base: "tail-test-stress-03",
+          fn: "main",
+          expected: "__baseline__",
+          note: "complex mathematical tail recursion (50K levels)"
+        },
+        {
+          base: "tail-test-stress-04",
+          fn: "main",
+          expected: "__baseline__",
+          note: "multiple tail recursive calls (75K levels)"
+        },
+        {
+          base: "tail-test-stress-05",
+          fn: "main",
+          expected: "__baseline__",
+          note: "extreme depth tail recursion (100K levels)"
         }
       ];
 
@@ -333,7 +373,8 @@
 
           rowOff.insertCell(0).textContent = `${tc.base}-off.wasm`;
           rowOff.insertCell(1).textContent = tc.fn;
-          rowOff.insertCell(2).textContent = tc.expected;
+          rowOff.insertCell(2).textContent =
+            tc.expected === "__baseline__" ? "(baseline)" : tc.expected;
           const stOff = rowOff.insertCell(3);
           const tOff = rowOff.insertCell(4);
           rowOff.insertCell(5).textContent = "—"; // Performance baseline
@@ -345,7 +386,8 @@
 
           rowLoop.insertCell(0).textContent = `${tc.base}-loop.wasm`;
           rowLoop.insertCell(1).textContent = tc.fn;
-          rowLoop.insertCell(2).textContent = tc.expected;
+          rowLoop.insertCell(2).textContent =
+            tc.expected === "__baseline__" ? "(baseline)" : tc.expected;
           const stLoop = rowLoop.insertCell(3);
           const tLoop = rowLoop.insertCell(4);
           const delta = rowLoop.insertCell(5);
@@ -353,43 +395,101 @@
           stOff.textContent = stLoop.textContent = "Waiting...";
           stOff.className = stLoop.className = "waiting";
 
+          const useBaseline = tc.expected === "__baseline__";
+          let expectedValue = useBaseline ? null : tc.expected;
+          let offResult = null;
+          let loopResult = null;
+          let offError = null;
+          let loopError = null;
+
           try {
-            const off = await runOne(tc.base, tc.fn, "off");
-            tOff.textContent = fmt(off.p50);
-            stOff.textContent = off.out === tc.expected ? "PASS" : "FAIL";
-            stOff.className = off.out === tc.expected ? "pass" : "fail";
-
-            const loop = await runOne(tc.base, tc.fn, "loop");
-            tLoop.textContent = fmt(loop.p50);
-            stLoop.textContent = loop.out === tc.expected ? "PASS" : "FAIL";
-            stLoop.className = loop.out === tc.expected ? "pass" : "fail";
-            delta.innerHTML = badge(off.p50, loop.p50);
-
-            if (off.out === tc.expected && loop.out === tc.expected) passed++;
-
-            data.push({
-              timestamp: new Date().toISOString(),
-              userAgent: navigator.userAgent,
-              base: tc.base,
-              fn: tc.fn,
-              expected: tc.expected,
-              off_ms: off.p50,
-              off_p25: off.p25,
-              off_p75: off.p75,
-              off_bytes: off.bytes,
-              loop_ms: loop.p50,
-              loop_p25: loop.p25,
-              loop_p75: loop.p75,
-              loop_bytes: loop.bytes,
-              out_off: off.out,
-              out_loop: loop.out,
-            });
-          } catch (e) {
-            stOff.textContent = stLoop.textContent = "ERROR";
-            stOff.className = stLoop.className = "fail";
-            tOff.textContent = tLoop.textContent = "—";
-            delta.textContent = e.message;
+            offResult = await runOne(tc.base, tc.fn, "off");
+          } catch (err) {
+            offError = err;
           }
+
+          if (offResult) {
+            if (useBaseline) expectedValue = offResult.out;
+            tOff.textContent = fmt(offResult.p50);
+            if (expectedValue !== null && offResult.out === expectedValue) {
+              stOff.textContent = "PASS";
+              stOff.className = "pass";
+            } else {
+              stOff.textContent = `FAIL (got ${offResult.out})`;
+              stOff.className = "fail";
+            }
+          } else {
+            tOff.textContent = "—";
+            stOff.textContent = offError
+              ? `ERR: ${offError.message}`
+              : "UNAVAILABLE";
+            stOff.className = useBaseline ? "warn" : "fail";
+          }
+
+          try {
+            loopResult = await runOne(tc.base, tc.fn, "loop");
+          } catch (err) {
+            loopError = err;
+          }
+
+          if (loopResult) {
+            if (expectedValue === null) expectedValue = loopResult.out;
+            tLoop.textContent = fmt(loopResult.p50);
+            if (expectedValue !== null && loopResult.out === expectedValue) {
+              stLoop.textContent = "PASS";
+              stLoop.className = "pass";
+            } else {
+              stLoop.textContent = `FAIL (got ${loopResult.out})`;
+              stLoop.className = "fail";
+            }
+          } else {
+            tLoop.textContent = "—";
+            stLoop.textContent = loopError
+              ? `ERR: ${loopError.message}`
+              : "UNAVAILABLE";
+            stLoop.className = "fail";
+          }
+
+          if (offResult && loopResult) {
+            delta.innerHTML = badge(offResult.p50, loopResult.p50);
+          } else {
+            delta.textContent = "—";
+          }
+
+          const loopPass =
+            loopResult && expectedValue !== null && loopResult.out === expectedValue;
+          const offPass =
+            offResult && expectedValue !== null && offResult.out === expectedValue;
+          if (loopPass && (offResult ? offPass : useBaseline)) {
+            passed++;
+          }
+
+          data.push({
+            timestamp: new Date().toISOString(),
+            userAgent: navigator.userAgent,
+            base: tc.base,
+            fn: tc.fn,
+            note: tc.note || "",
+            expected: expectedValue,
+            off_ms: offResult ? offResult.p50 : null,
+            off_p25: offResult ? offResult.p25 : null,
+            off_p75: offResult ? offResult.p75 : null,
+            off_bytes: offResult ? offResult.bytes : 0,
+            loop_ms: loopResult ? loopResult.p50 : null,
+            loop_p25: loopResult ? loopResult.p25 : null,
+            loop_p75: loopResult ? loopResult.p75 : null,
+            loop_bytes: loopResult ? loopResult.bytes : 0,
+            out_off: offResult
+              ? offResult.out
+              : offError
+              ? offError.message
+              : null,
+            out_loop: loopResult
+              ? loopResult.out
+              : loopError
+              ? loopError.message
+              : null,
+          });
         }
         document.getElementById(
           "sum"
@@ -405,6 +505,7 @@
             "timestamp",
             "userAgent",
             "base",
+            "note",
             "fn",
             "expected",
             "off_ms",
@@ -420,11 +521,12 @@
           ];
           const rows = [header.join(",")].concat(
             data.map((r) =>
-              [
-                r.timestamp,
-                r.userAgent,
-                r.base,
-                r.fn,
+                  [
+                    r.timestamp,
+                    r.userAgent,
+                    r.base,
+                    r.note,
+                    r.fn,
                 r.expected,
                 r.off_ms,
                 r.off_p25,

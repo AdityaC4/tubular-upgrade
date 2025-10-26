@@ -1,0 +1,31 @@
+// Test aggressive inlining with recursive functions
+// This should test the new recursive function detection
+
+function simple_add(int a, int b) : int {
+    return a + b;
+}
+
+function factorial(int n) : int {
+    if (n <= 1) {
+        return 1;
+    } else {
+        return n * factorial(n - 1);
+    }
+}
+
+function complex_calc(int x, int y) : int {
+    int result = 0;
+    int i = 0;
+    while (i < 5) {
+        result = result + x * y;
+        i = i + 1;
+    }
+    return result;
+}
+
+function main() : int {
+    int sum = simple_add(3, 4);
+    sum = sum + factorial(3);
+    sum = sum + complex_calc(2, 3);
+    return sum;
+}

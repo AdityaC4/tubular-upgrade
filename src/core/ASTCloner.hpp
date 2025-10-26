@@ -24,7 +24,9 @@ public:
     if (auto *idx = dynamic_cast<const ASTNode_Indexing *>(&node)) return cloneIndexing(*idx);
     if (auto *sz = dynamic_cast<const ASTNode_Size *>(&node)) return cloneSize(*sz);
     if (auto *td = dynamic_cast<const ASTNode_ToDouble *>(&node)) return cloneToDouble(*td);
+    if (auto *ti = dynamic_cast<const ASTNode_ToInt *>(&node)) return cloneToInt(*ti);
     if (auto *ts = dynamic_cast<const ASTNode_ToString *>(&node)) return cloneToString(*ts);
+    if (auto *fn = dynamic_cast<const ASTNode_Function *>(&node)) return cloneFunction(*fn);
     if (auto *br = dynamic_cast<const ASTNode_Break *>(&node)) return cloneBreak(*br);
     if (auto *ct = dynamic_cast<const ASTNode_Continue *>(&node)) return cloneContinue(*ct);
     return nullptr;
@@ -172,11 +174,36 @@ private:
     return nullptr;
   }
 
+  static std::unique_ptr<ASTNode> cloneToInt(const ASTNode_ToInt &ti) {
+    if (ti.NumChildren() >= 1) {
+      auto arg = clone(ti.GetChild(0));
+      if (arg) {
+        return std::make_unique<ASTNode_ToInt>(std::move(arg));
+      }
+    }
+    return nullptr;
+  }
+
   static std::unique_ptr<ASTNode> cloneToString(const ASTNode_ToString &ts) {
     if (ts.NumChildren() >= 1) {
       auto arg = clone(ts.GetChild(0));
       if (arg) {
         return std::make_unique<ASTNode_ToString>(std::move(arg));
+      }
+    }
+    return nullptr;
+  }
+
+  static std::unique_ptr<ASTNode> cloneFunction(const ASTNode_Function &fn) {
+    if (fn.NumChildren() >= 1) {
+      auto body = clone(fn.GetChild(0));
+      if (body) {
+        // Create a dummy token for the constructor - this is a limitation of the current design
+        emplex::Token dummyToken;
+        dummyToken.line_id = fn.GetFilePos().line;
+        dummyToken.col_id = fn.GetFilePos().col;
+        return std::make_unique<ASTNode_Function>(dummyToken, fn.GetFunId(), 
+                                                  fn.GetParamIds(), std::move(body));
       }
     }
     return nullptr;

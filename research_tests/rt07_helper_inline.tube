@@ -1,0 +1,18 @@
+// Helper-heavy loop intended to show inline-first vs unroll-first differences.
+function Step(int a, int b, int c) : int {
+  return a + b - c;
+}
+
+function Worker(int seed) : int {
+  int total = 0;
+  int i = 0;
+  while (i < 16000) {
+    total = total + Step(seed, i % 17, i % 5);
+    i = i + 1;
+  }
+  return total;
+}
+
+function main() : int {
+  return Worker(42); // 767,979
+}

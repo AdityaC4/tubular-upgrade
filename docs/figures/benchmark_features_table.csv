@@ -1,0 +1,11 @@
+benchmark,loops,tail_recursion,branching,dominant_order
+rt01-fib-recursive,0,No (non-tail recursion),High (if),unroll→tail→inline
+rt02-tail-factorial,0,Yes (tail recursion),Low,tail→inline→unroll
+rt03-loop-summation,1,No,Low,inline→tail→unroll
+rt04-stride-heavy-loop,1,No,Low,tail→unroll→inline
+rt05-nested-mix,2 (nested),No,Low,inline→unroll→tail
+rt06-string-wrapping,1,No,Low,unroll→tail→inline
+rt07-helper-inline,1,No,Low,tail→unroll→inline
+rt08-branchy-loop,1,No,High (if/continue),tail→unroll→inline
+rt09-matrix-mix,2 (nested),No,Low,tail→inline→unroll
+rt10-control-baseline,1,No,Low,tail→unroll→inline

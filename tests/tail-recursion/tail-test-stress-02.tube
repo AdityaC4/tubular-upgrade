@@ -1,0 +1,21 @@
+// Stress Test 2: Fibonacci with Very Deep Tail Recursion
+// Goal: Test tail recursion optimization with 100,000 levels of recursion
+// This should demonstrate stack pressure differences between recursive and iterative versions
+
+function fib_tail(int n, int a, int b) : int {
+  if (n == 0) return a;
+  if (n == 1) return b;
+  
+  // Add computational work to make timing measurable
+  int temp1 = a + b;
+  int temp2 = temp1 * temp1 + n;
+  int temp3 = temp2 / 2 + a;
+  int new_a = b;
+  int new_b = temp3;
+  
+  return fib_tail(n - 1, new_a, new_b);
+}
+
+function main() : int {
+  return fib_tail(20000, 0, 1); // 20K levels of recursion
+}

@@ -1,0 +1,9 @@
+// Recursive Fibonacci to showcase pass ordering impact on recursion-heavy code.
+function Fib(int n) : int {
+  if (n <= 1) return n;
+  return Fib(n - 1) + Fib(n - 2);
+}
+
+function main() : int {
+  return Fib(25); // 75,025
+}

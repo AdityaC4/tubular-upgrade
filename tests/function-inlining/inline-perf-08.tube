@@ -1,0 +1,35 @@
+// Performance Test 8: Multiple Small Functions in Hot Loop
+// Goal: Test inlining of multiple small functions called in sequence
+// This should show cumulative performance benefits of inlining multiple calls
+
+function add_one(int x) : int {
+  return x + 1;
+}
+
+function multiply_two(int x) : int {
+  return x * 2;
+}
+
+function subtract_three(int x) : int {
+  return x - 3;
+}
+
+function divide_four(int x) : int {
+  return x / 4;
+}
+
+function main() : int {
+  int sum = 0;
+  int i = 0;
+  while (i < 20000000) { // 20M iterations with 4 function calls per iteration
+    int temp = i;
+    temp = add_one(temp);
+    temp = multiply_two(temp);
+    temp = subtract_three(temp);
+    temp = divide_four(temp);
+    sum = sum + temp;
+    i = i + 1;
+  }
+  return sum; // Expected: Large positive number
+}
+

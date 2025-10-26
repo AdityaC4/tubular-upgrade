@@ -1,0 +1,21 @@
+// Test aggressive inlining with single-use functions
+// This should test the new single-use function inlining heuristic
+
+function get_constant() : int {
+    return 42;
+}
+
+function multiply_by_two(int x) : int {
+    return x * 2;
+}
+
+function add_one(int x) : int {
+    return x + 1;
+}
+
+function main() : int {
+    int result = get_constant();
+    result = multiply_by_two(result);
+    result = add_one(result);
+    return result;
+}

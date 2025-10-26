@@ -528,6 +528,77 @@ public:
   void Accept(ASTVisitor &visitor) override { visitor.visit(*this); }
 };
 
+class ASTNode_TailCallLoop : public ASTNode {
+private:
+  std::vector<size_t> param_ids;
+  std::vector<ptr_t> args;
+
+public:
+  ASTNode_TailCallLoop(FilePos file_pos, std::vector<size_t> param_ids, std::vector<ptr_t> &&args)
+      : ASTNode(file_pos), param_ids(std::move(param_ids)), args(std::move(args)) {}
+
+  std::string GetTypeName() const override { return "TAIL_CALL_LOOP"; }
+
+  void AddArgument(ptr_t &&arg) { args.push_back(std::move(arg)); }
+
+  void TypeCheck(const SymbolTable &symbols) override {
+    if (args.size() != param_ids.size()) {
+      Error(file_pos, "Internal error: tail call loop mismatch between params (", param_ids.size(),
+            ") and arguments (", args.size(), ").");
+    }
+
+    for (auto &arg : args) {
+      if (arg)
+        arg->TypeCheck(symbols);
+    }
+
+    for (size_t i = 0; i < args.size(); ++i) {
+      if (!args[i])
+        continue;
+      const Type &param_type = symbols.GetType(param_ids[i]);
+      const Type arg_type = args[i]->ReturnType(symbols);
+      if (!arg_type.ConvertToOK(param_type)) {
+        Error(file_pos, "Tail recursion argument ", i, " cannot convert from ", arg_type.Name(), " to ",
+              param_type.Name(), ".");
+      }
+    }
+  }
+
+  bool ToWAT(Control &control) override {
+    std::vector<std::string> temp_names;
+    temp_names.reserve(args.size());
+
+    for (size_t i = 0; i < args.size(); ++i) {
+      auto &arg = args[i];
+      if (!arg) {
+        Error(file_pos, "Internal error: Missing argument in tail call loop.");
+      }
+
+      const Type arg_type = arg->ReturnType(control.symbols);
+      std::string wat_type = arg_type.ToWAT();
+      std::string temp_name = control.DeclareTempVar(wat_type);
+      temp_names.push_back(temp_name);
+
+      bool has_value = arg->ToWAT(control);
+      if (!has_value) {
+        Error(file_pos, "Tail recursion argument did not leave a value on the stack.");
+      }
+      control.Code("(local.set ", temp_name, ")").Comment("Store tail arg ", i, " into temp");
+    }
+
+    for (size_t i = 0; i < param_ids.size(); ++i) {
+      control.Code("(local.get ", temp_names[i], ")").Comment("Reload tail arg ", i);
+      control.Code("(local.set $var", param_ids[i], ")").Comment("Assign tail arg ", i, " to parameter");
+    }
+
+    ASTNode_Continue cont(file_pos);
+    cont.ToWAT(control);
+    return false;
+  }
+
+  void Accept(ASTVisitor &visitor) override { visitor.visit(*this); }
+};
+
 class ASTNode_ToDouble : public ASTNode_Parent {
 public:
   ASTNode_ToDouble(ptr_t &&child) : ASTNode_Parent(child->GetFilePos(), child) {}

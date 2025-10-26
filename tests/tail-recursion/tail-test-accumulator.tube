@@ -1,0 +1,30 @@
+// Test accumulator-based tail recursion optimization
+// This should test the new accumulator optimization features
+
+function factorial_acc(n: int, acc: int): int {
+    if (n <= 1) {
+        return acc;
+    } else {
+        return factorial_acc(n - 1, n * acc);
+    }
+}
+
+function sum_acc(n: int, acc: int): int {
+    if (n <= 0) {
+        return acc;
+    } else {
+        return sum_acc(n - 1, acc + n);
+    }
+}
+
+function main(): int {
+    local result1: int;
+    local result2: int;
+    
+    result1 = factorial_acc(5, 1);
+    result2 = sum_acc(10, 0);
+    
+    return result1 + result2;
+}
+
+

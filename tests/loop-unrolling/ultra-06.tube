@@ -1,0 +1,23 @@
+// Test nested loop unrolling
+// This should test the new nested loop unrolling capabilities
+
+function main(): int {
+    local sum: int;
+    sum = 0;
+    local i: int;
+    local j: int;
+    
+    i = 0;
+    while (i < 4) {
+        j = 0;
+        while (j < 3) {
+            sum = sum + i * j;
+            j = j + 1;
+        }
+        i = i + 1;
+    }
+    
+    return sum;
+}
+
+

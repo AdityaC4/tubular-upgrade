@@ -1,0 +1,17 @@
+// Simple arithmetic baseline to serve as a control workload.
+function main() : int {
+  int x = 123456;
+  x = x + 789;
+  x = x - 100;
+  x = x * 2;
+  x = x / 3;
+  int i = 0;
+  while (i < 20000) {
+    x = (x + 7) % 1000000;
+    x = (x * 3) % 1000000;
+    x = (x - 11) % 1000000;
+    if (x < 0) x = x + 1000000;
+    i = i + 1;
+  }
+  return x; // 282,763
+}

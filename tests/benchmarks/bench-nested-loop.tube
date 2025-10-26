@@ -1,0 +1,18 @@
+// Nested loop benchmark to stress unrolling and arithmetic
+function NestedSum(int n) : int {
+  int total = 0;
+  int outer = 0;
+  while (outer < n) {
+    int inner = 0;
+    while (inner < 16) {
+      total = total + (outer * 3) + inner;
+      inner = inner + 1;
+    }
+    outer = outer + 1;
+  }
+  return total;
+}
+
+function main() : int {
+  return NestedSum(64);
+}

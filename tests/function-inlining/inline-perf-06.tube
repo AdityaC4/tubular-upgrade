@@ -1,0 +1,23 @@
+// Performance Test 6: Conditional Logic in Inlined Functions
+// Goal: Test inlining of functions with branching logic
+// This should show performance benefits when inlining eliminates call overhead
+
+function conditional_calc(int x, int threshold) : int {
+  if (x < threshold) {
+    return x * x + x;
+  } else if (x < threshold * 2) {
+    return x * x - x;
+  } else {
+    return x * x * 2;
+  }
+}
+
+function main() : int {
+  int sum = 0;
+  int i = 0;
+  while (i < 12000000) { // 12M iterations with conditional logic
+    sum = sum + conditional_calc(i, 1000000);
+    i = i + 1;
+  }
+  return sum; // Expected: Large positive number
+}

@@ -1,0 +1,28 @@
+// Performance Test 7: Memory Access Pattern in Inlined Functions
+// Goal: Test inlining with functions that access array-like memory patterns
+// This should show performance benefits when inlining enables better optimization
+
+function memory_access_func(int index, int base) : int {
+  // Simulate array access pattern that benefits from inlining
+  int offset1 = base + index;
+  int offset2 = base + index * 2;
+  int offset3 = base + index * 3;
+  
+  int val1 = offset1 * offset1;
+  int val2 = offset2 * offset2;
+  int val3 = offset3 * offset3;
+  
+  return val1 + val2 + val3;
+}
+
+function main() : int {
+  int sum = 0;
+  int i = 0;
+  int base = 1000;
+  while (i < 15000000) { // 15M iterations with memory access patterns
+    sum = sum + memory_access_func(i, base);
+    i = i + 1;
+  }
+  return sum; // Expected: Large positive number
+}
+

@@ -1,0 +1,10 @@
+// Simple sequential loop to study loop unrolling benefits.
+function main() : int {
+  int sum = 0;
+  int i = 1;
+  while (i <= 20000) {
+    sum = sum + i;
+    i = i + 1;
+  }
+  return sum; // 200,010,000
+}

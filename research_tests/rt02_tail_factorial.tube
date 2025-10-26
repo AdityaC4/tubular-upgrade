@@ -1,0 +1,13 @@
+// Tail-recursive factorial to highlight tail loopification effects.
+function FactTail(int n, int acc) : int {
+  if (n <= 1) return acc;
+  return FactTail(n - 1, acc * n);
+}
+
+function Factorial(int n) : int {
+  return FactTail(n, 1);
+}
+
+function main() : int {
+  return Factorial(12); // 479,001,600
+}

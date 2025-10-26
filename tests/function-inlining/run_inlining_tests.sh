@@ -147,8 +147,13 @@ echo "Tubular executable: $TUBULAR"
 echo
 
 # Run all tests
-for i in {1..6}; do
-    test_file="$SCRIPT_DIR/inline-test-0$i.tube"
+for i in {1..8}; do
+    if [ $i -le 6 ]; then
+        test_file="$SCRIPT_DIR/inline-test-0$i.tube"
+    else
+        test_file="$SCRIPT_DIR/inline-test-0$i.tube"
+    fi
+    
     if [ -f "$test_file" ]; then
         case $i in
             1) run_test "$test_file" "inline-test-01" "Simple function should be inlined"
@@ -165,6 +170,14 @@ for i in {1..6}; do
             6) run_test "$test_file" "inline-test-06" "Parameterless functions SHOULD be inlined"
                analyze_inlining "${test_file%.tube}.wat" "get_five"
                analyze_inlining "${test_file%.tube}.wat" "get_ten" ;;
+            7) run_test "$test_file" "inline-test-07" "Recursive functions should be detected and handled"
+               analyze_inlining "${test_file%.tube}.wat" "simple_add"
+               analyze_inlining "${test_file%.tube}.wat" "factorial"
+               analyze_inlining "${test_file%.tube}.wat" "complex_calc" ;;
+            8) run_test "$test_file" "inline-test-08" "Single-use functions should be inlined aggressively"
+               analyze_inlining "${test_file%.tube}.wat" "get_constant"
+               analyze_inlining "${test_file%.tube}.wat" "multiply_by_two"
+               analyze_inlining "${test_file%.tube}.wat" "add_one" ;;
         esac
     else
         echo "Test file $test_file not found, skipping..."

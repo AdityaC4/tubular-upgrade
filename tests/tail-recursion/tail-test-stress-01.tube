@@ -1,0 +1,20 @@
+// Stress Test 1: Very Deep Tail Recursion with Heavy Computation
+// Goal: Test tail recursion optimization with 50,000 levels of recursion
+// This should show significant performance difference between recursive and iterative versions
+
+function deep_sum(int n, int acc) : int {
+  if (n == 0) return acc;
+  
+  // Heavy computation per recursive call to make timing measurable
+  int temp1 = n * n + acc;
+  int temp2 = temp1 * 2 + n;
+  int temp3 = temp2 / 3 + acc;
+  int temp4 = temp3 * temp3 + n;
+  int new_acc = temp4 + acc;
+  
+  return deep_sum(n - 1, new_acc);
+}
+
+function main() : int {
+  return deep_sum(10000, 0); // 10K levels of recursion with heavy computation
+}

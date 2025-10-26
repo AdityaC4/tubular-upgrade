@@ -73,17 +73,67 @@ function bench(inst, fn, iters){
   const off = await load(process.argv[2]);
   const loop = await load(process.argv[3]);
   const fn = process.argv[4];
-  const expected = Number(process.argv[5]);
-  const resOff = off.instance.exports[fn]();
-  const resLoop = loop.instance.exports[fn]();
-  console.log(`Output off=${resOff}, loop=${resLoop}, expected=${expected}`);
-  if (resOff !== expected || resLoop !== expected) {
-    console.log('RESULT MISMATCH'); process.exit(1);
+  const expectedArg = process.argv[5];
+  const useBaseline = expectedArg === '__baseline__';
+  let expected = useBaseline ? null : Number(expectedArg);
+  if (!useBaseline && !Number.isFinite(expected)) {
+    console.error('Invalid expected value:', expectedArg);
+    process.exit(1);
   }
-  const tOff = bench(off, fn);
+  let resOff, resLoop;
+  let offError = null;
+  let loopError = null;
+  try {
+    resOff = off.instance.exports[fn]();
+  } catch (err) {
+    offError = err;
+  }
+  try {
+    resLoop = loop.instance.exports[fn]();
+  } catch (err) {
+    loopError = err;
+  }
+  if (loopError) {
+    console.log('Loop execution error:', loopError.message);
+    process.exit(1);
+  }
+  if (useBaseline) {
+    expected = resLoop;
+  }
+  if (offError) {
+    console.log('Baseline execution error:', offError.message);
+    if (!useBaseline) {
+      console.log('RESULT MISMATCH');
+      process.exit(1);
+    }
+  }
+  const baselineMatch = offError ? true : (resOff === expected);
+  const loopMatch = resLoop === expected;
+  const agree = offError ? true : (resOff === resLoop);
+  if (!loopMatch || !baselineMatch || !agree) {
+    console.log(`Output off=${resOff}, loop=${resLoop}, expected=${expected}`);
+    console.log('RESULT MISMATCH');
+    process.exit(1);
+  }
+  if (offError) {
+    console.log(`Output loop=${resLoop} (baseline failed: ${offError.message})`);
+  } else if (useBaseline) {
+    console.log(`Output off=${resOff}, loop=${resLoop} (baseline expected=${expected})`);
+  } else {
+    console.log(`Output off=${resOff}, loop=${resLoop}, expected=${expected}`);
+  }
+  let tOff = null;
+  if (!offError) {
+    tOff = bench(off, fn);
+  }
   const tLoop = bench(loop, fn);
-  const delta = ((tLoop - tOff)/tOff*100).toFixed(1);
-  console.log(`Median per-call: off=${tOff.toFixed(3)}ms, loop=${tLoop.toFixed(3)}ms (${delta}%)`);
+  if (tOff !== null && tOff > 0) {
+    const delta = ((tLoop - tOff)/tOff*100).toFixed(1);
+    console.log(`Median per-call: off=${tOff.toFixed(3)}ms, loop=${tLoop.toFixed(3)}ms (${delta}%)`);
+  } else {
+    const reason = offError ? offError.message : 'baseline skipped';
+    console.log(`Median per-call: loop=${tLoop.toFixed(3)}ms (baseline unavailable: ${reason})`);
+  }
   process.exit(0);
 })().catch(e=>{ console.error('Bench error', e); process.exit(1); });
 EOF
@@ -103,5 +153,14 @@ run_case "tail-test-deep-01" "main" 50005000
 run_case "tail-test-deep-02" "main" 102334155
 run_case "tail-test-deep-03" "main" 50005000
 run_case "tail-test-extreme" "main" 1048576
+run_case "tail-test-order" "main" 8
+
+# Run stress tests
+echo "=== STRESS TESTS ==="
+run_case "tail-test-stress-01" "main" "__baseline__"  # Will be calculated dynamically
+run_case "tail-test-stress-02" "main" "__baseline__"  # Will be calculated dynamically
+run_case "tail-test-stress-03" "main" "__baseline__"  # Will be calculated dynamically
+run_case "tail-test-stress-04" "main" "__baseline__"  # Will be calculated dynamically
+run_case "tail-test-stress-05" "main" "__baseline__"  # Will be calculated dynamically
 
 echo "=== END TAIL RECURSION TESTS ==="

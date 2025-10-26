@@ -1,12 +1,15 @@
 #include <assert.h>
+#include <algorithm>
 #include <chrono>
 #include <complex>
 #include <cstddef>
+#include <cctype>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <iterator>
 #include <memory>
+#include <sstream>
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -22,6 +25,63 @@
 #include "TokenQueue.hpp"
 #include "WATGenerator.hpp"
 #include "lexer.hpp"
+
+enum class PassId { Inline, Unroll, Tail };
+
+static std::string TrimCopy(const std::string &input) {
+  size_t start = 0;
+  while (start < input.size() && std::isspace(static_cast<unsigned char>(input[start]))) {
+    ++start;
+  }
+  size_t end = input.size();
+  while (end > start && std::isspace(static_cast<unsigned char>(input[end - 1]))) {
+    --end;
+  }
+  return input.substr(start, end - start);
+}
+
+static std::vector<PassId> ParsePassOrderSpec(const std::string &spec) {
+  std::vector<PassId> order;
+  std::stringstream ss(spec);
+  std::string token;
+  while (std::getline(ss, token, ',')) {
+    auto trimmed = TrimCopy(token);
+    if (trimmed.empty()) {
+      continue;
+    }
+    std::string lowered;
+    lowered.reserve(trimmed.size());
+    for (char ch : trimmed) {
+      lowered.push_back(static_cast<char>(std::tolower(static_cast<unsigned char>(ch))));
+    }
+
+    PassId passId;
+    if (lowered == "inline") {
+      passId = PassId::Inline;
+    } else if (lowered == "unroll") {
+      passId = PassId::Unroll;
+    } else if (lowered == "tail") {
+      passId = PassId::Tail;
+    } else {
+      std::cout << "Error: Unknown pass '" << trimmed << "' in --pass-order (expected inline, unroll, tail)."
+                << std::endl;
+      exit(1);
+    }
+
+    if (std::find(order.begin(), order.end(), passId) != order.end()) {
+      std::cout << "Error: Duplicate pass '" << trimmed << "' in --pass-order." << std::endl;
+      exit(1);
+    }
+    order.push_back(passId);
+  }
+
+  if (order.size() != 3) {
+    std::cout << "Error: --pass-order must specify inline, unroll, and tail exactly once." << std::endl;
+    exit(1);
+  }
+
+  return order;
+}
 
 class Tubular {
 private:
@@ -715,23 +775,44 @@ public:
   }
 
   // New method to run optimization passes
-  void RunOptimizationPasses(bool enableLoopUnrolling = true,
-                             int unrollFactor = 4,
-                             bool enableFunctionInlining = true,
-                             bool enableTailLoopify = true) {
+  void RunOptimizationPasses(bool enableLoopUnrolling = true, int unrollFactor = 4,
+                             bool enableFunctionInlining = true, bool enableTailLoopify = true,
+                             const std::vector<PassId> &passOrder = {}) {
     PassManager passManager;
 
-    // Add passes to the manager - only add function inlining if enabled
-    if (enableFunctionInlining) {
-      passManager.addPass(std::make_unique<FunctionInliningPass>(true));
+    auto addInlinePass = [&]() {
+      passManager.addPass(std::make_unique<FunctionInliningPass>(control.symbols, true, false, false, 3, 40, 100));
+    };
+    auto addUnrollPass = [&]() {
+      passManager.addPass(std::make_unique<LoopUnrollingPass>(unrollFactor, false, false, 100, false));
+    };
+    auto addTailPass = [&]() {
+      passManager.addPass(
+          std::make_unique<TailRecursionPass>(control.symbols, enableTailLoopify, false, false, 1000));
+    };
+
+    std::vector<PassId> effectiveOrder = passOrder;
+    if (effectiveOrder.empty()) {
+      effectiveOrder = {PassId::Inline, PassId::Unroll, PassId::Tail};
     }
-    
-    // Only add loop unrolling if enabled
-    if (enableLoopUnrolling) {
-      passManager.addPass(std::make_unique<LoopUnrollingPass>(unrollFactor));
+
+    for (PassId id : effectiveOrder) {
+      switch (id) {
+      case PassId::Inline:
+        if (enableFunctionInlining) {
+          addInlinePass();
+        }
+        break;
+      case PassId::Unroll:
+        if (enableLoopUnrolling) {
+          addUnrollPass();
+        }
+        break;
+      case PassId::Tail:
+        addTailPass();
+        break;
+      }
     }
-    
-    passManager.addPass(std::make_unique<TailRecursionPass>(enableTailLoopify));
 
     // Run all passes on each function
     for (auto &fun_ptr : functions) {
@@ -740,11 +821,51 @@ public:
   }
 };
 
+void printHelp(const char* programName) {
+  std::cout << "Tubular Compiler - A compiler for the Tubular language\n\n";
+  std::cout << "USAGE:\n";
+  std::cout << "  " << programName << " <filename> [OPTIONS]\n\n";
+  std::cout << "ARGUMENTS:\n";
+  std::cout << "  filename    Input Tubular source file to compile\n\n";
+  std::cout << "OPTIONS:\n";
+  std::cout << "  --help, -h              Show this help message and exit\n";
+  std::cout << "  --no-unroll             Disable loop unrolling optimization\n";
+  std::cout << "  --unroll-factor=N       Set loop unrolling factor (1-16, default: 4)\n";
+  std::cout << "                          Setting to 1 effectively disables unrolling\n";
+  std::cout << "  --no-inline             Disable function inlining optimization\n";
+  std::cout << "  --tail=loop|off         Control tail recursion optimization\n";
+  std::cout << "                          loop: Convert tail recursion to loops (default)\n";
+  std::cout << "                          off:  Disable tail recursion optimization\n\n";
+  std::cout << "  --pass-order=a,b,c      Set optimization pass order using a permutation of\n";
+  std::cout << "                          inline,unroll,tail (default: inline,unroll,tail)\n\n";
+  std::cout << "EXAMPLES:\n";
+  std::cout << "  " << programName << " program.tub              # Compile with default optimizations\n";
+  std::cout << "  " << programName << " program.tub --no-unroll  # Disable loop unrolling\n";
+  std::cout << "  " << programName << " program.tub --unroll-factor=8 --no-inline  # Custom settings\n";
+  std::cout << "  " << programName << " program.tub --tail=off   # Disable tail recursion optimization\n\n";
+  std::cout << "OPTIMIZATION PASSES:\n";
+  std::cout << "  The compiler includes several optimization passes:\n";
+  std::cout << "  • Function Inlining: Inlines small, pure functions to reduce call overhead\n";
+  std::cout << "  • Loop Unrolling: Unrolls loops to reduce branch overhead and enable\n";
+  std::cout << "    further optimizations\n";
+  std::cout << "  • Tail Recursion: Converts tail-recursive functions to iterative loops\n\n";
+  std::cout << "OUTPUT:\n";
+  std::cout << "  The compiler generates WebAssembly Text (WAT) format output to stdout.\n";
+  std::cout << "  Redirect to a file to save: " << programName << " program.tub > output.wat\n";
+}
+
 int main(int argc, char *argv[]) {
   if (argc < 2) {
-    std::cout << "Format: " << argv[0]
-              << " [filename] [--no-unroll] [--unroll-factor=N] [--no-inline] [--tail=loop|off]" << std::endl;
+    std::cout << "Error: No input file specified\n\n";
+    printHelp(argv[0]);
     exit(1);
+  }
+
+  // Check for help flag
+  std::string firstArg = argv[1];
+  if (firstArg == "--help" || firstArg == "-h") {
+    printHelp(argv[0]);
+    exit(0);
   }
 
   std::string filename = argv[1];
@@ -752,6 +873,7 @@ int main(int argc, char *argv[]) {
   int unrollFactor = 4; // default
   bool enableFunctionInlining = true; // default
   bool enableTailLoopify = true;      // default
+  std::vector<PassId> passOrder = {PassId::Inline, PassId::Unroll, PassId::Tail};
 
   // Track seen flags for validation
   bool seenNoUnroll = false;
@@ -806,6 +928,13 @@ int main(int argc, char *argv[]) {
         exit(1);
       }
       seenTail = true;
+    } else if (flag.rfind("--pass-order=", 0) == 0) {
+      std::string spec = flag.substr(13);
+      if (spec.empty()) {
+        std::cout << "Error: --pass-order requires a comma-separated permutation of inline,unroll,tail" << std::endl;
+        exit(1);
+      }
+      passOrder = ParsePassOrderSpec(spec);
     } else {
       std::cout << "Error: Unknown flag '" << flag << "'" << std::endl;
       exit(1);
@@ -823,7 +952,7 @@ int main(int argc, char *argv[]) {
   prog.Parse();
 
   // Run optimization passes
-  prog.RunOptimizationPasses(enableLoopUnrolling, unrollFactor, enableFunctionInlining, enableTailLoopify);
+  prog.RunOptimizationPasses(enableLoopUnrolling, unrollFactor, enableFunctionInlining, enableTailLoopify, passOrder);
 
   // -- uncomment for debugging --
   // prog.PrintSymbols();

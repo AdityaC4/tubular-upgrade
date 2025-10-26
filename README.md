@@ -68,6 +68,22 @@ wasmtime program.wasm                    # Execute
 ./build/Tubular program.tube --unroll-factor=8 --no-inline --tail=loop
 ```
 
+You can also explore optimization *ordering* effects using `--pass-order=inline,unroll,tail`
+(any permutation of the three passes). For example, `--pass-order=unroll,inline,tail`
+forces loop unrolling to run before inlining.
+
+### Research Data Collection
+
+For the final report you can capture a complete dataset (build, regression sanity,
+10 curated workloads × optimization variants × pass-order permutations) via:
+
+```bash
+./scripts/collect_data.py
+```
+
+Artifacts land under `artifacts/research/` (`results.csv`, `summary.json`, and all
+generated `.wat/.wasm` files), ready for plotting or further analysis.
+
 ## Testing Infrastructure
 
 ### Comprehensive Test Coverage
@@ -97,6 +113,7 @@ Current optimization impact measured across representative workloads:
 
 - **[SPECS.md](SPECS.md)** - Complete language specification
 - **[TESTING.md](TESTING.md)** - Testing infrastructure and procedures
+- **[AUTOTUNING.md](docs/AUTOTUNING.md)** - Automated benchmarking & tuning workflow
 
 ### Current Status
 
@@ -107,6 +124,5 @@ Current optimization impact measured across representative workloads:
 
 ### Future Directions
 
-- Autotuning framework for systematic optimization exploration
-- hopefully🤞 Machine learning-guided optimization parameter selection
+- Machine learning-guided optimization parameter selection
 - Extended language features and additional optimization passes

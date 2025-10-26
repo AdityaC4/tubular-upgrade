@@ -1,0 +1,23 @@
+// Performance Test 4: Complex Mathematical Functions in Hot Loop
+// Goal: Test inlining of functions with multiple parameters and complex calculations
+// This should show significant performance difference between inlined and non-inlined versions
+
+function complex_math(int a, int b, int c) : int {
+  // Complex calculation that benefits from inlining
+  int temp1 = a * a + b * b;
+  int temp2 = c * c + a * b;
+  int temp3 = temp1 - temp2;
+  int temp4 = temp3 * 2 + a;
+  int temp5 = temp4 / 3 + b;
+  return temp5 * c + temp1;
+}
+
+function main() : int {
+  int sum = 0;
+  int i = 0;
+  while (i < 10000000) { // 10M iterations for measurable timing
+    sum = sum + complex_math(i, i + 1, i + 2);
+    i = i + 1;
+  }
+  return sum; // Expected: Large positive number
+}
