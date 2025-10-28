@@ -1,8 +1,13 @@
 # Tubular WebAssembly Compiler
 
-## Key Features
+Tubular is a didactic compiler for a small “Tube” language that emits WebAssembly
+Text (WAT). The first version was built for CSE 450 (Compilers); the current
+repository extends it with optimization passes, configurable pass ordering, and a
+reproducible data-collection pipeline used to study pass-order sensitivity.
 
-### Language Support
+[report link](https://drive.google.com/file/d/1l2euVHNgPHo4V_RDMbIrIy_qi7EYpVuD/view?usp=sharing)
+
+## Language Support
 
 - Complete type system with int, double, char, string types
 - Control flow: if/else, while loops, break/continue statements
@@ -10,20 +15,14 @@
 - String operations: concatenation, repetition, indexing
 - Type casting with implicit and explicit conversions
 
-### Optimization Passes
+## Optimization Passes
 
-1. **Function Inlining** - Smart inlining for small functions with size-based heuristics
-2. **Loop Unrolling** - Advanced loop optimization with configurable unroll factors (1x, 4x, 8x, 16x)
-3. **Tail Recursion Elimination** - Converts tail-recursive calls to iterative loops using dependency analysis (Work in Progress, also need to write better tests.)
+1. **Function Inlining** – Pure/small functions are cloned into call sites.
+2. **Loop Unrolling** – Affine `while` loops with literal bounds can be unrolled; `--unroll-factor=N` controls the stride.
+3. **Tail Recursion Elimination** – Tail-recursive calls can be converted into explicit loops via a dedicated AST node.
 
-### Performance Analysis
-
-- Comprehensive benchmarking infrastructure with statistical timing
-- Browser-based performance testing with interactive visualizations
-- Quantitative results showing up to 22% execution time improvements
-- CSV export capabilities for research data collection
-
-![Performance Results](docs/screenshots/performance-results.png)
+Any permutation of the three passes can be selected via
+`--pass-order=inline,unroll,tail` (or any ordering of the tokens).
 
 ## Architecture
 
@@ -68,61 +67,58 @@ wasmtime program.wasm                    # Execute
 ./build/Tubular program.tube --unroll-factor=8 --no-inline --tail=loop
 ```
 
-You can also explore optimization *ordering* effects using `--pass-order=inline,unroll,tail`
-(any permutation of the three passes). For example, `--pass-order=unroll,inline,tail`
-forces loop unrolling to run before inlining.
+### Exploring Pass Ordering
 
-### Research Data Collection
+```
+./build/Tubular program.tube --pass-order=inline,tail,unroll
+```
 
-For the final report you can capture a complete dataset (build, regression sanity,
-10 curated workloads × optimization variants × pass-order permutations) via:
+Any permutation of `inline`, `unroll`, and `tail` is accepted. Additional flags
+such as `--no-inline`, `--unroll-factor=N`, and `--tail=off` can be combined.
+
+## Research Data Collection
+
+The repository includes a reproducible pipeline for measuring pass-order
+sensitivity on a suite of ten curated benchmarks (`research_tests/`). To capture
+the full dataset used in the accompanying technical report:
 
 ```bash
 ./scripts/collect_data.py
 ```
 
-Artifacts land under `artifacts/research/` (`results.csv`, `summary.json`, and all
-generated `.wat/.wasm` files), ready for plotting or further analysis.
+This command:
 
-## Testing Infrastructure
+1. Rebuilds the compiler.
+2. Runs the legacy regression suite (`./make test`) for sanity.
+3. Executes every benchmark × optimization variant × pass-order permutation with
+   warm-ups and 50 timed runs, writing results to `artifacts/research/`.
 
-### Comprehensive Test Coverage
+To repeat the sweep multiple times (for example, three batches to check
+stability):
 
-- **Language tests** covering all features and edge cases
-- **Optimization-specific test suites** with performance benchmarks
+```bash
+./scripts/repeat_collection.py --runs 3
+```
 
-### Browser-Based Performance Testing
-
-Interactive testing interfaces provide real-time performance analysis:
-
-- Loop unrolling performance comparison across different factors
-- Function inlining before/after analysis
-- Tail recursion optimization measurement
-
-## Performance Results
-
-Current optimization impact measured across representative workloads:
-
-| Optimization      | Best Case Improvement | Test Coverage          |
-| ----------------- | --------------------- | ---------------------- |
-| Loop Unrolling    | 22% faster execution  | 4 performance tests    |
-| Function Inlining | Measurable gains      | 6 test scenarios       |
-| Tail Recursion    | Stack usage reduction | 5 recursive algorithms |
+Aggregated CSV/JSON summaries are written to `docs/figures/` and
+`artifacts/research/`. Helper scripts such as
+`scripts/analyze_research_data.py` and
+`scripts/generate_benchmark_features_table.py` generate the tables that appear
+in the technical report.
 
 ## Documentation
 
-- **[SPECS.md](SPECS.md)** - Complete language specification
-- **[TESTING.md](TESTING.md)** - Testing infrastructure and procedures
-- **[AUTOTUNING.md](docs/AUTOTUNING.md)** - Automated benchmarking & tuning workflow
+- **[SPECS.md](SPECS.md)** – Tube language specification.
+- **[TESTING.md](TESTING.md)** – Legacy regression tests and harnesses.
+- **[docs/PROJECT_OVERVIEW.md](docs/PROJECT_OVERVIEW.md)** – Architectural summary.
+- **[docs/DATA_PIPELINE.md](docs/DATA_PIPELINE.md)** – Data collection workflow and reproducibility notes.
+- **[docs/technical_report.tex](docs/technical_report.tex)** – Technical report (LaTeX source). A PDF build is linked in the repo blog post.
 
-### Current Status
+## Repository Layout (Highlights)
 
-- Core compilation pipeline: Complete and tested
-- Optimization passes: Fully implemented with measurable results (tail recursion is WIP)
-- Performance infrastructure: Comprehensive timing and analysis tools
-- Documentation: Professional-grade technical documentation
-
-### Future Directions
-
-- Machine learning-guided optimization parameter selection
-- Extended language features and additional optimization passes
+- `Tubular.cpp` – Driver that wires together parsing, passes, and code generation.
+- `src/frontend/` – Lexer, AST nodes, and visitor interface.
+- `src/middle_end/` – Control, symbol table, pass infrastructure, and optimization passes.
+- `research_tests/` – Benchmark suite used in the pass-order study.
+- `scripts/` – Automation helpers for builds, data collection, and analysis.
+- `artifacts/research/` – Raw and aggregated datasets (regenerated by the scripts).
