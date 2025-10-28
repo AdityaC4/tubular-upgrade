@@ -112,7 +112,6 @@ in the technical report.
 - **[TESTING.md](TESTING.md)** – Legacy regression tests and harnesses.
 - **[docs/PROJECT_OVERVIEW.md](docs/PROJECT_OVERVIEW.md)** – Architectural summary.
 - **[docs/DATA_PIPELINE.md](docs/DATA_PIPELINE.md)** – Data collection workflow and reproducibility notes.
-- **[docs/technical_report.tex](docs/technical_report.tex)** – Technical report (LaTeX source). A PDF build is linked in the repo blog post.
 
 ## Repository Layout (Highlights)
 
